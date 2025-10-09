@@ -1,5 +1,8 @@
 # typed-lexicon
 
+> [!WARNING]
+> this project is in the middle of active initial development and not ready for use. there will be updates posted [here](https://bsky.app/profile/tylur.dev) if you'd like to follow along!
+
 this will be a toolkit for writing lexicon json schema's in typescript and providing types for lexicon data shape. it will:
 
 - remove boilerplate and improve ergonomics
