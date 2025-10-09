@@ -7,6 +7,10 @@ this will be a toolkit for writing lexicon json schema's in typescript and provi
 - infer the typescript type definitions for the data shape to avoid duplication and skew
 - methods and a cli for generating json
 
+With each of the above finished, i'll plan to write a `validate` method that will be published alongside this that takes any lexicon json definition and validates payloads off that. 
+
+My working hypothesis: it will be easier to write lexicons in typescript with a single api, then validate based off the json definition, than it would be to start with validation library types (standard-schema style) and attempt to use those as the authoring and validation tools.
+
 **what you'd write:**
 
 ```typescript
