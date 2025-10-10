@@ -141,6 +141,18 @@ interface ProcedureOptions {
   errors?: ErrorDef[];
 }
 
+interface MessageSchema {
+  description?: string;
+  schema: { type: "union"; refs: readonly string[] };
+}
+
+interface SubscriptionOptions {
+  description?: string;
+  parameters?: ParamsResult<ParamsProperties>;
+  message?: MessageSchema;
+  errors?: ErrorDef[];
+}
+
 /**
  * Main API: Create a namespace (lexicon document)
  */
@@ -285,6 +297,14 @@ export const lx = {
       type: "procedure",
       ...options,
     } as T & { type: "procedure" };
+  },
+  subscription<T extends SubscriptionOptions>(
+    options?: T
+  ): T & { type: "subscription" } {
+    return {
+      type: "subscription",
+      ...options,
+    } as T & { type: "subscription" };
   },
   namespace<ID extends string, D extends LexiconNamespace["defs"]>(
     id: ID,

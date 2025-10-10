@@ -622,3 +622,147 @@ Deno.test("lx.procedure() real-world example: createPost", () => {
     ],
   });
 });
+
+Deno.test("lx.subscription() basic", () => {
+  const result = lx.subscription();
+  assertEquals(result, { type: "subscription" });
+});
+
+Deno.test("lx.subscription() with description", () => {
+  const result = lx.subscription({
+    description: "Repository event stream",
+  });
+  assertEquals(result, {
+    type: "subscription",
+    description: "Repository event stream",
+  });
+});
+
+Deno.test("lx.subscription() with parameters", () => {
+  const result = lx.subscription({
+    parameters: lx.params({
+      cursor: lx.integer(),
+    }),
+  });
+  assertEquals(result, {
+    type: "subscription",
+    parameters: {
+      type: "params",
+      properties: {
+        cursor: { type: "integer" },
+      },
+    },
+  });
+});
+
+Deno.test("lx.subscription() with message", () => {
+  const result = lx.subscription({
+    message: {
+      schema: lx.union([
+        "#commit",
+        "#identity",
+        "#account",
+      ]),
+    },
+  });
+  assertEquals(result, {
+    type: "subscription",
+    message: {
+      schema: {
+        type: "union",
+        refs: ["#commit", "#identity", "#account"],
+      },
+    },
+  });
+});
+
+Deno.test("lx.subscription() with message description", () => {
+  const result = lx.subscription({
+    message: {
+      description: "Event message types",
+      schema: lx.union(["#commit", "#handle", "#migrate"]),
+    },
+  });
+  assertEquals(result, {
+    type: "subscription",
+    message: {
+      description: "Event message types",
+      schema: {
+        type: "union",
+        refs: ["#commit", "#handle", "#migrate"],
+      },
+    },
+  });
+});
+
+Deno.test("lx.subscription() with errors", () => {
+  const result = lx.subscription({
+    errors: [
+      { name: "FutureCursor" },
+      { name: "ConsumerTooSlow", description: "Consumer is too slow" },
+    ],
+  });
+  assertEquals(result, {
+    type: "subscription",
+    errors: [
+      { name: "FutureCursor" },
+      { name: "ConsumerTooSlow", description: "Consumer is too slow" },
+    ],
+  });
+});
+
+Deno.test("lx.subscription() real-world example: subscribeRepos", () => {
+  const result = lx.subscription({
+    description: "Repository event stream, aka Firehose endpoint",
+    parameters: lx.params({
+      cursor: lx.integer(),
+    }),
+    message: {
+      description: "Represents an update of repository state",
+      schema: lx.union([
+        "#commit",
+        "#identity",
+        "#account",
+        "#handle",
+        "#migrate",
+        "#tombstone",
+        "#info",
+      ]),
+    },
+    errors: [
+      { name: "FutureCursor" },
+      { name: "ConsumerTooSlow" },
+    ],
+  });
+  assertEquals(result, {
+    type: "subscription",
+    description: "Repository event stream, aka Firehose endpoint",
+    parameters: {
+      type: "params",
+      properties: {
+        cursor: {
+          type: "integer",
+        },
+      },
+    },
+    message: {
+      description: "Represents an update of repository state",
+      schema: {
+        type: "union",
+        refs: [
+          "#commit",
+          "#identity",
+          "#account",
+          "#handle",
+          "#migrate",
+          "#tombstone",
+          "#info",
+        ],
+      },
+    },
+    errors: [
+      { name: "FutureCursor" },
+      { name: "ConsumerTooSlow" },
+    ],
+  });
+});
