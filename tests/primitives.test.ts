@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 Deno.test("lx.null()", () => {
   const result = lx.null();
@@ -615,10 +615,7 @@ Deno.test("lx.procedure() real-world example: createPost", () => {
         cid: lx.string({ required: true }),
       }),
     },
-    errors: [
-      { name: "InvalidSwap" },
-      { name: "InvalidRecord" },
-    ],
+    errors: [{ name: "InvalidSwap" }, { name: "InvalidRecord" }],
   });
   assertEquals(result, {
     type: "procedure",
@@ -647,10 +644,7 @@ Deno.test("lx.procedure() real-world example: createPost", () => {
         required: ["uri", "cid"],
       },
     },
-    errors: [
-      { name: "InvalidSwap" },
-      { name: "InvalidRecord" },
-    ],
+    errors: [{ name: "InvalidSwap" }, { name: "InvalidRecord" }],
   });
 });
 
@@ -689,11 +683,7 @@ Deno.test("lx.subscription() with parameters", () => {
 Deno.test("lx.subscription() with message", () => {
   const result = lx.subscription({
     message: {
-      schema: lx.union([
-        "#commit",
-        "#identity",
-        "#account",
-      ]),
+      schema: lx.union(["#commit", "#identity", "#account"]),
     },
   });
   assertEquals(result, {
@@ -760,10 +750,7 @@ Deno.test("lx.subscription() real-world example: subscribeRepos", () => {
         "#info",
       ]),
     },
-    errors: [
-      { name: "FutureCursor" },
-      { name: "ConsumerTooSlow" },
-    ],
+    errors: [{ name: "FutureCursor" }, { name: "ConsumerTooSlow" }],
   });
   assertEquals(result, {
     type: "subscription",
@@ -791,9 +778,6 @@ Deno.test("lx.subscription() real-world example: subscribeRepos", () => {
         ],
       },
     },
-    errors: [
-      { name: "FutureCursor" },
-      { name: "ConsumerTooSlow" },
-    ],
+    errors: [{ name: "FutureCursor" }, { name: "ConsumerTooSlow" }],
   });
 });

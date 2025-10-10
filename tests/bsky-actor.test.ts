@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 Deno.test("app.bsky.actor.defs - profileViewBasic", () => {
   const profileViewBasic = lx.object({
@@ -407,7 +407,10 @@ Deno.test("app.bsky.actor.defs - contentLabelPref", () => {
 Deno.test("app.bsky.actor.defs - savedFeed", () => {
   const savedFeed = lx.object({
     id: lx.string({ required: true }),
-    type: lx.string({ required: true, knownValues: ["feed", "list", "timeline"] }),
+    type: lx.string({
+      required: true,
+      knownValues: ["feed", "list", "timeline"],
+    }),
     value: lx.string({ required: true }),
     pinned: lx.boolean({ required: true }),
   });

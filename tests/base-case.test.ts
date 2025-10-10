@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 Deno.test("app.bsky.actor.profile", () => {
   const profileNamespace = lx.namespace("app.bsky.actor.profile", {

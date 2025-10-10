@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 Deno.test("app.bsky.feed.defs - postView", () => {
   const postView = lx.object({
