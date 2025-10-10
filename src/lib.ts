@@ -45,7 +45,18 @@ interface LexiconNamespace {
 }
 
 interface StringOptions extends LexiconItemCommonOptions {
-  format?: string;
+  format?:
+    | "at-identifier"
+    | "at-uri"
+    | "cid"
+    | "datetime"
+    | "did"
+    | "handle"
+    | "nsid"
+    | "tid"
+    | "record-key"
+    | "uri"
+    | "language";
   maxLength?: number;
   minLength?: number;
   maxGraphemes?: number;
