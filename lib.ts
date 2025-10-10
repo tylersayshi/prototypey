@@ -90,7 +90,7 @@ interface RecordOptions {
   description?: string;
 }
 
-interface UnionOptions {
+interface UnionOptions extends LexiconItemCommonOptions {
   closed?: boolean;
 }
 
@@ -224,11 +224,15 @@ export const lx = {
   ): { type: "token"; description: Description } {
     return { type: "token", description };
   },
-  ref<Ref extends string>(ref: Ref): { type: "ref"; ref: Ref } {
+  ref<Ref extends string>(
+    ref: Ref,
+    options?: LexiconItemCommonOptions
+  ): LexiconItemCommonOptions & { type: "ref"; ref: Ref } {
     return {
       type: "ref",
       ref,
-    };
+      ...options,
+    } as LexiconItemCommonOptions & { type: "ref"; ref: Ref };
   },
   union<const Refs extends readonly string[], Options extends UnionOptions>(
     refs: Refs,

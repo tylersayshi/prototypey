@@ -31,3 +31,7 @@ When implementing new lexicon types, fetch from:
 ## Implementation Status
 
 initial implementation of field types returning json definitions is done
+
+## todo
+
+write two new test files, one for bsky actor and another for bsky feed. i want to see these fully implemented and tested in separate files. then wait.

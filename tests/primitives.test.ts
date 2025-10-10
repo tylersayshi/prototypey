@@ -218,6 +218,37 @@ Deno.test("lx.ref() with external schema", () => {
   });
 });
 
+Deno.test("lx.ref() with required option", () => {
+  const result = lx.ref("#profileView", { required: true });
+  assertEquals(result, {
+    type: "ref",
+    ref: "#profileView",
+    required: true,
+  });
+});
+
+Deno.test("lx.ref() with nullable option", () => {
+  const result = lx.ref("#profileView", { nullable: true });
+  assertEquals(result, {
+    type: "ref",
+    ref: "#profileView",
+    nullable: true,
+  });
+});
+
+Deno.test("lx.ref() with both required and nullable", () => {
+  const result = lx.ref("app.bsky.actor.defs#profileView", {
+    required: true,
+    nullable: true,
+  });
+  assertEquals(result, {
+    type: "ref",
+    ref: "app.bsky.actor.defs#profileView",
+    required: true,
+    nullable: true,
+  });
+});
+
 Deno.test("lx.union() with local refs", () => {
   const result = lx.union(["#reasonRepost", "#reasonPin"]);
   assertEquals(result, {
