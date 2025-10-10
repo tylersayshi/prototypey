@@ -96,6 +96,14 @@ Deno.test("lx.bytes() with minLength and maxLength", () => {
   assertEquals(result, { type: "bytes", minLength: 1, maxLength: 1024 });
 });
 
+Deno.test("lx.cidLink()", () => {
+  const result = lx.cidLink("bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a");
+  assertEquals(result, {
+    type: "cid-link",
+    $link: "bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a",
+  });
+});
+
 Deno.test("lx.blob()", () => {
   const result = lx.blob();
   assertEquals(result, { type: "blob" });
@@ -158,5 +166,87 @@ Deno.test("lx.array() with minLength and maxLength", () => {
     items: { type: "string" },
     minLength: 1,
     maxLength: 10,
+  });
+});
+
+Deno.test("lx.token() with interaction event", () => {
+  const result = lx.token("Request that less content like the given feed item be shown in the feed");
+  assertEquals(result, {
+    type: "token",
+    description: "Request that less content like the given feed item be shown in the feed",
+  });
+});
+
+Deno.test("lx.token() with content mode", () => {
+  const result = lx.token("Declares the feed generator returns posts containing app.bsky.embed.video embeds");
+  assertEquals(result, {
+    type: "token",
+    description: "Declares the feed generator returns posts containing app.bsky.embed.video embeds",
+  });
+});
+
+Deno.test("lx.ref() with local definition", () => {
+  const result = lx.ref("#profileAssociated");
+  assertEquals(result, {
+    type: "ref",
+    ref: "#profileAssociated",
+  });
+});
+
+Deno.test("lx.ref() with external schema", () => {
+  const result = lx.ref("com.atproto.label.defs#label");
+  assertEquals(result, {
+    type: "ref",
+    ref: "com.atproto.label.defs#label",
+  });
+});
+
+Deno.test("lx.union() with local refs", () => {
+  const result = lx.union(["#reasonRepost", "#reasonPin"]);
+  assertEquals(result, {
+    type: "union",
+    refs: ["#reasonRepost", "#reasonPin"],
+  });
+});
+
+Deno.test("lx.union() with external refs", () => {
+  const result = lx.union([
+    "app.bsky.embed.images#view",
+    "app.bsky.embed.video#view",
+    "app.bsky.embed.external#view",
+    "app.bsky.embed.record#view",
+    "app.bsky.embed.recordWithMedia#view",
+  ]);
+  assertEquals(result, {
+    type: "union",
+    refs: [
+      "app.bsky.embed.images#view",
+      "app.bsky.embed.video#view",
+      "app.bsky.embed.external#view",
+      "app.bsky.embed.record#view",
+      "app.bsky.embed.recordWithMedia#view",
+    ],
+  });
+});
+
+Deno.test("lx.union() with closed option", () => {
+  const result = lx.union(["#postView", "#notFoundPost", "#blockedPost"], {
+    closed: true,
+  });
+  assertEquals(result, {
+    type: "union",
+    refs: ["#postView", "#notFoundPost", "#blockedPost"],
+    closed: true,
+  });
+});
+
+Deno.test("lx.union() with closed: false (open union)", () => {
+  const result = lx.union(["#threadViewPost", "#notFoundPost"], {
+    closed: false,
+  });
+  assertEquals(result, {
+    type: "union",
+    refs: ["#threadViewPost", "#notFoundPost"],
+    closed: false,
   });
 });

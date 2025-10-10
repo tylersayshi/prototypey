@@ -88,6 +88,10 @@ interface RecordOptions {
   record: { type: "object" };
 }
 
+interface UnionOptions {
+  closed?: boolean;
+}
+
 interface ObjectProperties {
   [key: string]: LexiconItem;
 }
@@ -143,6 +147,12 @@ export const lx = {
       ...options,
     } as T & { type: "bytes" };
   },
+  cidLink<Link extends string>(link: Link): { type: "cid-link"; $link: Link } {
+    return {
+      type: "cid-link",
+      $link: link,
+    };
+  },
   blob<T extends BlobOptions>(options?: T): T & { type: "blob" } {
     return {
       type: "blob",
@@ -158,6 +168,27 @@ export const lx = {
       items,
       ...options,
     } as Options & { type: "array"; items: Items };
+  },
+  token<Description extends string>(
+    description: Description
+  ): { type: "token"; description: Description } {
+    return { type: "token", description };
+  },
+  ref<Ref extends string>(ref: Ref): { type: "ref"; ref: Ref } {
+    return {
+      type: "ref",
+      ref,
+    };
+  },
+  union<const Refs extends readonly string[], Options extends UnionOptions>(
+    refs: Refs,
+    options?: Options
+  ): Options & { type: "union"; refs: Refs } {
+    return {
+      type: "union",
+      refs,
+      ...options,
+    } as Options & { type: "union"; refs: Refs };
   },
   record<T extends RecordOptions>(options: T): T & { type: "record" } {
     return {
