@@ -158,7 +158,7 @@ interface SubscriptionOptions {
  */
 export const lx = {
   null(
-    options?: LexiconItemCommonOptions
+    options?: LexiconItemCommonOptions,
   ): { type: "null" } & LexiconItemCommonOptions {
     return {
       type: "null",
@@ -184,7 +184,7 @@ export const lx = {
     } as T & { type: "string" };
   },
   unknown(
-    options?: LexiconItemCommonOptions
+    options?: LexiconItemCommonOptions,
   ): { type: "unknown" } & LexiconItemCommonOptions {
     return {
       type: "unknown",
@@ -211,7 +211,7 @@ export const lx = {
   },
   array<Items extends LexiconItem, Options extends ArrayOptions>(
     items: Items,
-    options?: Options
+    options?: Options,
   ): Options & { type: "array"; items: Items } {
     return {
       type: "array",
@@ -220,13 +220,13 @@ export const lx = {
     } as Options & { type: "array"; items: Items };
   },
   token<Description extends string>(
-    description: Description
+    description: Description,
   ): { type: "token"; description: Description } {
     return { type: "token", description };
   },
   ref<Ref extends string>(
     ref: Ref,
-    options?: LexiconItemCommonOptions
+    options?: LexiconItemCommonOptions,
   ): LexiconItemCommonOptions & { type: "ref"; ref: Ref } {
     return {
       type: "ref",
@@ -236,7 +236,7 @@ export const lx = {
   },
   union<const Refs extends readonly string[], Options extends UnionOptions>(
     refs: Refs,
-    options?: Options
+    options?: Options,
   ): Options & { type: "union"; refs: Refs } {
     return {
       type: "union",
@@ -252,10 +252,10 @@ export const lx = {
   },
   object<T extends ObjectProperties>(options: T): ObjectResult<T> {
     const required = Object.keys(options).filter(
-      (key) => options[key].required
+      (key) => options[key].required,
     );
     const nullable = Object.keys(options).filter(
-      (key) => options[key].nullable
+      (key) => options[key].nullable,
     );
     const result: ObjectResult<T> = {
       type: "object",
@@ -270,10 +270,10 @@ export const lx = {
     return result;
   },
   params<Properties extends ParamsProperties>(
-    properties: Properties
+    properties: Properties,
   ): ParamsResult<Properties> {
     const required = Object.keys(properties).filter(
-      (key) => properties[key].required
+      (key) => properties[key].required,
     );
     const result: {
       type: "params";
@@ -295,7 +295,7 @@ export const lx = {
     } as T & { type: "query" };
   },
   procedure<T extends ProcedureOptions>(
-    options?: T
+    options?: T,
   ): T & { type: "procedure" } {
     return {
       type: "procedure",
@@ -303,7 +303,7 @@ export const lx = {
     } as T & { type: "procedure" };
   },
   subscription<T extends SubscriptionOptions>(
-    options?: T
+    options?: T,
   ): T & { type: "subscription" } {
     return {
       type: "subscription",
@@ -312,7 +312,7 @@ export const lx = {
   },
   namespace<ID extends string, D extends LexiconNamespace["defs"]>(
     id: ID,
-    defs: D
+    defs: D,
   ): { lexicon: 1; id: ID; defs: D } {
     return {
       lexicon: 1,

@@ -197,7 +197,7 @@ Deno.test("app.bsky.feed.defs - threadViewPost", () => {
     post: lx.ref("#postView", { required: true }),
     parent: lx.union(["#threadViewPost", "#notFoundPost", "#blockedPost"]),
     replies: lx.array(
-      lx.union(["#threadViewPost", "#notFoundPost", "#blockedPost"])
+      lx.union(["#threadViewPost", "#notFoundPost", "#blockedPost"]),
     ),
     threadContext: lx.ref("#threadContext"),
   });
@@ -465,7 +465,7 @@ Deno.test("app.bsky.feed.defs - interaction", () => {
 
 Deno.test("app.bsky.feed.defs - requestLess token", () => {
   const requestLess = lx.token(
-    "Request that less content like the given feed item be shown in the feed"
+    "Request that less content like the given feed item be shown in the feed",
   );
 
   assertEquals(requestLess, {
@@ -477,7 +477,7 @@ Deno.test("app.bsky.feed.defs - requestLess token", () => {
 
 Deno.test("app.bsky.feed.defs - requestMore token", () => {
   const requestMore = lx.token(
-    "Request that more content like the given feed item be shown in the feed"
+    "Request that more content like the given feed item be shown in the feed",
   );
 
   assertEquals(requestMore, {
@@ -498,7 +498,7 @@ Deno.test("app.bsky.feed.defs - clickthroughItem token", () => {
 
 Deno.test("app.bsky.feed.defs - clickthroughAuthor token", () => {
   const clickthroughAuthor = lx.token(
-    "User clicked through to the author of the feed item"
+    "User clicked through to the author of the feed item",
   );
 
   assertEquals(clickthroughAuthor, {
@@ -509,7 +509,7 @@ Deno.test("app.bsky.feed.defs - clickthroughAuthor token", () => {
 
 Deno.test("app.bsky.feed.defs - clickthroughReposter token", () => {
   const clickthroughReposter = lx.token(
-    "User clicked through to the reposter of the feed item"
+    "User clicked through to the reposter of the feed item",
   );
 
   assertEquals(clickthroughReposter, {
@@ -520,7 +520,7 @@ Deno.test("app.bsky.feed.defs - clickthroughReposter token", () => {
 
 Deno.test("app.bsky.feed.defs - clickthroughEmbed token", () => {
   const clickthroughEmbed = lx.token(
-    "User clicked through to the embedded content of the feed item"
+    "User clicked through to the embedded content of the feed item",
   );
 
   assertEquals(clickthroughEmbed, {
@@ -532,7 +532,7 @@ Deno.test("app.bsky.feed.defs - clickthroughEmbed token", () => {
 
 Deno.test("app.bsky.feed.defs - contentModeUnspecified token", () => {
   const contentModeUnspecified = lx.token(
-    "Declares the feed generator returns any types of posts."
+    "Declares the feed generator returns any types of posts.",
   );
 
   assertEquals(contentModeUnspecified, {
@@ -543,7 +543,7 @@ Deno.test("app.bsky.feed.defs - contentModeUnspecified token", () => {
 
 Deno.test("app.bsky.feed.defs - contentModeVideo token", () => {
   const contentModeVideo = lx.token(
-    "Declares the feed generator returns posts containing app.bsky.embed.video embeds."
+    "Declares the feed generator returns posts containing app.bsky.embed.video embeds.",
   );
 
   assertEquals(contentModeVideo, {
@@ -643,26 +643,26 @@ Deno.test("app.bsky.feed.defs - full namespace", () => {
       pinned: lx.boolean(),
     }),
     requestLess: lx.token(
-      "Request that less content like the given feed item be shown in the feed"
+      "Request that less content like the given feed item be shown in the feed",
     ),
     requestMore: lx.token(
-      "Request that more content like the given feed item be shown in the feed"
+      "Request that more content like the given feed item be shown in the feed",
     ),
     clickthroughItem: lx.token("User clicked through to the feed item"),
     clickthroughAuthor: lx.token(
-      "User clicked through to the author of the feed item"
+      "User clicked through to the author of the feed item",
     ),
     clickthroughReposter: lx.token(
-      "User clicked through to the reposter of the feed item"
+      "User clicked through to the reposter of the feed item",
     ),
     clickthroughEmbed: lx.token(
-      "User clicked through to the embedded content of the feed item"
+      "User clicked through to the embedded content of the feed item",
     ),
     contentModeUnspecified: lx.token(
-      "Declares the feed generator returns any types of posts."
+      "Declares the feed generator returns any types of posts.",
     ),
     contentModeVideo: lx.token(
-      "Declares the feed generator returns posts containing app.bsky.embed.video embeds."
+      "Declares the feed generator returns posts containing app.bsky.embed.video embeds.",
     ),
     interactionSeen: lx.token("Feed item was seen by user"),
     interactionLike: lx.token("User liked the feed item"),

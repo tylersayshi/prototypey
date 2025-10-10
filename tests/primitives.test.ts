@@ -98,7 +98,7 @@ Deno.test("lx.bytes() with minLength and maxLength", () => {
 
 Deno.test("lx.cidLink()", () => {
   const result = lx.cidLink(
-    "bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a"
+    "bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a",
   );
   assertEquals(result, {
     type: "cid-link",
@@ -182,7 +182,7 @@ Deno.test("lx.array() with required", () => {
 
 Deno.test("lx.token() with interaction event", () => {
   const result = lx.token(
-    "Request that less content like the given feed item be shown in the feed"
+    "Request that less content like the given feed item be shown in the feed",
   );
   assertEquals(result, {
     type: "token",
@@ -193,7 +193,7 @@ Deno.test("lx.token() with interaction event", () => {
 
 Deno.test("lx.token() with content mode", () => {
   const result = lx.token(
-    "Declares the feed generator returns posts containing app.bsky.embed.video embeds"
+    "Declares the feed generator returns posts containing app.bsky.embed.video embeds",
   );
   assertEquals(result, {
     type: "token",

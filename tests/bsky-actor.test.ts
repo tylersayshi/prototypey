@@ -216,7 +216,7 @@ Deno.test("app.bsky.actor.defs - viewerState", () => {
     followedBy: lx.string({ format: "at-uri" }),
     knownFollowers: lx.ref("#knownFollowers"),
     activitySubscription: lx.ref(
-      "app.bsky.notification.defs#activitySubscription"
+      "app.bsky.notification.defs#activitySubscription",
     ),
   });
 
@@ -338,7 +338,7 @@ Deno.test("app.bsky.actor.defs - preferences", () => {
       "#labelersPref",
       "#postInteractionSettingsPref",
       "#verificationPrefs",
-    ])
+    ]),
   );
 
   assertEquals(preferences, {
@@ -762,11 +762,11 @@ Deno.test("app.bsky.actor.defs - postInteractionSettingsPref", () => {
         "app.bsky.feed.threadgate#followingRule",
         "app.bsky.feed.threadgate#listRule",
       ]),
-      { maxLength: 5 }
+      { maxLength: 5 },
     ),
     postgateEmbeddingRules: lx.array(
       lx.union(["app.bsky.feed.postgate#disableRule"]),
-      { maxLength: 5 }
+      { maxLength: 5 },
     ),
   });
 
@@ -855,7 +855,7 @@ Deno.test("app.bsky.actor.defs - full namespace", () => {
       followedBy: lx.string({ format: "at-uri" }),
       knownFollowers: lx.ref("#knownFollowers"),
       activitySubscription: lx.ref(
-        "app.bsky.notification.defs#activitySubscription"
+        "app.bsky.notification.defs#activitySubscription",
       ),
     }),
   });
