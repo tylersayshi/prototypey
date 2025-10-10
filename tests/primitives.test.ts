@@ -469,3 +469,156 @@ Deno.test("lx.query() real-world example: searchPosts", () => {
     errors: [{ name: "BadQueryString" }],
   });
 });
+
+Deno.test("lx.procedure() basic", () => {
+  const result = lx.procedure();
+  assertEquals(result, { type: "procedure" });
+});
+
+Deno.test("lx.procedure() with description", () => {
+  const result = lx.procedure({ description: "Create a new post" });
+  assertEquals(result, { type: "procedure", description: "Create a new post" });
+});
+
+Deno.test("lx.procedure() with parameters", () => {
+  const result = lx.procedure({
+    parameters: lx.params({
+      validate: lx.boolean({ default: true }),
+    }),
+  });
+  assertEquals(result, {
+    type: "procedure",
+    parameters: {
+      type: "params",
+      properties: {
+        validate: { type: "boolean", default: true },
+      },
+    },
+  });
+});
+
+Deno.test("lx.procedure() with input", () => {
+  const result = lx.procedure({
+    input: {
+      encoding: "application/json",
+      schema: lx.object({
+        text: lx.string({ required: true, maxGraphemes: 300 }),
+        createdAt: lx.string({ format: "datetime" }),
+      }),
+    },
+  });
+  assertEquals(result, {
+    type: "procedure",
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          text: { type: "string", required: true, maxGraphemes: 300 },
+          createdAt: { type: "string", format: "datetime" },
+        },
+        required: ["text"],
+      },
+    },
+  });
+});
+
+Deno.test("lx.procedure() with output", () => {
+  const result = lx.procedure({
+    output: {
+      encoding: "application/json",
+      schema: lx.object({
+        uri: lx.string({ required: true }),
+        cid: lx.string({ required: true }),
+      }),
+    },
+  });
+  assertEquals(result, {
+    type: "procedure",
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          uri: { type: "string", required: true },
+          cid: { type: "string", required: true },
+        },
+        required: ["uri", "cid"],
+      },
+    },
+  });
+});
+
+Deno.test("lx.procedure() with errors", () => {
+  const result = lx.procedure({
+    errors: [
+      { name: "InvalidRequest" },
+      { name: "RateLimitExceeded", description: "Too many requests" },
+    ],
+  });
+  assertEquals(result, {
+    type: "procedure",
+    errors: [
+      { name: "InvalidRequest" },
+      { name: "RateLimitExceeded", description: "Too many requests" },
+    ],
+  });
+});
+
+Deno.test("lx.procedure() real-world example: createPost", () => {
+  const result = lx.procedure({
+    description: "Create a post",
+    input: {
+      encoding: "application/json",
+      schema: lx.object({
+        repo: lx.string({ required: true }),
+        collection: lx.string({ required: true }),
+        record: lx.unknown({ required: true }),
+        validate: lx.boolean({ default: true }),
+      }),
+    },
+    output: {
+      encoding: "application/json",
+      schema: lx.object({
+        uri: lx.string({ required: true }),
+        cid: lx.string({ required: true }),
+      }),
+    },
+    errors: [
+      { name: "InvalidSwap" },
+      { name: "InvalidRecord" },
+    ],
+  });
+  assertEquals(result, {
+    type: "procedure",
+    description: "Create a post",
+    input: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          repo: { type: "string", required: true },
+          collection: { type: "string", required: true },
+          record: { type: "unknown", required: true },
+          validate: { type: "boolean", default: true },
+        },
+        required: ["repo", "collection", "record"],
+      },
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          uri: { type: "string", required: true },
+          cid: { type: "string", required: true },
+        },
+        required: ["uri", "cid"],
+      },
+    },
+    errors: [
+      { name: "InvalidSwap" },
+      { name: "InvalidRecord" },
+    ],
+  });
+});

@@ -59,13 +59,13 @@ When implementing new lexicon types, fetch from:
 
 - `record` - Required: `key`, `record`
 - `query` - Optional: `description`, `parameters`, `output`, `errors`
+- `procedure` - Optional: `description`, `parameters`, `input`, `output`, `errors`
 
 ### ❌ TODO: Remaining Types
 
 **Primary types:**
 
-- [ ] `procedure` - Optional: `parameters`, `input`, `output`, `errors`
-- [ ] `subscription` - Optional: `parameters`, `message`, `errors`
+- [ ] `subscription` - Optional: `description`, `parameters`, `message`, `errors`
 
 ## Implementation Pattern
 
@@ -87,4 +87,4 @@ When adding a new type:
 
 Working through remaining types in order of complexity:
 
-- `query`, `procedure`, `subscription` (primary types) - in progress
+- `subscription` (final primary type) - pending

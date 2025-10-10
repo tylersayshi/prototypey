@@ -87,6 +87,7 @@ interface ArrayOptions extends LexiconItemCommonOptions {
 interface RecordOptions {
   key: "self" | "tid";
   record: { type: "object" };
+  description?: string;
 }
 
 interface UnionOptions {
@@ -128,6 +129,14 @@ interface ErrorDef {
 interface QueryOptions {
   description?: string;
   parameters?: ParamsResult<ParamsProperties>;
+  output?: BodySchema;
+  errors?: ErrorDef[];
+}
+
+interface ProcedureOptions {
+  description?: string;
+  parameters?: ParamsResult<ParamsProperties>;
+  input?: BodySchema;
   output?: BodySchema;
   errors?: ErrorDef[];
 }
@@ -268,6 +277,14 @@ export const lx = {
       type: "query",
       ...options,
     } as T & { type: "query" };
+  },
+  procedure<T extends ProcedureOptions>(
+    options?: T
+  ): T & { type: "procedure" } {
+    return {
+      type: "procedure",
+      ...options,
+    } as T & { type: "procedure" };
   },
   namespace<ID extends string, D extends LexiconNamespace["defs"]>(
     id: ID,
