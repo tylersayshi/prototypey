@@ -6,8 +6,6 @@
 > if you'd like to follow along! or checkout the [todo.md](./todo.md)
 
 <video
-height="509"
-width="828"
 autoPlay
 loop
 controls
