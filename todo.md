@@ -35,16 +35,19 @@ When implementing new lexicon types, fetch from:
 ## Implementation Status
 
 - ✅ Initial implementation of field types returning json definitions
-- ✅ Bsky actor and feed test files created and passing (`tests/bsky-actor.test.ts` and `tests/bsky-feed.test.ts`)
+- ✅ Bsky actor and feed test files created and passing
+  (`tests/bsky-actor.test.ts` and `tests/bsky-feed.test.ts`)
 
 ## Todo
 
 ### CLI for JSON Emission
 
 1. **Design CLI** - Determine command structure, flags, and output strategy
-2. **Create JSON emission logic** - Traverse lexicon objects and serialize to formatted JSON
+2. **Create JSON emission logic** - Traverse lexicon objects and serialize to
+   formatted JSON
 3. **Add file I/O** - Read TypeScript lexicon files, write JSON output files
-4. **Write CLI documentation** - Usage examples, flag reference, common workflows
+4. **Write CLI documentation** - Usage examples, flag reference, common
+   workflows
 
 ### Type Inference System
 
