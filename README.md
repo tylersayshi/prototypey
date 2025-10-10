@@ -5,10 +5,7 @@
 > use. there will be updates posted [here](https://bsky.app/profile/tylur.dev)
 > if you'd like to follow along! or checkout the [todo.md](./todo.md)
 
-<video
-  alt="demo of jsdoc with typed-lexicon"
-  src="https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c"
-/>
+![demo of jsdoc with typed-lexicon](https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c)
 
 this will be a toolkit for writing lexicon json schema's in typescript and
 providing types for lexicon data shape. it will:
