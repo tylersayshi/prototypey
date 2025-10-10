@@ -58,13 +58,13 @@ When implementing new lexicon types, fetch from:
 **Primary types:**
 
 - `record` - Required: `key`, `record`
+- `query` - Optional: `description`, `parameters`, `output`, `errors`
 
 ### ❌ TODO: Remaining Types
 
 **Primary types:**
 
-- [ ] `query` - Optional: `parameters`, `output`
-- [ ] `procedure` - Optional: `parameters`, `output`, `input`, `errors`
+- [ ] `procedure` - Optional: `parameters`, `input`, `output`, `errors`
 - [ ] `subscription` - Optional: `parameters`, `message`, `errors`
 
 ## Implementation Pattern

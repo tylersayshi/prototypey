@@ -97,7 +97,9 @@ Deno.test("lx.bytes() with minLength and maxLength", () => {
 });
 
 Deno.test("lx.cidLink()", () => {
-  const result = lx.cidLink("bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a");
+  const result = lx.cidLink(
+    "bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a"
+  );
   assertEquals(result, {
     type: "cid-link",
     $link: "bafyreidfayvfuwqa7qlnopdjiqrxzs6blmoeu4rujcjtnci5beludirz2a",
@@ -169,19 +171,34 @@ Deno.test("lx.array() with minLength and maxLength", () => {
   });
 });
 
+Deno.test("lx.array() with required", () => {
+  const result = lx.array(lx.string(), { required: true });
+  assertEquals(result, {
+    type: "array",
+    items: { type: "string" },
+    required: true,
+  });
+});
+
 Deno.test("lx.token() with interaction event", () => {
-  const result = lx.token("Request that less content like the given feed item be shown in the feed");
+  const result = lx.token(
+    "Request that less content like the given feed item be shown in the feed"
+  );
   assertEquals(result, {
     type: "token",
-    description: "Request that less content like the given feed item be shown in the feed",
+    description:
+      "Request that less content like the given feed item be shown in the feed",
   });
 });
 
 Deno.test("lx.token() with content mode", () => {
-  const result = lx.token("Declares the feed generator returns posts containing app.bsky.embed.video embeds");
+  const result = lx.token(
+    "Declares the feed generator returns posts containing app.bsky.embed.video embeds"
+  );
   assertEquals(result, {
     type: "token",
-    description: "Declares the feed generator returns posts containing app.bsky.embed.video embeds",
+    description:
+      "Declares the feed generator returns posts containing app.bsky.embed.video embeds",
   });
 });
 
@@ -324,5 +341,131 @@ Deno.test("lx.params() real-world example from searchActors", () => {
       cursor: { type: "string" },
     },
     required: ["q"],
+  });
+});
+
+Deno.test("lx.query() basic", () => {
+  const result = lx.query();
+  assertEquals(result, { type: "query" });
+});
+
+Deno.test("lx.query() with description", () => {
+  const result = lx.query({ description: "Search for actors" });
+  assertEquals(result, { type: "query", description: "Search for actors" });
+});
+
+Deno.test("lx.query() with parameters", () => {
+  const result = lx.query({
+    parameters: lx.params({
+      q: lx.string({ required: true }),
+      limit: lx.integer({ minimum: 1, maximum: 100, default: 25 }),
+    }),
+  });
+  assertEquals(result, {
+    type: "query",
+    parameters: {
+      type: "params",
+      properties: {
+        q: { type: "string", required: true },
+        limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
+      },
+      required: ["q"],
+    },
+  });
+});
+
+Deno.test("lx.query() with output", () => {
+  const result = lx.query({
+    output: {
+      encoding: "application/json",
+      schema: lx.object({
+        posts: lx.array(lx.ref("app.bsky.feed.defs#postView"), {
+          required: true,
+        }),
+        cursor: lx.string(),
+      }),
+    },
+  });
+  assertEquals(result, {
+    type: "query",
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          posts: {
+            type: "array",
+            items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
+            required: true,
+          },
+          cursor: { type: "string" },
+        },
+        required: ["posts"],
+      },
+    },
+  });
+});
+
+Deno.test("lx.query() with errors", () => {
+  const result = lx.query({
+    errors: [{ name: "BadQueryString" }],
+  });
+  assertEquals(result, {
+    type: "query",
+    errors: [{ name: "BadQueryString" }],
+  });
+});
+
+Deno.test("lx.query() real-world example: searchPosts", () => {
+  const result = lx.query({
+    description: "Find posts matching search criteria",
+    parameters: lx.params({
+      q: lx.string({ required: true }),
+      sort: lx.string({ enum: ["top", "latest"], default: "latest" }),
+      limit: lx.integer({ minimum: 1, maximum: 100, default: 25 }),
+      cursor: lx.string(),
+    }),
+    output: {
+      encoding: "application/json",
+      schema: lx.object({
+        cursor: lx.string(),
+        hitsTotal: lx.integer(),
+        posts: lx.array(lx.ref("app.bsky.feed.defs#postView"), {
+          required: true,
+        }),
+      }),
+    },
+    errors: [{ name: "BadQueryString" }],
+  });
+  assertEquals(result, {
+    type: "query",
+    description: "Find posts matching search criteria",
+    parameters: {
+      type: "params",
+      properties: {
+        q: { type: "string", required: true },
+        sort: { type: "string", enum: ["top", "latest"], default: "latest" },
+        limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
+        cursor: { type: "string" },
+      },
+      required: ["q"],
+    },
+    output: {
+      encoding: "application/json",
+      schema: {
+        type: "object",
+        properties: {
+          cursor: { type: "string" },
+          hitsTotal: { type: "integer" },
+          posts: {
+            type: "array",
+            items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
+            required: true,
+          },
+        },
+        required: ["posts"],
+      },
+    },
+    errors: [{ name: "BadQueryString" }],
   });
 });

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
   // Concrete types
@@ -113,6 +114,24 @@ interface ParamsResult<T extends ParamsProperties> {
   required?: string[];
 }
 
+interface BodySchema {
+  encoding: "application/json" | (string & {});
+  description?: string;
+  schema?: ObjectResult<ObjectProperties>;
+}
+
+interface ErrorDef {
+  name: string;
+  description?: string;
+}
+
+interface QueryOptions {
+  description?: string;
+  parameters?: ParamsResult<ParamsProperties>;
+  output?: BodySchema;
+  errors?: ErrorDef[];
+}
+
 /**
  * Main API: Create a namespace (lexicon document)
  */
@@ -206,14 +225,7 @@ export const lx = {
       ...options,
     };
   },
-  object<T extends ObjectProperties>(
-    options: T
-  ): {
-    type: "object";
-    properties: T;
-    required?: string[];
-    nullable?: string[];
-  } {
+  object<T extends ObjectProperties>(options: T): ObjectResult<T> {
     const required = Object.keys(options).filter(
       (key) => options[key].required
     );
@@ -250,6 +262,12 @@ export const lx = {
       result.required = required;
     }
     return result;
+  },
+  query<T extends QueryOptions>(options?: T): T & { type: "query" } {
+    return {
+      type: "query",
+      ...options,
+    } as T & { type: "query" };
   },
   namespace<ID extends string, D extends LexiconNamespace["defs"]>(
     id: ID,
