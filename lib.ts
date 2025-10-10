@@ -103,6 +103,16 @@ interface ObjectResult<T extends ObjectProperties> {
   nullable?: string[];
 }
 
+interface ParamsProperties {
+  [key: string]: LexiconItem;
+}
+
+interface ParamsResult<T extends ParamsProperties> {
+  type: "params";
+  properties: T;
+  required?: string[];
+}
+
 /**
  * Main API: Create a namespace (lexicon document)
  */
@@ -219,6 +229,25 @@ export const lx = {
     }
     if (nullable.length > 0) {
       result.nullable = nullable;
+    }
+    return result;
+  },
+  params<Properties extends ParamsProperties>(
+    properties: Properties
+  ): ParamsResult<Properties> {
+    const required = Object.keys(properties).filter(
+      (key) => properties[key].required
+    );
+    const result: {
+      type: "params";
+      properties: Properties;
+      required?: string[];
+    } = {
+      type: "params",
+      properties,
+    };
+    if (required.length > 0) {
+      result.required = required;
     }
     return result;
   },

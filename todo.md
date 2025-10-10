@@ -46,6 +46,7 @@ When implementing new lexicon types, fetch from:
 
 - `array` - Required: `items`, Options: `minLength`, `maxLength`
 - `object` - Required: `properties`, Options: `required`, `nullable`
+- `params` - Required: `properties`, Options: `required`, Limited property types: `boolean`, `integer`, `string`, `unknown`, `array`
 
 **Meta types:**
 
@@ -59,10 +60,6 @@ When implementing new lexicon types, fetch from:
 - `record` - Required: `key`, `record`
 
 ### ❌ TODO: Remaining Types
-
-**Container types:**
-
-- [ ] `params` - Optional: `required`, Limited property types: `boolean`, `integer`, `string`, `unknown`
 
 **Primary types:**
 
@@ -90,5 +87,4 @@ When adding a new type:
 
 Working through remaining types in order of complexity:
 
-1. `params` (container type) - next up
-2. `query`, `procedure`, `subscription` (primary types)
+- `query`, `procedure`, `subscription` (primary types) - in progress

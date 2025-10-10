@@ -250,3 +250,79 @@ Deno.test("lx.union() with closed: false (open union)", () => {
     closed: false,
   });
 });
+
+Deno.test("lx.params() with basic properties", () => {
+  const result = lx.params({
+    q: lx.string(),
+    limit: lx.integer(),
+  });
+  assertEquals(result, {
+    type: "params",
+    properties: {
+      q: { type: "string" },
+      limit: { type: "integer" },
+    },
+  });
+});
+
+Deno.test("lx.params() with required properties", () => {
+  const result = lx.params({
+    q: lx.string({ required: true }),
+    limit: lx.integer(),
+  });
+  assertEquals(result, {
+    type: "params",
+    properties: {
+      q: { type: "string", required: true },
+      limit: { type: "integer" },
+    },
+    required: ["q"],
+  });
+});
+
+Deno.test("lx.params() with property options", () => {
+  const result = lx.params({
+    q: lx.string(),
+    limit: lx.integer({ minimum: 1, maximum: 100, default: 25 }),
+    cursor: lx.string(),
+  });
+  assertEquals(result, {
+    type: "params",
+    properties: {
+      q: { type: "string" },
+      limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
+      cursor: { type: "string" },
+    },
+  });
+});
+
+Deno.test("lx.params() with array properties", () => {
+  const result = lx.params({
+    tags: lx.array(lx.string()),
+    ids: lx.array(lx.integer()),
+  });
+  assertEquals(result, {
+    type: "params",
+    properties: {
+      tags: { type: "array", items: { type: "string" } },
+      ids: { type: "array", items: { type: "integer" } },
+    },
+  });
+});
+
+Deno.test("lx.params() real-world example from searchActors", () => {
+  const result = lx.params({
+    q: lx.string({ required: true }),
+    limit: lx.integer({ minimum: 1, maximum: 100, default: 25 }),
+    cursor: lx.string(),
+  });
+  assertEquals(result, {
+    type: "params",
+    properties: {
+      q: { type: "string", required: true },
+      limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
+      cursor: { type: "string" },
+    },
+    required: ["q"],
+  });
+});
