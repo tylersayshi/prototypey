@@ -6,13 +6,8 @@
 > if you'd like to follow along! or checkout the [todo.md](./todo.md)
 
 <video
-autoplay
-loop
-controls
-playsinline
-muted
-disablepictureinpicture
-src="https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c"
+  alt="demo of jsdoc with typed-lexicon"
+  src="https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c"
 />
 
 this will be a toolkit for writing lexicon json schema's in typescript and
