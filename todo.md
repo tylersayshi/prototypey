@@ -51,6 +51,7 @@ When implementing new lexicon types, fetch from:
 
 - `token` - Takes `description` parameter
 - `ref` - Takes `ref` parameter (can be local `#name` or external `namespace#name`)
+- `union` - Required: `refs`, Optional: `closed` (defaults to false)
 - `unknown` - No options
 
 **Primary types:**
@@ -58,10 +59,6 @@ When implementing new lexicon types, fetch from:
 - `record` - Required: `key`, `record`
 
 ### ❌ TODO: Remaining Types
-
-**Meta types:**
-
-- [ ] `union` - Required: `refs`, Optional: `closed` (defaults to false)
 
 **Container types:**
 
@@ -93,6 +90,5 @@ When adding a new type:
 
 Working through remaining types in order of complexity:
 
-1. `union` (meta type) - next up
-2. `params` (container type)
-3. `query`, `procedure`, `subscription` (primary types)
+1. `params` (container type) - next up
+2. `query`, `procedure`, `subscription` (primary types)
