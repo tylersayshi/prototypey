@@ -18,7 +18,7 @@ export default tseslint.config(
 		},
 	},
 	{
-		files: ["**/*.test.ts"],
+		files: ["**/*.{test,bench}.ts"],
 		rules: {
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/no-unused-vars": "off",

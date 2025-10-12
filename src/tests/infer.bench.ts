@@ -1,6 +1,12 @@
+import { test } from "vitest";
 import { bench } from "@ark/attest";
 import type { InferNS } from "../infer.ts";
 import { lx } from "../lib.ts";
+
+// Dummy test to satisfy Vitest - actual benchmarks run during module load
+test("type benchmarks", () => {
+	// Benchmarks run automatically via bench() calls below
+});
 
 bench("InferNS with simple object", () => {
 	const schema = lx.namespace("test.simple", {
@@ -11,7 +17,7 @@ bench("InferNS with simple object", () => {
 	});
 
 	return null as unknown as InferNS<typeof schema>;
-}).types([63, "instantiations"]);
+}).types([12, "instantiations"]);
 
 bench("InferNS with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
