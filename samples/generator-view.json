@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "properties": {
+    "uri": {
+      "type": "string",
+      "required": true,
+      "format": "at-uri"
+    },
+    "cid": {
+      "type": "string",
+      "required": true,
+      "format": "cid"
+    },
+    "did": {
+      "type": "string",
+      "required": true,
+      "format": "did"
+    },
+    "creator": {
+      "type": "ref",
+      "ref": "app.bsky.actor.defs#profileView",
+      "required": true
+    },
+    "displayName": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "maxGraphemes": 300,
+      "maxLength": 3000
+    },
+    "descriptionFacets": {
+      "type": "array",
+      "items": {
+        "type": "ref",
+        "ref": "app.bsky.richtext.facet"
+      }
+    },
+    "avatar": {
+      "type": "string",
+      "format": "uri"
+    },
+    "likeCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "acceptsInteractions": {
+      "type": "boolean"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "ref",
+        "ref": "com.atproto.label.defs#label"
+      }
+    },
+    "viewer": {
+      "type": "ref",
+      "ref": "#generatorViewerState"
+    },
+    "contentMode": {
+      "type": "string",
+      "knownValues": [
+        "app.bsky.feed.defs#contentModeUnspecified",
+        "app.bsky.feed.defs#contentModeVideo"
+      ]
+    },
+    "indexedAt": {
+      "type": "string",
+      "required": true,
+      "format": "datetime"
+    }
+  },
+  "required": [
+    "uri",
+    "cid",
+    "did",
+    "creator",
+    "displayName",
+    "indexedAt"
+  ]
+}

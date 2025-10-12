@@ -1,0 +1,61 @@
+{
+  "type": "procedure",
+  "description": "Create a post",
+  "input": {
+    "encoding": "application/json",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string",
+          "required": true
+        },
+        "collection": {
+          "type": "string",
+          "required": true
+        },
+        "record": {
+          "type": "unknown",
+          "required": true
+        },
+        "validate": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "repo",
+        "collection",
+        "record"
+      ]
+    }
+  },
+  "output": {
+    "encoding": "application/json",
+    "schema": {
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "required": true
+        },
+        "cid": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "required": [
+        "uri",
+        "cid"
+      ]
+    }
+  },
+  "errors": [
+    {
+      "name": "InvalidSwap"
+    },
+    {
+      "name": "InvalidRecord"
+    }
+  ]
+}

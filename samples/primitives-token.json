@@ -1,0 +1,4 @@
+{
+  "type": "token",
+  "description": "Request that less content like the given feed item be shown in the feed"
+}

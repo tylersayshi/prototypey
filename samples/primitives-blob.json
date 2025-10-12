@@ -1,0 +1,8 @@
+{
+  "type": "blob",
+  "accept": [
+    "image/png",
+    "image/jpeg"
+  ],
+  "maxSize": 5000000
+}
