@@ -1,4 +1,3 @@
 {
-  "editor.defaultFormatter": "denoland.vscode-deno",
-  "prettier.enable": false
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }

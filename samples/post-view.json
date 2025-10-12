@@ -1,76 +1,70 @@
 {
-  "type": "object",
-  "properties": {
-    "uri": {
-      "type": "string",
-      "required": true,
-      "format": "at-uri"
-    },
-    "cid": {
-      "type": "string",
-      "required": true,
-      "format": "cid"
-    },
-    "author": {
-      "type": "ref",
-      "ref": "app.bsky.actor.defs#profileViewBasic",
-      "required": true
-    },
-    "record": {
-      "type": "unknown",
-      "required": true
-    },
-    "embed": {
-      "type": "union",
-      "refs": [
-        "app.bsky.embed.images#view",
-        "app.bsky.embed.video#view",
-        "app.bsky.embed.external#view",
-        "app.bsky.embed.record#view",
-        "app.bsky.embed.recordWithMedia#view"
-      ]
-    },
-    "bookmarkCount": {
-      "type": "integer"
-    },
-    "replyCount": {
-      "type": "integer"
-    },
-    "repostCount": {
-      "type": "integer"
-    },
-    "likeCount": {
-      "type": "integer"
-    },
-    "quoteCount": {
-      "type": "integer"
-    },
-    "indexedAt": {
-      "type": "string",
-      "required": true,
-      "format": "datetime"
-    },
-    "viewer": {
-      "type": "ref",
-      "ref": "#viewerState"
-    },
-    "labels": {
-      "type": "array",
-      "items": {
-        "type": "ref",
-        "ref": "com.atproto.label.defs#label"
-      }
-    },
-    "threadgate": {
-      "type": "ref",
-      "ref": "#threadgateView"
-    }
-  },
-  "required": [
-    "uri",
-    "cid",
-    "author",
-    "record",
-    "indexedAt"
-  ]
+	"type": "object",
+	"properties": {
+		"uri": {
+			"type": "string",
+			"required": true,
+			"format": "at-uri"
+		},
+		"cid": {
+			"type": "string",
+			"required": true,
+			"format": "cid"
+		},
+		"author": {
+			"type": "ref",
+			"ref": "app.bsky.actor.defs#profileViewBasic",
+			"required": true
+		},
+		"record": {
+			"type": "unknown",
+			"required": true
+		},
+		"embed": {
+			"type": "union",
+			"refs": [
+				"app.bsky.embed.images#view",
+				"app.bsky.embed.video#view",
+				"app.bsky.embed.external#view",
+				"app.bsky.embed.record#view",
+				"app.bsky.embed.recordWithMedia#view"
+			]
+		},
+		"bookmarkCount": {
+			"type": "integer"
+		},
+		"replyCount": {
+			"type": "integer"
+		},
+		"repostCount": {
+			"type": "integer"
+		},
+		"likeCount": {
+			"type": "integer"
+		},
+		"quoteCount": {
+			"type": "integer"
+		},
+		"indexedAt": {
+			"type": "string",
+			"required": true,
+			"format": "datetime"
+		},
+		"viewer": {
+			"type": "ref",
+			"ref": "#viewerState"
+		},
+		"labels": {
+			"type": "array",
+			"items": {
+				"type": "ref",
+				"ref": "com.atproto.label.defs#label"
+			}
+		},
+		"threadgate": {
+			"type": "ref",
+			"ref": "#threadgateView"
+		}
+	},
+	"required": ["uri", "cid", "author", "record", "indexedAt"]
 }

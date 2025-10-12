@@ -1,35 +1,35 @@
 {
-  "type": "subscription",
-  "description": "Repository event stream, aka Firehose endpoint",
-  "parameters": {
-    "type": "params",
-    "properties": {
-      "cursor": {
-        "type": "integer"
-      }
-    }
-  },
-  "message": {
-    "description": "Represents an update of repository state",
-    "schema": {
-      "type": "union",
-      "refs": [
-        "#commit",
-        "#identity",
-        "#account",
-        "#handle",
-        "#migrate",
-        "#tombstone",
-        "#info"
-      ]
-    }
-  },
-  "errors": [
-    {
-      "name": "FutureCursor"
-    },
-    {
-      "name": "ConsumerTooSlow"
-    }
-  ]
+	"type": "subscription",
+	"description": "Repository event stream, aka Firehose endpoint",
+	"parameters": {
+		"type": "params",
+		"properties": {
+			"cursor": {
+				"type": "integer"
+			}
+		}
+	},
+	"message": {
+		"description": "Represents an update of repository state",
+		"schema": {
+			"type": "union",
+			"refs": [
+				"#commit",
+				"#identity",
+				"#account",
+				"#handle",
+				"#migrate",
+				"#tombstone",
+				"#info"
+			]
+		}
+	},
+	"errors": [
+		{
+			"name": "FutureCursor"
+		},
+		{
+			"name": "ConsumerTooSlow"
+		}
+	]
 }

@@ -1,63 +1,56 @@
 {
-  "type": "query",
-  "description": "Find posts matching search criteria",
-  "parameters": {
-    "type": "params",
-    "properties": {
-      "q": {
-        "type": "string",
-        "required": true
-      },
-      "sort": {
-        "type": "string",
-        "enum": [
-          "top",
-          "latest"
-        ],
-        "default": "latest"
-      },
-      "limit": {
-        "type": "integer",
-        "minimum": 1,
-        "maximum": 100,
-        "default": 25
-      },
-      "cursor": {
-        "type": "string"
-      }
-    },
-    "required": [
-      "q"
-    ]
-  },
-  "output": {
-    "encoding": "application/json",
-    "schema": {
-      "type": "object",
-      "properties": {
-        "cursor": {
-          "type": "string"
-        },
-        "hitsTotal": {
-          "type": "integer"
-        },
-        "posts": {
-          "type": "array",
-          "items": {
-            "type": "ref",
-            "ref": "app.bsky.feed.defs#postView"
-          },
-          "required": true
-        }
-      },
-      "required": [
-        "posts"
-      ]
-    }
-  },
-  "errors": [
-    {
-      "name": "BadQueryString"
-    }
-  ]
+	"type": "query",
+	"description": "Find posts matching search criteria",
+	"parameters": {
+		"type": "params",
+		"properties": {
+			"q": {
+				"type": "string",
+				"required": true
+			},
+			"sort": {
+				"type": "string",
+				"enum": ["top", "latest"],
+				"default": "latest"
+			},
+			"limit": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 100,
+				"default": 25
+			},
+			"cursor": {
+				"type": "string"
+			}
+		},
+		"required": ["q"]
+	},
+	"output": {
+		"encoding": "application/json",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"cursor": {
+					"type": "string"
+				},
+				"hitsTotal": {
+					"type": "integer"
+				},
+				"posts": {
+					"type": "array",
+					"items": {
+						"type": "ref",
+						"ref": "app.bsky.feed.defs#postView"
+					},
+					"required": true
+				}
+			},
+			"required": ["posts"]
+		}
+	},
+	"errors": [
+		{
+			"name": "BadQueryString"
+		}
+	]
 }

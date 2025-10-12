@@ -1,103 +1,100 @@
 {
-  "lexicon": 1,
-  "id": "app.bsky.actor.defs",
-  "defs": {
-    "profileViewBasic": {
-      "type": "object",
-      "properties": {
-        "did": {
-          "type": "string",
-          "required": true,
-          "format": "did"
-        },
-        "handle": {
-          "type": "string",
-          "required": true,
-          "format": "handle"
-        },
-        "displayName": {
-          "type": "string",
-          "maxGraphemes": 64,
-          "maxLength": 640
-        },
-        "pronouns": {
-          "type": "string"
-        },
-        "avatar": {
-          "type": "string",
-          "format": "uri"
-        },
-        "associated": {
-          "type": "ref",
-          "ref": "#profileAssociated"
-        },
-        "viewer": {
-          "type": "ref",
-          "ref": "#viewerState"
-        },
-        "labels": {
-          "type": "array",
-          "items": {
-            "type": "ref",
-            "ref": "com.atproto.label.defs#label"
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "verification": {
-          "type": "ref",
-          "ref": "#verificationState"
-        },
-        "status": {
-          "type": "ref",
-          "ref": "#statusView"
-        }
-      },
-      "required": [
-        "did",
-        "handle"
-      ]
-    },
-    "viewerState": {
-      "type": "object",
-      "properties": {
-        "muted": {
-          "type": "boolean"
-        },
-        "mutedByList": {
-          "type": "ref",
-          "ref": "app.bsky.graph.defs#listViewBasic"
-        },
-        "blockedBy": {
-          "type": "boolean"
-        },
-        "blocking": {
-          "type": "string",
-          "format": "at-uri"
-        },
-        "blockingByList": {
-          "type": "ref",
-          "ref": "app.bsky.graph.defs#listViewBasic"
-        },
-        "following": {
-          "type": "string",
-          "format": "at-uri"
-        },
-        "followedBy": {
-          "type": "string",
-          "format": "at-uri"
-        },
-        "knownFollowers": {
-          "type": "ref",
-          "ref": "#knownFollowers"
-        },
-        "activitySubscription": {
-          "type": "ref",
-          "ref": "app.bsky.notification.defs#activitySubscription"
-        }
-      }
-    }
-  }
+	"lexicon": 1,
+	"id": "app.bsky.actor.defs",
+	"defs": {
+		"profileViewBasic": {
+			"type": "object",
+			"properties": {
+				"did": {
+					"type": "string",
+					"required": true,
+					"format": "did"
+				},
+				"handle": {
+					"type": "string",
+					"required": true,
+					"format": "handle"
+				},
+				"displayName": {
+					"type": "string",
+					"maxGraphemes": 64,
+					"maxLength": 640
+				},
+				"pronouns": {
+					"type": "string"
+				},
+				"avatar": {
+					"type": "string",
+					"format": "uri"
+				},
+				"associated": {
+					"type": "ref",
+					"ref": "#profileAssociated"
+				},
+				"viewer": {
+					"type": "ref",
+					"ref": "#viewerState"
+				},
+				"labels": {
+					"type": "array",
+					"items": {
+						"type": "ref",
+						"ref": "com.atproto.label.defs#label"
+					}
+				},
+				"createdAt": {
+					"type": "string",
+					"format": "datetime"
+				},
+				"verification": {
+					"type": "ref",
+					"ref": "#verificationState"
+				},
+				"status": {
+					"type": "ref",
+					"ref": "#statusView"
+				}
+			},
+			"required": ["did", "handle"]
+		},
+		"viewerState": {
+			"type": "object",
+			"properties": {
+				"muted": {
+					"type": "boolean"
+				},
+				"mutedByList": {
+					"type": "ref",
+					"ref": "app.bsky.graph.defs#listViewBasic"
+				},
+				"blockedBy": {
+					"type": "boolean"
+				},
+				"blocking": {
+					"type": "string",
+					"format": "at-uri"
+				},
+				"blockingByList": {
+					"type": "ref",
+					"ref": "app.bsky.graph.defs#listViewBasic"
+				},
+				"following": {
+					"type": "string",
+					"format": "at-uri"
+				},
+				"followedBy": {
+					"type": "string",
+					"format": "at-uri"
+				},
+				"knownFollowers": {
+					"type": "ref",
+					"ref": "#knownFollowers"
+				},
+				"activitySubscription": {
+					"type": "ref",
+					"ref": "app.bsky.notification.defs#activitySubscription"
+				}
+			}
+		}
+	}
 }
