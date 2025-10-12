@@ -35,11 +35,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
       - run: pnpm test
+  benchmark_types:
+    name: Benchmark Types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare
+      - run: pnpm test:bench
 
 name: CI
 
 on:
-  pull_request: ~
+  pull_request:
   push:
     branches:
       - main
