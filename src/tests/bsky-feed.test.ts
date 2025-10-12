@@ -1,5 +1,4 @@
-import { strict as assert } from "node:assert";
-import { test } from "node:test";
+import { expect, test } from "vitest";
 import { lx } from "../lib.ts";
 
 test("app.bsky.feed.defs - postView", () => {
@@ -26,7 +25,7 @@ test("app.bsky.feed.defs - postView", () => {
 		threadgate: lx.ref("#threadgateView"),
 	});
 
-	assert.deepEqual(postView, {
+	expect(postView).toEqual({
 		type: "object",
 		properties: {
 			uri: { type: "string", required: true, format: "at-uri" },
@@ -75,7 +74,7 @@ test("app.bsky.feed.defs - viewerState", () => {
 		pinned: lx.boolean(),
 	});
 
-	assert.deepEqual(viewerState, {
+	expect(viewerState).toEqual({
 		type: "object",
 		properties: {
 			repost: { type: "string", format: "at-uri" },
@@ -94,7 +93,7 @@ test("app.bsky.feed.defs - threadContext", () => {
 		rootAuthorLike: lx.string({ format: "at-uri" }),
 	});
 
-	assert.deepEqual(threadContext, {
+	expect(threadContext).toEqual({
 		type: "object",
 		properties: {
 			rootAuthorLike: { type: "string", format: "at-uri" },
@@ -111,7 +110,7 @@ test("app.bsky.feed.defs - feedViewPost", () => {
 		reqId: lx.string({ maxLength: 100 }),
 	});
 
-	assert.deepEqual(feedViewPost, {
+	expect(feedViewPost).toEqual({
 		type: "object",
 		properties: {
 			post: { type: "ref", ref: "#postView", required: true },
@@ -138,7 +137,7 @@ test("app.bsky.feed.defs - replyRef", () => {
 		grandparentAuthor: lx.ref("app.bsky.actor.defs#profileViewBasic"),
 	});
 
-	assert.deepEqual(replyRef, {
+	expect(replyRef).toEqual({
 		type: "object",
 		properties: {
 			root: {
@@ -168,7 +167,7 @@ test("app.bsky.feed.defs - reasonRepost", () => {
 		indexedAt: lx.string({ required: true, format: "datetime" }),
 	});
 
-	assert.deepEqual(reasonRepost, {
+	expect(reasonRepost).toEqual({
 		type: "object",
 		properties: {
 			by: {
@@ -187,7 +186,7 @@ test("app.bsky.feed.defs - reasonRepost", () => {
 test("app.bsky.feed.defs - reasonPin", () => {
 	const reasonPin = lx.object({});
 
-	assert.deepEqual(reasonPin, {
+	expect(reasonPin).toEqual({
 		type: "object",
 		properties: {},
 	});
@@ -203,7 +202,7 @@ test("app.bsky.feed.defs - threadViewPost", () => {
 		threadContext: lx.ref("#threadContext"),
 	});
 
-	assert.deepEqual(threadViewPost, {
+	expect(threadViewPost).toEqual({
 		type: "object",
 		properties: {
 			post: { type: "ref", ref: "#postView", required: true },
@@ -230,7 +229,7 @@ test("app.bsky.feed.defs - notFoundPost", () => {
 		notFound: lx.boolean({ required: true, const: true }),
 	});
 
-	assert.deepEqual(notFoundPost, {
+	expect(notFoundPost).toEqual({
 		type: "object",
 		properties: {
 			uri: { type: "string", required: true, format: "at-uri" },
@@ -247,7 +246,7 @@ test("app.bsky.feed.defs - blockedPost", () => {
 		author: lx.ref("#blockedAuthor", { required: true }),
 	});
 
-	assert.deepEqual(blockedPost, {
+	expect(blockedPost).toEqual({
 		type: "object",
 		properties: {
 			uri: { type: "string", required: true, format: "at-uri" },
@@ -264,7 +263,7 @@ test("app.bsky.feed.defs - blockedAuthor", () => {
 		viewer: lx.ref("app.bsky.actor.defs#viewerState"),
 	});
 
-	assert.deepEqual(blockedAuthor, {
+	expect(blockedAuthor).toEqual({
 		type: "object",
 		properties: {
 			did: { type: "string", required: true, format: "did" },
@@ -297,7 +296,7 @@ test("app.bsky.feed.defs - generatorView", () => {
 		indexedAt: lx.string({ required: true, format: "datetime" }),
 	});
 
-	assert.deepEqual(generatorView, {
+	expect(generatorView).toEqual({
 		type: "object",
 		properties: {
 			uri: { type: "string", required: true, format: "at-uri" },
@@ -340,7 +339,7 @@ test("app.bsky.feed.defs - generatorViewerState", () => {
 		like: lx.string({ format: "at-uri" }),
 	});
 
-	assert.deepEqual(generatorViewerState, {
+	expect(generatorViewerState).toEqual({
 		type: "object",
 		properties: {
 			like: { type: "string", format: "at-uri" },
@@ -355,7 +354,7 @@ test("app.bsky.feed.defs - skeletonFeedPost", () => {
 		feedContext: lx.string({ maxLength: 2000 }),
 	});
 
-	assert.deepEqual(skeletonFeedPost, {
+	expect(skeletonFeedPost).toEqual({
 		type: "object",
 		properties: {
 			post: { type: "string", required: true, format: "at-uri" },
@@ -374,7 +373,7 @@ test("app.bsky.feed.defs - skeletonReasonRepost", () => {
 		repost: lx.string({ required: true, format: "at-uri" }),
 	});
 
-	assert.deepEqual(skeletonReasonRepost, {
+	expect(skeletonReasonRepost).toEqual({
 		type: "object",
 		properties: {
 			repost: { type: "string", required: true, format: "at-uri" },
@@ -386,7 +385,7 @@ test("app.bsky.feed.defs - skeletonReasonRepost", () => {
 test("app.bsky.feed.defs - skeletonReasonPin", () => {
 	const skeletonReasonPin = lx.object({});
 
-	assert.deepEqual(skeletonReasonPin, {
+	expect(skeletonReasonPin).toEqual({
 		type: "object",
 		properties: {},
 	});
@@ -400,7 +399,7 @@ test("app.bsky.feed.defs - threadgateView", () => {
 		lists: lx.array(lx.ref("app.bsky.graph.defs#listViewBasic")),
 	});
 
-	assert.deepEqual(threadgateView, {
+	expect(threadgateView).toEqual({
 		type: "object",
 		properties: {
 			uri: { type: "string", format: "at-uri" },
@@ -437,7 +436,7 @@ test("app.bsky.feed.defs - interaction", () => {
 		reqId: lx.string({ maxLength: 100 }),
 	});
 
-	assert.deepEqual(interaction, {
+	expect(interaction).toEqual({
 		type: "object",
 		properties: {
 			item: { type: "string", format: "at-uri" },
@@ -469,7 +468,7 @@ test("app.bsky.feed.defs - requestLess token", () => {
 		"Request that less content like the given feed item be shown in the feed",
 	);
 
-	assert.deepEqual(requestLess, {
+	expect(requestLess).toEqual({
 		type: "token",
 		description:
 			"Request that less content like the given feed item be shown in the feed",
@@ -481,7 +480,7 @@ test("app.bsky.feed.defs - requestMore token", () => {
 		"Request that more content like the given feed item be shown in the feed",
 	);
 
-	assert.deepEqual(requestMore, {
+	expect(requestMore).toEqual({
 		type: "token",
 		description:
 			"Request that more content like the given feed item be shown in the feed",
@@ -491,7 +490,7 @@ test("app.bsky.feed.defs - requestMore token", () => {
 test("app.bsky.feed.defs - clickthroughItem token", () => {
 	const clickthroughItem = lx.token("User clicked through to the feed item");
 
-	assert.deepEqual(clickthroughItem, {
+	expect(clickthroughItem).toEqual({
 		type: "token",
 		description: "User clicked through to the feed item",
 	});
@@ -502,7 +501,7 @@ test("app.bsky.feed.defs - clickthroughAuthor token", () => {
 		"User clicked through to the author of the feed item",
 	);
 
-	assert.deepEqual(clickthroughAuthor, {
+	expect(clickthroughAuthor).toEqual({
 		type: "token",
 		description: "User clicked through to the author of the feed item",
 	});
@@ -513,7 +512,7 @@ test("app.bsky.feed.defs - clickthroughReposter token", () => {
 		"User clicked through to the reposter of the feed item",
 	);
 
-	assert.deepEqual(clickthroughReposter, {
+	expect(clickthroughReposter).toEqual({
 		type: "token",
 		description: "User clicked through to the reposter of the feed item",
 	});
@@ -524,7 +523,7 @@ test("app.bsky.feed.defs - clickthroughEmbed token", () => {
 		"User clicked through to the embedded content of the feed item",
 	);
 
-	assert.deepEqual(clickthroughEmbed, {
+	expect(clickthroughEmbed).toEqual({
 		type: "token",
 		description:
 			"User clicked through to the embedded content of the feed item",
@@ -536,7 +535,7 @@ test("app.bsky.feed.defs - contentModeUnspecified token", () => {
 		"Declares the feed generator returns any types of posts.",
 	);
 
-	assert.deepEqual(contentModeUnspecified, {
+	expect(contentModeUnspecified).toEqual({
 		type: "token",
 		description: "Declares the feed generator returns any types of posts.",
 	});
@@ -547,7 +546,7 @@ test("app.bsky.feed.defs - contentModeVideo token", () => {
 		"Declares the feed generator returns posts containing app.bsky.embed.video embeds.",
 	);
 
-	assert.deepEqual(contentModeVideo, {
+	expect(contentModeVideo).toEqual({
 		type: "token",
 		description:
 			"Declares the feed generator returns posts containing app.bsky.embed.video embeds.",
@@ -557,7 +556,7 @@ test("app.bsky.feed.defs - contentModeVideo token", () => {
 test("app.bsky.feed.defs - interactionSeen token", () => {
 	const interactionSeen = lx.token("Feed item was seen by user");
 
-	assert.deepEqual(interactionSeen, {
+	expect(interactionSeen).toEqual({
 		type: "token",
 		description: "Feed item was seen by user",
 	});
@@ -566,7 +565,7 @@ test("app.bsky.feed.defs - interactionSeen token", () => {
 test("app.bsky.feed.defs - interactionLike token", () => {
 	const interactionLike = lx.token("User liked the feed item");
 
-	assert.deepEqual(interactionLike, {
+	expect(interactionLike).toEqual({
 		type: "token",
 		description: "User liked the feed item",
 	});
@@ -575,7 +574,7 @@ test("app.bsky.feed.defs - interactionLike token", () => {
 test("app.bsky.feed.defs - interactionRepost token", () => {
 	const interactionRepost = lx.token("User reposted the feed item");
 
-	assert.deepEqual(interactionRepost, {
+	expect(interactionRepost).toEqual({
 		type: "token",
 		description: "User reposted the feed item",
 	});
@@ -584,7 +583,7 @@ test("app.bsky.feed.defs - interactionRepost token", () => {
 test("app.bsky.feed.defs - interactionReply token", () => {
 	const interactionReply = lx.token("User replied to the feed item");
 
-	assert.deepEqual(interactionReply, {
+	expect(interactionReply).toEqual({
 		type: "token",
 		description: "User replied to the feed item",
 	});
@@ -593,7 +592,7 @@ test("app.bsky.feed.defs - interactionReply token", () => {
 test("app.bsky.feed.defs - interactionQuote token", () => {
 	const interactionQuote = lx.token("User quoted the feed item");
 
-	assert.deepEqual(interactionQuote, {
+	expect(interactionQuote).toEqual({
 		type: "token",
 		description: "User quoted the feed item",
 	});
@@ -602,7 +601,7 @@ test("app.bsky.feed.defs - interactionQuote token", () => {
 test("app.bsky.feed.defs - interactionShare token", () => {
 	const interactionShare = lx.token("User shared the feed item");
 
-	assert.deepEqual(interactionShare, {
+	expect(interactionShare).toEqual({
 		type: "token",
 		description: "User shared the feed item",
 	});
@@ -673,10 +672,10 @@ test("app.bsky.feed.defs - full namespace", () => {
 		interactionShare: lx.token("User shared the feed item"),
 	});
 
-	assert.deepEqual(feedDefs.lexicon, 1);
-	assert.deepEqual(feedDefs.id, "app.bsky.feed.defs");
-	assert.deepEqual(feedDefs.defs.postView.type, "object");
-	assert.deepEqual(feedDefs.defs.viewerState.type, "object");
-	assert.deepEqual(feedDefs.defs.requestLess.type, "token");
-	assert.deepEqual(feedDefs.defs.contentModeVideo.type, "token");
+	expect(feedDefs.lexicon).toEqual(1);
+	expect(feedDefs.id).toEqual("app.bsky.feed.defs");
+	expect(feedDefs.defs.postView.type).toEqual("object");
+	expect(feedDefs.defs.viewerState.type).toEqual("object");
+	expect(feedDefs.defs.requestLess.type).toEqual("token");
+	expect(feedDefs.defs.contentModeVideo.type).toEqual("token");
 });

@@ -94,7 +94,7 @@ type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & {};
 
-export type InferDefs<T extends Record<string, unknown>> = Prettify<{
+type InferDefs<T extends Record<string, unknown>> = Prettify<{
 	-readonly [K in keyof T]: InferType<T[K]>;
 }>;
 

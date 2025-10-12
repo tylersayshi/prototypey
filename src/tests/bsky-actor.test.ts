@@ -1,5 +1,4 @@
-import { strict as assert } from "node:assert";
-import { test } from "node:test";
+import { expect, test } from "vitest";
 import { lx } from "../lib.ts";
 
 test("app.bsky.actor.defs - profileViewBasic", () => {
@@ -17,7 +16,7 @@ test("app.bsky.actor.defs - profileViewBasic", () => {
 		status: lx.ref("#statusView"),
 	});
 
-	assert.deepEqual(profileViewBasic, {
+	expect(profileViewBasic).toEqual({
 		type: "object",
 		properties: {
 			did: { type: "string", required: true, format: "did" },
@@ -56,7 +55,7 @@ test("app.bsky.actor.defs - profileView", () => {
 		status: lx.ref("#statusView"),
 	});
 
-	assert.deepEqual(profileView, {
+	expect(profileView).toEqual({
 		type: "object",
 		properties: {
 			did: { type: "string", required: true, format: "did" },
@@ -104,7 +103,7 @@ test("app.bsky.actor.defs - profileViewDetailed", () => {
 		status: lx.ref("#statusView"),
 	});
 
-	assert.deepEqual(profileViewDetailed, {
+	expect(profileViewDetailed).toEqual({
 		type: "object",
 		properties: {
 			did: { type: "string", required: true, format: "did" },
@@ -148,7 +147,7 @@ test("app.bsky.actor.defs - profileAssociated", () => {
 		activitySubscription: lx.ref("#profileAssociatedActivitySubscription"),
 	});
 
-	assert.deepEqual(profileAssociated, {
+	expect(profileAssociated).toEqual({
 		type: "object",
 		properties: {
 			lists: { type: "integer" },
@@ -172,7 +171,7 @@ test("app.bsky.actor.defs - profileAssociatedChat", () => {
 		}),
 	});
 
-	assert.deepEqual(profileAssociatedChat, {
+	expect(profileAssociatedChat).toEqual({
 		type: "object",
 		properties: {
 			allowIncoming: {
@@ -193,7 +192,7 @@ test("app.bsky.actor.defs - profileAssociatedActivitySubscription", () => {
 		}),
 	});
 
-	assert.deepEqual(profileAssociatedActivitySubscription, {
+	expect(profileAssociatedActivitySubscription).toEqual({
 		type: "object",
 		properties: {
 			allowSubscriptions: {
@@ -221,7 +220,7 @@ test("app.bsky.actor.defs - viewerState", () => {
 		),
 	});
 
-	assert.deepEqual(viewerState, {
+	expect(viewerState).toEqual({
 		type: "object",
 		properties: {
 			muted: { type: "boolean" },
@@ -250,7 +249,7 @@ test("app.bsky.actor.defs - knownFollowers", () => {
 		}),
 	});
 
-	assert.deepEqual(knownFollowers, {
+	expect(knownFollowers).toEqual({
 		type: "object",
 		properties: {
 			count: { type: "integer", required: true },
@@ -279,7 +278,7 @@ test("app.bsky.actor.defs - verificationState", () => {
 		}),
 	});
 
-	assert.deepEqual(verificationState, {
+	expect(verificationState).toEqual({
 		type: "object",
 		properties: {
 			verifications: {
@@ -310,7 +309,7 @@ test("app.bsky.actor.defs - verificationView", () => {
 		createdAt: lx.string({ required: true, format: "datetime" }),
 	});
 
-	assert.deepEqual(verificationView, {
+	expect(verificationView).toEqual({
 		type: "object",
 		properties: {
 			issuer: { type: "string", required: true, format: "did" },
@@ -342,7 +341,7 @@ test("app.bsky.actor.defs - preferences", () => {
 		]),
 	);
 
-	assert.deepEqual(preferences, {
+	expect(preferences).toEqual({
 		type: "array",
 		items: {
 			type: "union",
@@ -371,7 +370,7 @@ test("app.bsky.actor.defs - adultContentPref", () => {
 		enabled: lx.boolean({ required: true, default: false }),
 	});
 
-	assert.deepEqual(adultContentPref, {
+	expect(adultContentPref).toEqual({
 		type: "object",
 		properties: {
 			enabled: { type: "boolean", required: true, default: false },
@@ -390,7 +389,7 @@ test("app.bsky.actor.defs - contentLabelPref", () => {
 		}),
 	});
 
-	assert.deepEqual(contentLabelPref, {
+	expect(contentLabelPref).toEqual({
 		type: "object",
 		properties: {
 			labelerDid: { type: "string", format: "did" },
@@ -416,7 +415,7 @@ test("app.bsky.actor.defs - savedFeed", () => {
 		pinned: lx.boolean({ required: true }),
 	});
 
-	assert.deepEqual(savedFeed, {
+	expect(savedFeed).toEqual({
 		type: "object",
 		properties: {
 			id: { type: "string", required: true },
@@ -439,7 +438,7 @@ test("app.bsky.actor.defs - savedFeedsPrefV2", () => {
 		}),
 	});
 
-	assert.deepEqual(savedFeedsPrefV2, {
+	expect(savedFeedsPrefV2).toEqual({
 		type: "object",
 		properties: {
 			items: {
@@ -459,7 +458,7 @@ test("app.bsky.actor.defs - savedFeedsPref", () => {
 		timelineIndex: lx.integer(),
 	});
 
-	assert.deepEqual(savedFeedsPref, {
+	expect(savedFeedsPref).toEqual({
 		type: "object",
 		properties: {
 			pinned: {
@@ -483,7 +482,7 @@ test("app.bsky.actor.defs - personalDetailsPref", () => {
 		birthDate: lx.string({ format: "datetime" }),
 	});
 
-	assert.deepEqual(personalDetailsPref, {
+	expect(personalDetailsPref).toEqual({
 		type: "object",
 		properties: {
 			birthDate: { type: "string", format: "datetime" },
@@ -501,7 +500,7 @@ test("app.bsky.actor.defs - feedViewPref", () => {
 		hideQuotePosts: lx.boolean(),
 	});
 
-	assert.deepEqual(feedViewPref, {
+	expect(feedViewPref).toEqual({
 		type: "object",
 		properties: {
 			feed: { type: "string", required: true },
@@ -523,7 +522,7 @@ test("app.bsky.actor.defs - threadViewPref", () => {
 		prioritizeFollowedUsers: lx.boolean(),
 	});
 
-	assert.deepEqual(threadViewPref, {
+	expect(threadViewPref).toEqual({
 		type: "object",
 		properties: {
 			sort: {
@@ -543,7 +542,7 @@ test("app.bsky.actor.defs - interestsPref", () => {
 		}),
 	});
 
-	assert.deepEqual(interestsPref, {
+	expect(interestsPref).toEqual({
 		type: "object",
 		properties: {
 			tags: {
@@ -564,7 +563,7 @@ test("app.bsky.actor.defs - mutedWordTarget", () => {
 		maxGraphemes: 64,
 	});
 
-	assert.deepEqual(mutedWordTarget, {
+	expect(mutedWordTarget).toEqual({
 		type: "string",
 		knownValues: ["content", "tag"],
 		maxLength: 640,
@@ -586,7 +585,7 @@ test("app.bsky.actor.defs - mutedWord", () => {
 		expiresAt: lx.string({ format: "datetime" }),
 	});
 
-	assert.deepEqual(mutedWord, {
+	expect(mutedWord).toEqual({
 		type: "object",
 		properties: {
 			id: { type: "string" },
@@ -619,7 +618,7 @@ test("app.bsky.actor.defs - mutedWordsPref", () => {
 		}),
 	});
 
-	assert.deepEqual(mutedWordsPref, {
+	expect(mutedWordsPref).toEqual({
 		type: "object",
 		properties: {
 			items: {
@@ -637,7 +636,7 @@ test("app.bsky.actor.defs - hiddenPostsPref", () => {
 		items: lx.array(lx.string({ format: "at-uri" }), { required: true }),
 	});
 
-	assert.deepEqual(hiddenPostsPref, {
+	expect(hiddenPostsPref).toEqual({
 		type: "object",
 		properties: {
 			items: {
@@ -655,7 +654,7 @@ test("app.bsky.actor.defs - labelersPref", () => {
 		labelers: lx.array(lx.ref("#labelerPrefItem"), { required: true }),
 	});
 
-	assert.deepEqual(labelersPref, {
+	expect(labelersPref).toEqual({
 		type: "object",
 		properties: {
 			labelers: {
@@ -673,7 +672,7 @@ test("app.bsky.actor.defs - labelerPrefItem", () => {
 		did: lx.string({ required: true, format: "did" }),
 	});
 
-	assert.deepEqual(labelerPrefItem, {
+	expect(labelerPrefItem).toEqual({
 		type: "object",
 		properties: {
 			did: { type: "string", required: true, format: "did" },
@@ -689,7 +688,7 @@ test("app.bsky.actor.defs - bskyAppStatePref", () => {
 		nuxs: lx.array(lx.ref("app.bsky.actor.defs#nux"), { maxLength: 100 }),
 	});
 
-	assert.deepEqual(bskyAppStatePref, {
+	expect(bskyAppStatePref).toEqual({
 		type: "object",
 		properties: {
 			activeProgressGuide: { type: "ref", ref: "#bskyAppProgressGuide" },
@@ -712,7 +711,7 @@ test("app.bsky.actor.defs - bskyAppProgressGuide", () => {
 		guide: lx.string({ required: true, maxLength: 100 }),
 	});
 
-	assert.deepEqual(bskyAppProgressGuide, {
+	expect(bskyAppProgressGuide).toEqual({
 		type: "object",
 		properties: {
 			guide: { type: "string", required: true, maxLength: 100 },
@@ -729,7 +728,7 @@ test("app.bsky.actor.defs - nux", () => {
 		expiresAt: lx.string({ format: "datetime" }),
 	});
 
-	assert.deepEqual(nux, {
+	expect(nux).toEqual({
 		type: "object",
 		properties: {
 			id: { type: "string", required: true, maxLength: 100 },
@@ -746,7 +745,7 @@ test("app.bsky.actor.defs - verificationPrefs", () => {
 		hideBadges: lx.boolean({ default: false }),
 	});
 
-	assert.deepEqual(verificationPrefs, {
+	expect(verificationPrefs).toEqual({
 		type: "object",
 		properties: {
 			hideBadges: { type: "boolean", default: false },
@@ -771,7 +770,7 @@ test("app.bsky.actor.defs - postInteractionSettingsPref", () => {
 		),
 	});
 
-	assert.deepEqual(postInteractionSettingsPref, {
+	expect(postInteractionSettingsPref).toEqual({
 		type: "object",
 		properties: {
 			threadgateAllowRules: {
@@ -811,7 +810,7 @@ test("app.bsky.actor.defs - statusView", () => {
 		isActive: lx.boolean(),
 	});
 
-	assert.deepEqual(statusView, {
+	expect(statusView).toEqual({
 		type: "object",
 		properties: {
 			status: {
@@ -861,8 +860,8 @@ test("app.bsky.actor.defs - full namespace", () => {
 		}),
 	});
 
-	assert.deepEqual(actorDefs.lexicon, 1);
-	assert.deepEqual(actorDefs.id, "app.bsky.actor.defs");
-	assert.deepEqual(actorDefs.defs.profileViewBasic.type, "object");
-	assert.deepEqual(actorDefs.defs.viewerState.type, "object");
+	expect(actorDefs.lexicon).toEqual(1);
+	expect(actorDefs.id).toEqual("app.bsky.actor.defs");
+	expect(actorDefs.defs.profileViewBasic.type).toEqual("object");
+	expect(actorDefs.defs.viewerState.type).toEqual("object");
 });

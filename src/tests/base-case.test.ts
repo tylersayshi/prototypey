@@ -1,5 +1,4 @@
-import { strict as assert } from "node:assert";
-import { test } from "node:test";
+import { expect, test } from "vitest";
 import { lx } from "../lib.ts";
 
 test("app.bsky.actor.profile", () => {
@@ -13,7 +12,7 @@ test("app.bsky.actor.profile", () => {
 		}),
 	});
 
-	assert.deepEqual(profileNamespace, {
+	expect(profileNamespace).toEqual({
 		lexicon: 1,
 		id: "app.bsky.actor.profile",
 		defs: {
