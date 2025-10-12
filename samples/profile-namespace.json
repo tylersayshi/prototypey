@@ -1,25 +1,25 @@
 {
-  "lexicon": 1,
-  "id": "app.bsky.actor.profile",
-  "defs": {
-    "main": {
-      "type": "record",
-      "key": "self",
-      "record": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string",
-            "maxLength": 64,
-            "maxGraphemes": 64
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 256,
-            "maxGraphemes": 256
-          }
-        }
-      }
-    }
-  }
+	"lexicon": 1,
+	"id": "app.bsky.actor.profile",
+	"defs": {
+		"main": {
+			"type": "record",
+			"key": "self",
+			"record": {
+				"type": "object",
+				"properties": {
+					"displayName": {
+						"type": "string",
+						"maxLength": 64,
+						"maxGraphemes": 64
+					},
+					"description": {
+						"type": "string",
+						"maxLength": 256,
+						"maxGraphemes": 256
+					}
+				}
+			}
+		}
+	}
 }
