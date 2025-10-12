@@ -2,7 +2,7 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
 	dts: true,
-	entry: ["src/**/*.ts"],
+	entry: ["src/index.ts"],
 	outDir: "lib",
 	unbundle: true,
 });
