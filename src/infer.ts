@@ -92,40 +92,5 @@ export type InferDefs<T extends Record<string, unknown>> = Prettify<
   }
 >;
 
-type InferNS<T extends { id: string; defs: Record<string, unknown> }> =
+export type InferNS<T extends { id: string; defs: Record<string, unknown> }> =
   InferDefs<T["defs"]>;
-
-const schema = {
-  "lexicon": 1,
-  "id": "app.bsky.actor.profile",
-  "defs": {
-    "main": {
-      "type": "record",
-      "key": "self",
-      "record": {
-        "type": "object",
-        "properties": {
-          "displayName": {
-            "type": "string",
-            "maxLength": 64,
-            "maxGraphemes": 64,
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 256,
-            "maxGraphemes": 256,
-          },
-        },
-      },
-    },
-  },
-} as const;
-
-type Schema = InferNS<typeof schema>;
-
-const main: Schema["main"] = {
-  displayName: "blob",
-  description: "I am a blob dude",
-};
-
-console.log(`hi ${main.displayName}`);
