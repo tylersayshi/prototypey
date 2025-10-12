@@ -8,7 +8,6 @@ bench("InferNS with simple object", () => {
 			name: lx.string({ required: true }),
 		}),
 	});
-
 	return schema.infer;
 }).types([62, "instantiations"]);
 
@@ -32,6 +31,5 @@ bench("InferNS with complex nested structure", () => {
 			author: lx.ref("test.complex#user", { required: true }),
 		}),
 	});
-
 	return schema.infer;
 }).types([124, "instantiations"]);
