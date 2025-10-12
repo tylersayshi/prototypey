@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types
 type InferType<T> = T extends { type: "record" } ? InferRecord<T>
   : T extends { type: "object" } ? InferObject<T>
   : T extends { type: "array" } ? InferArray<T>
@@ -17,20 +18,47 @@ type InferType<T> = T extends { type: "record" } ? InferRecord<T>
 
 type InferToken<T> = T extends { enum: readonly (infer U)[] } ? U : string;
 
-type InferObject<T> = T extends { properties: infer P } ?
-    & {
-      -readonly [K in keyof P as P[K] extends { type: string } ? K : never]?:
-        InferType<
-          P[K]
-        >;
-    }
-    & (T extends { required?: readonly (infer R)[] } ? {
-        -readonly [K in R extends string ? R : never]-?: InferType<
+type GetRequired<T> = T extends { required: readonly (infer R)[] } ? R : never;
+type GetNullable<T> = T extends { nullable: readonly (infer N)[] } ? N : never;
+
+type InferObject<
+  T,
+  Nullable extends string = GetNullable<T> & string,
+  Required extends string = GetRequired<T> & string,
+  NullableAndRequired extends string = Required & Nullable & string,
+  Normal extends string = "properties" extends keyof T
+    ? Exclude<keyof T["properties"], Required | Nullable> & string
+    : never,
+> = Prettify<
+  T extends { properties: infer P } ?
+      & {
+        -readonly [
+          K in Normal
+        ]?: InferType<
           P[K & keyof P]
         >;
       }
-      : never)
-  : never;
+      & ({
+        -readonly [K in Exclude<Required, NullableAndRequired>]-?: InferType<
+          P[K & keyof P]
+        >;
+      })
+      & ({
+        -readonly [K in Exclude<Nullable, NullableAndRequired>]?:
+          | InferType<
+            P[K & keyof P]
+          >
+          | null;
+      })
+      & ({
+        -readonly [K in NullableAndRequired]:
+          | InferType<
+            P[K & keyof P]
+          >
+          | null;
+      })
+    : {}
+>;
 
 type InferArray<T> = T extends { items: infer Items } ? InferType<Items>[]
   : never[];
@@ -56,7 +84,6 @@ type Prettify<T> =
   & {
     [K in keyof T]: T[K];
   }
-  // deno-lint-ignore ban-types
   & {};
 
 export type InferDefs<T extends Record<string, unknown>> = Prettify<
@@ -89,7 +116,6 @@ const schema = {
             "maxGraphemes": 256,
           },
         },
-        "nullable": ["displayName"],
       },
     },
   },
