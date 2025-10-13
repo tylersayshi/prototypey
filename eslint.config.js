@@ -16,6 +16,9 @@ export default tseslint.config(
 				projectService: { allowDefaultProject: ["*.config.*s"] },
 			},
 		},
+		rules: {
+			"@typescript-eslint/consistent-type-definitions": "off",
+		},
 	},
 	{
 		files: ["**/*.{test,bench}.ts"],
