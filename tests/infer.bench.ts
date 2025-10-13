@@ -1,5 +1,4 @@
 import { bench } from "@ark/attest";
-import type { InferNS } from "../src/infer.ts";
 import { lx } from "../src/lib.ts";
 
 bench("InferNS with simple object", () => {
@@ -11,7 +10,7 @@ bench("InferNS with simple object", () => {
 	});
 
 	return schema.infer;
-}).types([63, "instantiations"]);
+}).types([62, "instantiations"]);
 
 bench("InferNS with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
@@ -35,4 +34,4 @@ bench("InferNS with complex nested structure", () => {
 	});
 
 	return schema.infer;
-}).types([125, "instantiations"]);
+}).types([124, "instantiations"]);

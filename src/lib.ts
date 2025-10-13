@@ -1,6 +1,6 @@
 // deno-lint-ignore-file ban-types
 
-import { InferNS } from "./infer.ts";
+import type { InferNS } from "./infer.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
