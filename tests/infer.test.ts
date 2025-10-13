@@ -60,34 +60,26 @@ test("InferObject handles nullable fields", () => {
 // ============================================================================
 
 test("InferType handles string primitive", () => {
-	const schema = lx.object({
-		simpleString: lx.string(),
+	const namespace = lx.namespace("test.string", {
+		main: lx.object({
+			simpleString: lx.string(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.string";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { simpleString?: string | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { simpleString?: string | undefined } }",
+	);
 });
 
 test("InferType handles integer primitive", () => {
-	const schema = lx.object({
-		count: lx.integer(),
-		age: lx.integer({ minimum: 0, maximum: 120 }),
+	const namespace = lx.namespace("test.integer", {
+		main: lx.object({
+			count: lx.integer(),
+			age: lx.integer({ minimum: 0, maximum: 120 }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.integer";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     count?: number | undefined
     age?: number | undefined
@@ -96,19 +88,14 @@ test("InferType handles integer primitive", () => {
 });
 
 test("InferType handles boolean primitive", () => {
-	const schema = lx.object({
-		isActive: lx.boolean(),
-		hasAccess: lx.boolean({ required: true }),
+	const namespace = lx.namespace("test.boolean", {
+		main: lx.object({
+			isActive: lx.boolean(),
+			hasAccess: lx.boolean({ required: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.boolean";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     isActive?: boolean | undefined
     hasAccess: boolean
@@ -117,63 +104,47 @@ test("InferType handles boolean primitive", () => {
 });
 
 test("InferType handles null primitive", () => {
-	const schema = lx.object({
-		nullValue: lx.null(),
+	const namespace = lx.namespace("test.null", {
+		main: lx.object({
+			nullValue: lx.null(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.null";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { nullValue?: null | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { nullValue?: null | undefined } }",
+	);
 });
 
 test("InferType handles unknown primitive", () => {
-	const schema = lx.object({
-		metadata: lx.unknown(),
+	const namespace = lx.namespace("test.unknown", {
+		main: lx.object({
+			metadata: lx.unknown(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.unknown";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { metadata?: unknown } }");
+	attest(namespace.infer).type.toString.snap("{ main: { metadata?: unknown } }");
 });
 
 test("InferType handles bytes primitive", () => {
-	const schema = lx.object({
-		data: lx.bytes(),
+	const namespace = lx.namespace("test.bytes", {
+		main: lx.object({
+			data: lx.bytes(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.bytes";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { data?: Uint8Array | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { data?: Uint8Array | undefined } }",
+	);
 });
 
 test("InferType handles blob primitive", () => {
-	const schema = lx.object({
-		image: lx.blob({ accept: ["image/png", "image/jpeg"] }),
+	const namespace = lx.namespace("test.blob", {
+		main: lx.object({
+			image: lx.blob({ accept: ["image/png", "image/jpeg"] }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.blob";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { image?: Blob | undefined } }");
+	attest(namespace.infer).type.toString.snap("{ main: { image?: Blob | undefined } }");
 });
 
 // ============================================================================
@@ -181,18 +152,15 @@ test("InferType handles blob primitive", () => {
 // ============================================================================
 
 test("InferToken handles basic token without enum", () => {
-	const schema = lx.object({
-		symbol: lx.token("A symbolic value"),
+	const namespace = lx.namespace("test.token", {
+		main: lx.object({
+			symbol: lx.token("A symbolic value"),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.token";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { symbol?: string | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { symbol?: string | undefined } }",
+	);
 });
 
 // ============================================================================
@@ -200,63 +168,49 @@ test("InferToken handles basic token without enum", () => {
 // ============================================================================
 
 test("InferArray handles string arrays", () => {
-	const schema = lx.object({
-		tags: lx.array(lx.string()),
+	const namespace = lx.namespace("test.array.string", {
+		main: lx.object({
+			tags: lx.array(lx.string()),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.array.string";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { tags?: string[] | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { tags?: string[] | undefined } }",
+	);
 });
 
 test("InferArray handles integer arrays", () => {
-	const schema = lx.object({
-		scores: lx.array(lx.integer(), { minLength: 1, maxLength: 10 }),
+	const namespace = lx.namespace("test.array.integer", {
+		main: lx.object({
+			scores: lx.array(lx.integer(), { minLength: 1, maxLength: 10 }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.array.integer";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { scores?: number[] | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { scores?: number[] | undefined } }",
+	);
 });
 
 test("InferArray handles boolean arrays", () => {
-	const schema = lx.object({
-		flags: lx.array(lx.boolean()),
+	const namespace = lx.namespace("test.array.boolean", {
+		main: lx.object({
+			flags: lx.array(lx.boolean()),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.array.boolean";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { flags?: boolean[] | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { flags?: boolean[] | undefined } }",
+	);
 });
 
 test("InferArray handles unknown arrays", () => {
-	const schema = lx.object({
-		items: lx.array(lx.unknown()),
+	const namespace = lx.namespace("test.array.unknown", {
+		main: lx.object({
+			items: lx.array(lx.unknown()),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.array.unknown";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { items?: unknown[] } }");
+	attest(namespace.infer).type.toString.snap("{ main: { items?: unknown[] } }");
 });
 
 // ============================================================================
@@ -264,21 +218,16 @@ test("InferArray handles unknown arrays", () => {
 // ============================================================================
 
 test("InferObject handles mixed optional and required fields", () => {
-	const schema = lx.object({
-		id: lx.string({ required: true }),
-		name: lx.string({ required: true }),
-		email: lx.string(),
-		age: lx.integer(),
+	const namespace = lx.namespace("test.mixed", {
+		main: lx.object({
+			id: lx.string({ required: true }),
+			name: lx.string({ required: true }),
+			email: lx.string(),
+			age: lx.integer(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.mixed";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     email?: string | undefined
     age?: number | undefined
@@ -289,20 +238,15 @@ test("InferObject handles mixed optional and required fields", () => {
 });
 
 test("InferObject handles all optional fields", () => {
-	const schema = lx.object({
-		field1: lx.string(),
-		field2: lx.integer(),
-		field3: lx.boolean(),
+	const namespace = lx.namespace("test.allOptional", {
+		main: lx.object({
+			field1: lx.string(),
+			field2: lx.integer(),
+			field3: lx.boolean(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.allOptional";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     field1?: string | undefined
     field2?: number | undefined
@@ -312,20 +256,15 @@ test("InferObject handles all optional fields", () => {
 });
 
 test("InferObject handles all required fields", () => {
-	const schema = lx.object({
-		field1: lx.string({ required: true }),
-		field2: lx.integer({ required: true }),
-		field3: lx.boolean({ required: true }),
+	const namespace = lx.namespace("test.allRequired", {
+		main: lx.object({
+			field1: lx.string({ required: true }),
+			field2: lx.integer({ required: true }),
+			field3: lx.boolean({ required: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.allRequired";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     field1: string
     field2: number
@@ -339,35 +278,27 @@ test("InferObject handles all required fields", () => {
 // ============================================================================
 
 test("InferObject handles nullable optional field", () => {
-	const schema = lx.object({
-		description: lx.string({ nullable: true }),
+	const namespace = lx.namespace("test.nullableOptional", {
+		main: lx.object({
+			description: lx.string({ nullable: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.nullableOptional";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { description?: string | null | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { description?: string | null | undefined } }",
+	);
 });
 
 test("InferObject handles multiple nullable fields", () => {
-	const schema = lx.object({
-		field1: lx.string({ nullable: true }),
-		field2: lx.integer({ nullable: true }),
-		field3: lx.boolean({ nullable: true }),
+	const namespace = lx.namespace("test.multipleNullable", {
+		main: lx.object({
+			field1: lx.string({ nullable: true }),
+			field2: lx.integer({ nullable: true }),
+			field3: lx.boolean({ nullable: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.multipleNullable";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     field1?: string | null | undefined
     field2?: number | null | undefined
@@ -377,36 +308,26 @@ test("InferObject handles multiple nullable fields", () => {
 });
 
 test("InferObject handles nullable and required field", () => {
-	const schema = lx.object({
-		value: lx.string({ nullable: true, required: true }),
+	const namespace = lx.namespace("test.nullableRequired", {
+		main: lx.object({
+			value: lx.string({ nullable: true, required: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.nullableRequired";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { value: string | null } }");
+	attest(namespace.infer).type.toString.snap("{ main: { value: string | null } }");
 });
 
 test("InferObject handles mixed nullable, required, and optional", () => {
-	const schema = lx.object({
-		requiredNullable: lx.string({ required: true, nullable: true }),
-		optionalNullable: lx.string({ nullable: true }),
-		required: lx.string({ required: true }),
-		optional: lx.string(),
+	const namespace = lx.namespace("test.mixedNullable", {
+		main: lx.object({
+			requiredNullable: lx.string({ required: true, nullable: true }),
+			optionalNullable: lx.string({ nullable: true }),
+			required: lx.string({ required: true }),
+			optional: lx.string(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.mixedNullable";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     optionalNullable?: string | null | undefined
     optional?: string | undefined
@@ -421,18 +342,13 @@ test("InferObject handles mixed nullable, required, and optional", () => {
 // ============================================================================
 
 test("InferRef handles basic reference", () => {
-	const schema = lx.object({
-		post: lx.ref("com.example.post"),
+	const namespace = lx.namespace("test.ref", {
+		main: lx.object({
+			post: lx.ref("com.example.post"),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.ref";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     post?: {
       $type: "com.example.post"
@@ -443,18 +359,13 @@ test("InferRef handles basic reference", () => {
 });
 
 test("InferRef handles required reference", () => {
-	const schema = lx.object({
-		author: lx.ref("com.example.user", { required: true }),
+	const namespace = lx.namespace("test.refRequired", {
+		main: lx.object({
+			author: lx.ref("com.example.user", { required: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.refRequired";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     author: {
       $type: "com.example.user"
@@ -465,18 +376,13 @@ test("InferRef handles required reference", () => {
 });
 
 test("InferRef handles nullable reference", () => {
-	const schema = lx.object({
-		parent: lx.ref("com.example.node", { nullable: true }),
+	const namespace = lx.namespace("test.refNullable", {
+		main: lx.object({
+			parent: lx.ref("com.example.node", { nullable: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.refNullable";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     parent?: {
       $type: "com.example.node"
@@ -491,18 +397,13 @@ test("InferRef handles nullable reference", () => {
 // ============================================================================
 
 test("InferUnion handles basic union", () => {
-	const schema = lx.object({
-		content: lx.union(["com.example.text", "com.example.image"]),
+	const namespace = lx.namespace("test.union", {
+		main: lx.object({
+			content: lx.union(["com.example.text", "com.example.image"]),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.union";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     content?: {
       $type: "com.example.text"
@@ -516,18 +417,15 @@ test("InferUnion handles basic union", () => {
 });
 
 test("InferUnion handles required union", () => {
-	const schema = lx.object({
-		media: lx.union(["com.example.video", "com.example.audio"], { required: true }),
+	const namespace = lx.namespace("test.unionRequired", {
+		main: lx.object({
+			media: lx.union(["com.example.video", "com.example.audio"], {
+				required: true,
+			}),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.unionRequired";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     media: {
       $type: "com.example.video"
@@ -541,23 +439,18 @@ test("InferUnion handles required union", () => {
 });
 
 test("InferUnion handles union with many types", () => {
-	const schema = lx.object({
-		attachment: lx.union([
-			"com.example.image",
-			"com.example.video",
-			"com.example.audio",
-			"com.example.document",
-		]),
+	const namespace = lx.namespace("test.unionMultiple", {
+		main: lx.object({
+			attachment: lx.union([
+				"com.example.image",
+				"com.example.video",
+				"com.example.audio",
+				"com.example.document",
+			]),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.unionMultiple";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     attachment?: {
       $type: "com.example.image"
@@ -581,19 +474,14 @@ test("InferUnion handles union with many types", () => {
 // ============================================================================
 
 test("InferParams handles basic params", () => {
-	const schema = lx.params({
-		limit: lx.integer(),
-		offset: lx.integer(),
+	const namespace = lx.namespace("test.params", {
+		main: lx.params({
+			limit: lx.integer(),
+			offset: lx.integer(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.params";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     limit?: number | undefined
     offset?: number | undefined
@@ -602,19 +490,14 @@ test("InferParams handles basic params", () => {
 });
 
 test("InferParams handles required params", () => {
-	const schema = lx.params({
-		query: lx.string({ required: true }),
-		limit: lx.integer(),
+	const namespace = lx.namespace("test.paramsRequired", {
+		main: lx.params({
+			query: lx.string({ required: true }),
+			limit: lx.integer(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.paramsRequired";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     limit?: number | undefined
     query: string
@@ -627,23 +510,18 @@ test("InferParams handles required params", () => {
 // ============================================================================
 
 test("InferRecord handles record with object schema", () => {
-	const schema = lx.record({
-		key: "tid",
-		record: lx.object({
-			title: lx.string({ required: true }),
-			content: lx.string({ required: true }),
-			published: lx.boolean(),
+	const namespace = lx.namespace("test.record", {
+		main: lx.record({
+			key: "tid",
+			record: lx.object({
+				title: lx.string({ required: true }),
+				content: lx.string({ required: true }),
+				published: lx.boolean(),
+			}),
 		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.record";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     published?: boolean | undefined
     title: string
@@ -657,21 +535,16 @@ test("InferRecord handles record with object schema", () => {
 // ============================================================================
 
 test("InferObject handles nested objects", () => {
-	const schema = lx.object({
-		user: lx.object({
-			name: lx.string({ required: true }),
-			email: lx.string({ required: true }),
+	const namespace = lx.namespace("test.nested", {
+		main: lx.object({
+			user: lx.object({
+				name: lx.string({ required: true }),
+				email: lx.string({ required: true }),
+			}),
 		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.nested";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     user?: {
       name: string
@@ -682,24 +555,19 @@ test("InferObject handles nested objects", () => {
 });
 
 test("InferObject handles deeply nested objects", () => {
-	const schema = lx.object({
-		data: lx.object({
-			user: lx.object({
-				profile: lx.object({
-					name: lx.string({ required: true }),
+	const namespace = lx.namespace("test.deepNested", {
+		main: lx.object({
+			data: lx.object({
+				user: lx.object({
+					profile: lx.object({
+						name: lx.string({ required: true }),
+					}),
 				}),
 			}),
 		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.deepNested";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     data?: {
       user?: {
@@ -717,23 +585,18 @@ test("InferObject handles deeply nested objects", () => {
 // ============================================================================
 
 test("InferArray handles arrays of objects", () => {
-	const schema = lx.object({
-		users: lx.array(
-			lx.object({
-				id: lx.string({ required: true }),
-				name: lx.string({ required: true }),
-			}),
-		),
+	const namespace = lx.namespace("test.arrayOfObjects", {
+		main: lx.object({
+			users: lx.array(
+				lx.object({
+					id: lx.string({ required: true }),
+					name: lx.string({ required: true }),
+				}),
+			),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.arrayOfObjects";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     users?: {
       id: string
@@ -748,29 +611,23 @@ test("InferArray handles arrays of arrays", () => {
 		matrix: lx.array(lx.array(lx.integer())),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.nestedArrays";
-		defs: { main: typeof schema };
-	}>;
+	const namespace = lx.namespace("test.nestedArrays", {
+		main: schema,
+	});
 
-	const result = {} as Result;
-	attest(result).type.toString.snap("{ main: { matrix?: number[][] | undefined } }");
+	attest(namespace.infer).type.toString.snap(
+		"{ main: { matrix?: number[][] | undefined } }",
+	);
 });
 
 test("InferArray handles arrays of refs", () => {
-	const schema = lx.object({
-		followers: lx.array(lx.ref("com.example.user")),
+	const namespace = lx.namespace("test.arrayOfRefs", {
+		main: lx.object({
+			followers: lx.array(lx.ref("com.example.user")),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.arrayOfRefs";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     followers?: {
       $type: "com.example.user"
@@ -801,14 +658,7 @@ test("InferObject handles complex nested structure", () => {
 		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test.complex";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(schema.infer).type.toString.snap(`{
   main: {
     author?: {
       avatar?: string | undefined
@@ -853,10 +703,7 @@ test("InferNS handles multiple defs in namespace", () => {
 		}),
 	});
 
-	type Result = InferNS<typeof namespace>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   user: {
     name: string
     email: string
@@ -890,10 +737,7 @@ test("InferNS handles namespace with record and object defs", () => {
 		}),
 	});
 
-	type Result = InferNS<typeof namespace>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(namespace.infer).type.toString.snap(`{
   main: {
     title: string
     body: string
