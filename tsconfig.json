@@ -12,5 +12,5 @@
 		"target": "ES2022",
 		"allowImportingTsExtensions": true
 	},
-	"include": ["src"]
+	"include": ["src", "tests"]
 }
