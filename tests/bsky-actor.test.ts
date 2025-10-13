@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 test("app.bsky.actor.defs - profileViewBasic", () => {
 	const profileViewBasic = lx.object({
@@ -860,8 +860,8 @@ test("app.bsky.actor.defs - full namespace", () => {
 		}),
 	});
 
-	expect(actorDefs.lexicon).toEqual(1);
-	expect(actorDefs.id).toEqual("app.bsky.actor.defs");
-	expect(actorDefs.defs.profileViewBasic.type).toEqual("object");
-	expect(actorDefs.defs.viewerState.type).toEqual("object");
+	expect(actorDefs.json.lexicon).toEqual(1);
+	expect(actorDefs.json.id).toEqual("app.bsky.actor.defs");
+	expect(actorDefs.json.defs.profileViewBasic.type).toEqual("object");
+	expect(actorDefs.json.defs.viewerState.type).toEqual("object");
 });

@@ -1,7 +1,7 @@
 import { test } from "vitest";
 import { attest } from "@ark/attest";
-import type { InferNS } from "../infer.ts";
-import { lx } from "../lib.ts";
+import type { InferNS } from "../src/infer.ts";
+import { lx } from "../src/lib.ts";
 
 test("InferNS produces expected type shape", () => {
 	const exampleLexicon = lx.namespace("com.example.post", {
@@ -16,11 +16,8 @@ test("InferNS produces expected type shape", () => {
 		}),
 	});
 
-	type Result = InferNS<typeof exampleLexicon>;
-
 	// Type snapshot - this captures how types appear on hover
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(exampleLexicon.infer).type.toString.snap(`{
   main: {
     createdAt?: string | undefined
     tags?: string[] | undefined
@@ -31,19 +28,14 @@ test("InferNS produces expected type shape", () => {
 });
 
 test("InferObject handles required fields", () => {
-	const schema = lx.object({
-		required: lx.string({ required: true }),
-		optional: lx.string(),
+	const schema = lx.namespace("test", {
+		main: lx.object({
+			required: lx.string({ required: true }),
+			optional: lx.string(),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(`{
+	attest(schema.infer).type.toString.snap(`{
   main: {
     required?: string | undefined
     optional?: string | undefined
@@ -52,18 +44,13 @@ test("InferObject handles required fields", () => {
 });
 
 test("InferObject handles nullable fields", () => {
-	const schema = lx.object({
-		nullable: lx.string({ nullable: true, required: true }),
+	const schema = lx.namespace("test", {
+		main: lx.object({
+			nullable: lx.string({ nullable: true, required: true }),
+		}),
 	});
 
-	type Result = InferNS<{
-		lexicon: 1;
-		id: "test";
-		defs: { main: typeof schema };
-	}>;
-
-	const result = {} as Result;
-	attest(result).type.toString.snap(
+	attest(schema.infer).type.toString.snap(
 		"{ main: { nullable?: string | undefined } }",
 	);
 });

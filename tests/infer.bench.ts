@@ -1,6 +1,6 @@
 import { bench } from "@ark/attest";
-import type { InferNS } from "../infer.ts";
-import { lx } from "../lib.ts";
+import type { InferNS } from "../src/infer.ts";
+import { lx } from "../src/lib.ts";
 
 bench("InferNS with simple object", () => {
 	const schema = lx.namespace("test.simple", {
@@ -10,7 +10,7 @@ bench("InferNS with simple object", () => {
 		}),
 	});
 
-	return null as unknown as InferNS<typeof schema>;
+	return schema.infer;
 }).types([63, "instantiations"]);
 
 bench("InferNS with complex nested structure", () => {
@@ -34,5 +34,5 @@ bench("InferNS with complex nested structure", () => {
 		}),
 	});
 
-	return null as unknown as InferNS<typeof schema>;
+	return schema.infer;
 }).types([125, "instantiations"]);

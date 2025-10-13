@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 test("app.bsky.actor.profile", () => {
 	const profileNamespace = lx.namespace("app.bsky.actor.profile", {
@@ -12,7 +12,7 @@ test("app.bsky.actor.profile", () => {
 		}),
 	});
 
-	expect(profileNamespace).toEqual({
+	expect(profileNamespace.json).toEqual({
 		lexicon: 1,
 		id: "app.bsky.actor.profile",
 		defs: {

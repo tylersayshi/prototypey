@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { lx } from "../lib.ts";
+import { lx } from "../src/lib.ts";
 
 test("app.bsky.feed.defs - postView", () => {
 	const postView = lx.object({
@@ -672,10 +672,10 @@ test("app.bsky.feed.defs - full namespace", () => {
 		interactionShare: lx.token("User shared the feed item"),
 	});
 
-	expect(feedDefs.lexicon).toEqual(1);
-	expect(feedDefs.id).toEqual("app.bsky.feed.defs");
-	expect(feedDefs.defs.postView.type).toEqual("object");
-	expect(feedDefs.defs.viewerState.type).toEqual("object");
-	expect(feedDefs.defs.requestLess.type).toEqual("token");
-	expect(feedDefs.defs.contentModeVideo.type).toEqual("token");
+	expect(feedDefs.json.lexicon).toEqual(1);
+	expect(feedDefs.json.id).toEqual("app.bsky.feed.defs");
+	expect(feedDefs.json.defs.postView.type).toEqual("object");
+	expect(feedDefs.json.defs.viewerState.type).toEqual("object");
+	expect(feedDefs.json.defs.requestLess.type).toEqual("token");
+	expect(feedDefs.json.defs.contentModeVideo.type).toEqual("token");
 });
