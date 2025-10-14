@@ -1,6 +1,7 @@
 // deno-lint-ignore-file ban-types
 
-import type { InferNS } from "./infer.ts";
+import type { GetNullable, GetRequired, InferNS } from "./infer.ts";
+import { Prettify, UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
@@ -191,21 +192,48 @@ interface UnionOptions extends LexiconItemCommonOptions {
  * Map of property names to their lexicon item definitions.
  * @see https://atproto.com/specs/lexicon#object
  */
-type ObjectProperties = Record<string, LexiconItem>;
+type ObjectProperties = Record<
+	string,
+	{
+		type: LexiconType;
+	}
+>;
+
+type RequiredKeys<T> =
+	T extends Record<string, { required?: boolean }>
+		? {
+				[K in keyof T]: T[K]["required"] extends true ? K : never;
+			}[keyof T]
+		: never;
+
+type NullableKeys<T> =
+	T extends Record<string, { nullable?: boolean }>
+		? {
+				[K in keyof T]: T[K]["nullable"] extends true ? K : never;
+			}[keyof T]
+		: never;
 
 /**
  * Resulting object schema with required and nullable fields extracted.
  * @see https://atproto.com/specs/lexicon#object
  */
-interface ObjectResult<T extends ObjectProperties> {
+type ObjectResult<
+	T extends ObjectProperties,
+	R = RequiredKeys<T>,
+	N = NullableKeys<T>,
+> = {
 	type: "object";
 	/** Property definitions */
-	properties: T;
-	/** List of required property names */
-	required?: string[];
-	/** List of nullable property names */
-	nullable?: string[];
-}
+	properties: {
+		[K in keyof T]: T[K] extends { type: "object" }
+			? T[K]
+			: Prettify<Omit<T[K], "required" | "nullable">>;
+	};
+} & Omit<
+	{ required: UnionToTuple<R> },
+	| (R extends never ? "required" : never)
+	| (N extends never ? "nullable" : never)
+>;
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -470,12 +498,12 @@ export const lx = {
 	 * Creates an object type with defined properties.
 	 * @see https://atproto.com/specs/lexicon#object
 	 */
-	object<T extends ObjectProperties>(options: T): ObjectResult<T> {
+	object<T extends ObjectProperties>(options: T): Prettify<ObjectResult<T>> {
 		const required = Object.keys(options).filter(
-			(key) => options[key].required,
+			(key) => "required" in options[key] && options[key].required,
 		);
 		const nullable = Object.keys(options).filter(
-			(key) => options[key].nullable,
+			(key) => "nullable" in options[key] && options[key].nullable,
 		);
 		const result: ObjectResult<T> = {
 			type: "object",
