@@ -1,58 +1,173 @@
-# typed-lexicon - Development TODO
+# Type Instantiation Optimization Plan
 
-## Project Goal
+## Current State
 
-Build a toolkit for writing ATProto lexicon JSON schemas in TypeScript that:
+**Benchmark Results:**
+- Simple object (2 properties): **578 instantiations** (baseline: 62, 9.3x over)
+- Complex nested (3 defs): **971 instantiations** (baseline: 124, 7.8x over)
 
-- Removes boilerplate and improves ergonomics
-- Provides type hints for
-  [atproto type parameters](https://atproto.com/specs/lexicon#overview-of-types)
-- Infers TypeScript type definitions for data shapes to avoid duplication and
-  skew
-- Includes methods and a CLI for generating JSON
+**Target:** Reduce to ~200-250 instantiations for simple case (2-3x savings)
 
-## Files to Read
+## Root Causes
 
-When working on this project, always reference:
+The 10x overhead comes from:
+1. **Excessive `Prettify` calls** - Applied at every level instead of just top-level
+2. **Unnecessary `UnionToTuple` conversions** - Running even when no required/nullable fields exist
+3. **Slow primitive inference** - All primitives go through 13-level conditional cascade
+4. **Triple property iteration** - `RequiredKeys`, `NullableKeys`, then actual inference
+5. **Complex `InferObject` intersections** - 4 separate mapped types intersected together
 
-1. **`lib.ts`** - Main implementation file with all `lx.*` methods
-2. **`tests/primitives.test.ts`** - Tests for all implemented types
-3. **`tests/base-case.test.ts`** - Example usage test
-4. **`README.md`** - Project direction and example usage
+## Optimization Tasks
 
-## Essential Resources
+### 1. Make `Prettify` Lazy ⚡️ HIGH IMPACT
 
-When implementing new lexicon types, fetch from:
+**Goal:** Only prettify at the top-level `InferNS` export, not at every intermediate step
 
-- **Main spec**: https://atproto.com/specs/lexicon#overview-of-types
-- **Data model**: https://atproto.com/specs/data-model
-- **ATProto lexicon examples**:
-  - https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/actor/defs.json
-    (for `ref` examples)
-  - https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/feed/defs.json
-    (for `token` examples)
+**Files to modify:**
+- `src/infer.ts` - Remove `Prettify` from `InferObject`, `InferDefs`
+- `src/infer.ts` - Keep `Prettify` only in `InferNS<T>` final export
+- `src/lib.ts` - Remove `Prettify` from `ObjectResult`, `ParamsResult`
 
-## Implementation Status
+**Expected savings:** 200-300 instantiations
 
-- ✅ Initial implementation of field types returning json definitions
-- ✅ Bsky actor and feed test files created and passing
-  (`tests/bsky-actor.test.ts` and `tests/bsky-feed.test.ts`)
+**Validation:** Run benchmarks, verify IDE autocomplete still shows clean types
 
-## Todo
+---
 
-### CLI for JSON Emission
+### 2. Skip `UnionToTuple` When Empty ⚡️ HIGH IMPACT
 
-1. **Design CLI** - Determine command structure, flags, and output strategy
-2. **Create JSON emission logic** - Traverse lexicon objects and serialize to
-   formatted JSON
-3. **Add file I/O** - Read TypeScript lexicon files, write JSON output files
-4. **Write CLI documentation** - Usage examples, flag reference, common
-   workflows
+**Goal:** Avoid expensive union-to-tuple conversion when there are no required/nullable fields
 
-### Type Inference System
+**Files to modify:**
+- `src/lib.ts` - Wrap `UnionToTuple` calls in conditional checks for `never`
+- `src/lib.ts` - Update `ObjectResult` to conditionally omit `required`/`nullable` keys
 
-Infer TypeScript types from lexicon definitions
+**Expected savings:** 50-100 instantiations per object with no required/nullable fields
 
-### `validate()`
+**Implementation:**
+```typescript
+type ObjectResult<T> = {
+  type: "object";
+  properties: {...};
+} & (
+  RequiredKeys<T> extends never
+    ? {}
+    : { required: UnionToTuple<RequiredKeys<T>> }
+) & (
+  NullableKeys<T> extends never
+    ? {}
+    : { nullable: UnionToTuple<NullableKeys<T>> }
+);
+```
 
-validate any lexicon schema json at runtime
+**Validation:** Ensure objects without required/nullable fields don't have those keys
+
+---
+
+### 3. Fast-Path for Primitives in `InferType` 🚀 MEDIUM IMPACT
+
+**Goal:** Early exit for common primitive types before checking complex conditionals
+
+**Files to modify:**
+- `src/infer.ts` - Reorder `InferType` to check primitives first
+- `src/infer.ts` - Extract type tag and switch on it
+
+**Expected savings:** 30-50 instantiations per primitive property
+
+**Implementation:**
+```typescript
+type InferType<T> =
+  T extends { type: infer Type }
+    ? Type extends "string" ? string
+    : Type extends "boolean" ? boolean
+    : Type extends "integer" ? number
+    : Type extends "null" ? null
+    : Type extends "bytes" ? Uint8Array
+    : Type extends "cid-link" ? string
+    : Type extends "blob" ? Blob
+    : Type extends "unknown" ? unknown
+    // ... then complex types (record, object, array, params, union, token, ref)
+    : never
+  : never;
+```
+
+**Validation:** All existing tests pass, primitives still infer correctly
+
+---
+
+### 4. Combine Key Extraction into Single Pass 🔧 MEDIUM IMPACT
+
+**Goal:** Extract required/nullable keys in one iteration instead of two separate mapped types
+
+**Files to modify:**
+- `src/lib.ts` - Create unified `ExtractKeys<T>` helper
+- `src/lib.ts` - Update `ObjectResult` to use single extraction
+- `src/infer.ts` - Update `InferObject` to use single extraction
+
+**Expected savings:** 20-40 instantiations per object
+
+**Implementation:**
+```typescript
+type ExtractKeys<T> = {
+  required: RequiredKeys<T>;
+  nullable: NullableKeys<T>;
+};
+
+type ObjectResult<T, Keys = ExtractKeys<T>> = ...
+```
+
+**Validation:** Required and nullable fields still work correctly
+
+---
+
+### 5. Simplify `InferObject` to 2 Mapped Types 🔧 MEDIUM-HIGH IMPACT
+
+**Goal:** Reduce from 4 intersected mapped types to 2 by using conditional types in values
+
+**Files to modify:**
+- `src/infer.ts` - Restructure `InferObject` type
+- `src/infer.ts` - Combine required/optional logic into value-level conditionals
+
+**Expected savings:** 50-100 instantiations per object
+
+**Current structure:**
+```typescript
+{ [K in Normal]?: ... } &
+{ [K in Required-NotNullable]-?: ... } &
+{ [K in Nullable-NotRequired]?: ... } &
+{ [K in RequiredAndNullable]: ... }
+```
+
+**Target structure:**
+```typescript
+{ [K in OptionalKeys]?: InferType<P[K]> | (K extends Nullable ? null : never) } &
+{ [K in RequiredKeys]-?: InferType<P[K]> | (K extends Nullable ? null : never) }
+```
+
+**Validation:** All nullable/required combinations still work, existing tests pass
+
+---
+
+## Validation Process
+
+After each optimization:
+
+1. **Run type tests:** `pnpm tsc`
+2. **Run unit tests:** `pnpm test`
+3. **Run benchmarks:** `pnpm test:bench`
+4. **Check IDE performance:** Open large schema file, verify autocomplete is fast
+5. **Document results:** Update this file with actual savings
+
+## Success Metrics
+
+- ✅ Simple object: < 250 instantiations (currently 578)
+- ✅ Complex nested: < 400 instantiations (currently 971)
+- ✅ All tests passing
+- ✅ IDE autocomplete remains fast and type display is clean
+
+## Notes
+
+- Maintain JSON compatibility (no nominal types)
+- Preserve developer experience (clean type display in IDE)
+- Keep runtime behavior unchanged (types erase anyway)
+- This is for schema authoring + validated payload typing
