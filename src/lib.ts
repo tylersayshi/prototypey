@@ -1,5 +1,3 @@
-// deno-lint-ignore-file ban-types
-
 import type { InferNS } from "./infer.ts";
 import { Prettify, UnionToTuple } from "./type-utils.ts";
 
@@ -225,8 +223,8 @@ type ObjectResult<
 	};
 } & Omit<
 	{ required: UnionToTuple<R>; nullable: UnionToTuple<N> },
-	| (R extends never ? "required" : never)
-	| (N extends never ? "nullable" : never)
+	| ([R] extends [never] ? "required" : never)
+	| ([N] extends [never] ? "nullable" : never)
 >;
 
 /**
@@ -245,7 +243,10 @@ type ParamsResult<T extends ParamsProperties, R = RequiredKeys<T>> = {
 	properties: {
 		[K in keyof T]: Prettify<Omit<T[K], "required" | "nullable">>;
 	};
-} & Omit<{ required: UnionToTuple<R> }, R extends never ? "required" : never>;
+} & Omit<
+	{ required: UnionToTuple<R> },
+	[R] extends [never] ? "required" : never
+>;
 
 /**
  * HTTP request or response body schema.
@@ -517,7 +518,7 @@ export const lx = {
 	 */
 	params<Properties extends ParamsProperties>(
 		properties: Properties,
-	): ParamsResult<Properties> {
+	): Prettify<ParamsResult<Properties>> {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
