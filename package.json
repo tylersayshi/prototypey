@@ -21,7 +21,7 @@
 	],
 	"scripts": {
 		"build": "tsdown",
-		"format": "prettier . --check",
+		"format": "prettier . --list-different",
 		"format:fix": "prettier . --write",
 		"lint": "eslint . --max-warnings 0",
 		"test": "vitest run",
