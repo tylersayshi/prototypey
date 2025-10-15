@@ -94,10 +94,6 @@ type InferRecord<T> = T extends { record: infer R }
 			: unknown
 	: unknown;
 
-type InferDefs<T extends Record<string, unknown>> = {
-	-readonly [K in keyof T]: InferType<T[K]>;
-};
-
 /**
  * Recursively replaces stub references in a type with their actual definitions.
  * Detects circular references and missing references, returning string literal error messages.
@@ -131,22 +127,15 @@ type ReplaceRefsInType<T, Defs, Visited = never> =
 						T;
 
 /**
- * Applies ref replacement to all definitions in a namespace.
- */
-type ReplaceRefs<InferredDefs> = {
-	[K in keyof InferredDefs]: ReplaceRefsInType<InferredDefs[K], InferredDefs>;
-};
-
-/**
  * Infers the TypeScript type for a lexicon namespace, returning only the 'main' definition
  * with all local refs (#user, #post, etc.) resolved to their actual types.
  */
 export type Infer<T extends { id: string; defs: Record<string, unknown> }> =
-	"main" extends keyof T["defs"]
-		? Prettify<
-				ReplaceRefsInType<
+	Prettify<
+		"main" extends keyof T["defs"]
+			? { id: T["id"] } & ReplaceRefsInType<
 					InferType<T["defs"]["main"]>,
 					{ [K in keyof T["defs"]]: InferType<T["defs"][K]> }
 				>
-			>
-		: never;
+			: never
+	>;

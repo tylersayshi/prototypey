@@ -34,6 +34,23 @@ bench("infer with complex nested structure", () => {
 	return schema.infer;
 }).types([1022, "instantiations"]);
 
+bench("infer with circular reference", () => {
+	const ns = lx.namespace("test", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+			posts: lx.array(lx.ref("#post")),
+		}),
+		post: lx.object({
+			title: lx.string({ required: true }),
+			author: lx.ref("#user", { required: true }),
+		}),
+		main: lx.object({
+			users: lx.array(lx.ref("#user")),
+		}),
+	});
+	return ns.infer;
+}).types([674, "instantiations"]);
+
 bench("infer with app.bsky.feed.defs namespace", () => {
 	const schema = lx.namespace("app.bsky.feed.defs", {
 		viewerState: lx.object({

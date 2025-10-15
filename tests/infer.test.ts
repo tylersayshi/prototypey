@@ -760,6 +760,40 @@ test("Edge case: circular reference detection", () => {
 }`);
 });
 
+test("Edge case: circular reference between multiple types", () => {
+	const ns = lx.namespace("test", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+			posts: lx.array(lx.ref("#post")),
+		}),
+		post: lx.object({
+			title: lx.string({ required: true }),
+			author: lx.ref("#user", { required: true }),
+		}),
+		main: lx.object({
+			users: lx.array(lx.ref("#user")),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  users?:
+    | {
+        posts?:
+          | {
+              author?:
+                | "[Circular reference detected: #user]"
+                | undefined
+              title: string
+              $type: "#post"
+            }[]
+          | undefined
+        name: string
+        $type: "#user"
+      }[]
+    | undefined
+}`);
+});
+
 test("Edge case: missing reference detection", () => {
 	const ns = lx.namespace("test", {
 		main: lx.object({
