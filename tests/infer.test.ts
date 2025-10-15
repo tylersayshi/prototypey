@@ -17,12 +17,10 @@ test("InferNS produces expected type shape", () => {
 
 	// Type snapshot - this captures how types appear on hover
 	attest(exampleLexicon.infer).type.toString.snap(`{
-  main: {
-    tags?: string[] | undefined
-    likes?: number | undefined
-    createdAt: string
-    text: string
-  }
+  tags?: string[] | undefined
+  likes?: number | undefined
+  createdAt: string
+  text: string
 }`);
 });
 
@@ -34,9 +32,9 @@ test("InferObject handles required fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap(`{
-  main: { optional?: string | undefined; required: string }
-}`);
+	attest(schema.infer).type.toString.snap(
+		"{ optional?: string | undefined; required: string }",
+	);
 });
 
 test("InferObject handles nullable fields", () => {
@@ -46,9 +44,7 @@ test("InferObject handles nullable fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap(
-		"{ main: { nullable: string | null } }",
-	);
+	attest(schema.infer).type.toString.snap("{ nullable: string | null }");
 });
 
 // ============================================================================
@@ -63,7 +59,7 @@ test("InferType handles string primitive", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { simpleString?: string | undefined } }",
+		"{ simpleString?: string | undefined }",
 	);
 });
 
@@ -76,10 +72,8 @@ test("InferType handles integer primitive", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    count?: number | undefined
-    age?: number | undefined
-  }
+  count?: number | undefined
+  age?: number | undefined
 }`);
 });
 
@@ -92,10 +86,8 @@ test("InferType handles boolean primitive", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    isActive?: boolean | undefined
-    hasAccess: boolean
-  }
+  isActive?: boolean | undefined
+  hasAccess: boolean
 }`);
 });
 
@@ -107,7 +99,7 @@ test("InferType handles null primitive", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { nullValue?: null | undefined } }",
+		"{ nullValue?: null | undefined }",
 	);
 });
 
@@ -118,9 +110,7 @@ test("InferType handles unknown primitive", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { metadata?: unknown } }",
-	);
+	attest(namespace.infer).type.toString.snap("{ metadata?: unknown }");
 });
 
 test("InferType handles bytes primitive", () => {
@@ -130,9 +120,9 @@ test("InferType handles bytes primitive", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  main: { data?: Uint8Array<ArrayBufferLike> | undefined }
-}`);
+	attest(namespace.infer).type.toString.snap(
+		"{ data?: Uint8Array<ArrayBufferLike> | undefined }",
+	);
 });
 
 test("InferType handles blob primitive", () => {
@@ -142,9 +132,7 @@ test("InferType handles blob primitive", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { image?: Blob | undefined } }",
-	);
+	attest(namespace.infer).type.toString.snap("{ image?: Blob | undefined }");
 });
 
 // ============================================================================
@@ -158,9 +146,7 @@ test("InferToken handles basic token without enum", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { symbol?: string | undefined } }",
-	);
+	attest(namespace.infer).type.toString.snap("{ symbol?: string | undefined }");
 });
 
 // ============================================================================
@@ -174,9 +160,7 @@ test("InferArray handles string arrays", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { tags?: string[] | undefined } }",
-	);
+	attest(namespace.infer).type.toString.snap("{ tags?: string[] | undefined }");
 });
 
 test("InferArray handles integer arrays", () => {
@@ -187,7 +171,7 @@ test("InferArray handles integer arrays", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { scores?: number[] | undefined } }",
+		"{ scores?: number[] | undefined }",
 	);
 });
 
@@ -199,7 +183,7 @@ test("InferArray handles boolean arrays", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { flags?: boolean[] | undefined } }",
+		"{ flags?: boolean[] | undefined }",
 	);
 });
 
@@ -211,7 +195,7 @@ test("InferArray handles unknown arrays", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { items?: unknown[] | undefined } }",
+		"{ items?: unknown[] | undefined }",
 	);
 });
 
@@ -230,12 +214,10 @@ test("InferObject handles mixed optional and required fields", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    age?: number | undefined
-    email?: string | undefined
-    id: string
-    name: string
-  }
+  age?: number | undefined
+  email?: string | undefined
+  id: string
+  name: string
 }`);
 });
 
@@ -249,11 +231,9 @@ test("InferObject handles all optional fields", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    field1?: string | undefined
-    field2?: number | undefined
-    field3?: boolean | undefined
-  }
+  field1?: string | undefined
+  field2?: number | undefined
+  field3?: boolean | undefined
 }`);
 });
 
@@ -266,9 +246,9 @@ test("InferObject handles all required fields", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  main: { field1: string; field2: number; field3: boolean }
-}`);
+	attest(namespace.infer).type.toString.snap(
+		"{ field1: string; field2: number; field3: boolean }",
+	);
 });
 
 // ============================================================================
@@ -282,9 +262,9 @@ test("InferObject handles nullable optional field", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  main: { description?: string | null | undefined }
-}`);
+	attest(namespace.infer).type.toString.snap(
+		"{ description?: string | null | undefined }",
+	);
 });
 
 test("InferObject handles multiple nullable fields", () => {
@@ -297,11 +277,9 @@ test("InferObject handles multiple nullable fields", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    field1?: string | null | undefined
-    field2?: number | null | undefined
-    field3?: boolean | null | undefined
-  }
+  field1?: string | null | undefined
+  field2?: number | null | undefined
+  field3?: boolean | null | undefined
 }`);
 });
 
@@ -312,9 +290,7 @@ test("InferObject handles nullable and required field", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { value: string | null } }",
-	);
+	attest(namespace.infer).type.toString.snap("{ value: string | null }");
 });
 
 test("InferObject handles mixed nullable, required, and optional", () => {
@@ -328,12 +304,10 @@ test("InferObject handles mixed nullable, required, and optional", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    optional?: string | undefined
-    required: string
-    optionalNullable?: string | null | undefined
-    requiredNullable: string | null
-  }
+  optional?: string | undefined
+  required: string
+  optionalNullable?: string | null | undefined
+  requiredNullable: string | null
 }`);
 });
 
@@ -349,14 +323,9 @@ test("InferRef handles basic reference", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    post?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.post"
-        }
-      | undefined
-  }
+  post?:
+    | { [x: string]: unknown; $type: "com.example.post" }
+    | undefined
 }`);
 });
 
@@ -368,14 +337,9 @@ test("InferRef handles required reference", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    author?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.user"
-        }
-      | undefined
-  }
+  author?:
+    | { [x: string]: unknown; $type: "com.example.user" }
+    | undefined
 }`);
 });
 
@@ -387,14 +351,9 @@ test("InferRef handles nullable reference", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    parent?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.node"
-        }
-      | undefined
-  }
+  parent?:
+    | { [x: string]: unknown; $type: "com.example.node" }
+    | undefined
 }`);
 });
 
@@ -410,18 +369,10 @@ test("InferUnion handles basic union", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    content?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.text"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.image"
-        }
-      | undefined
-  }
+  content?:
+    | { [x: string]: unknown; $type: "com.example.text" }
+    | { [x: string]: unknown; $type: "com.example.image" }
+    | undefined
 }`);
 });
 
@@ -435,17 +386,9 @@ test("InferUnion handles required union", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    media:
-      | {
-          [key: string]: unknown
-          $type: "com.example.video"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.audio"
-        }
-  }
+  media:
+    | { [x: string]: unknown; $type: "com.example.video" }
+    | { [x: string]: unknown; $type: "com.example.audio" }
 }`);
 });
 
@@ -462,26 +405,15 @@ test("InferUnion handles union with many types", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    attachment?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.image"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.video"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.audio"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.document"
-        }
-      | undefined
-  }
+  attachment?:
+    | { [x: string]: unknown; $type: "com.example.image" }
+    | { [x: string]: unknown; $type: "com.example.video" }
+    | { [x: string]: unknown; $type: "com.example.audio" }
+    | {
+        [x: string]: unknown
+        $type: "com.example.document"
+      }
+    | undefined
 }`);
 });
 
@@ -498,10 +430,8 @@ test("InferParams handles basic params", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    limit?: number | undefined
-    offset?: number | undefined
-  }
+  limit?: number | undefined
+  offset?: number | undefined
 }`);
 });
 
@@ -513,9 +443,9 @@ test("InferParams handles required params", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  main: { limit?: number | undefined; query: string }
-}`);
+	attest(namespace.infer).type.toString.snap(
+		"{ limit?: number | undefined; query: string }",
+	);
 });
 
 // ============================================================================
@@ -535,11 +465,9 @@ test("InferRecord handles record with object schema", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    published?: boolean | undefined
-    content: string
-    title: string
-  }
+  published?: boolean | undefined
+  content: string
+  title: string
 }`);
 });
 
@@ -558,9 +486,7 @@ test("InferObject handles nested objects", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    user?: { name: string; email: string } | undefined
-  }
+  user?: { name: string; email: string } | undefined
 }`);
 });
 
@@ -578,15 +504,13 @@ test("InferObject handles deeply nested objects", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    data?:
-      | {
-          user?:
-            | { profile?: { name: string } | undefined }
-            | undefined
-        }
-      | undefined
-  }
+  data?:
+    | {
+        user?:
+          | { profile?: { name: string } | undefined }
+          | undefined
+      }
+    | undefined
 }`);
 });
 
@@ -607,9 +531,7 @@ test("InferArray handles arrays of objects", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    users?: { id: string; name: string }[] | undefined
-  }
+  users?: { id: string; name: string }[] | undefined
 }`);
 });
 
@@ -623,7 +545,7 @@ test("InferArray handles arrays of arrays", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ main: { matrix?: number[][] | undefined } }",
+		"{ matrix?: number[][] | undefined }",
 	);
 });
 
@@ -635,14 +557,9 @@ test("InferArray handles arrays of refs", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    followers?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.user"
-        }[]
-      | undefined
-  }
+  followers?:
+    | { [x: string]: unknown; $type: "com.example.user" }[]
+    | undefined
 }`);
 });
 
@@ -670,34 +587,26 @@ test("InferObject handles complex nested structure", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    tags?: string[] | undefined
-    content?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.text"
-        }
-      | {
-          [key: string]: unknown
-          $type: "com.example.image"
-        }
-      | undefined
-    author?:
-      | {
-          avatar?: string | undefined
-          did: string
-          handle: string
-        }
-      | undefined
-    metadata?:
-      | {
-          likes?: number | undefined
-          views?: number | undefined
-          shares?: number | undefined
-        }
-      | undefined
-    id: string
-  }
+  tags?: string[] | undefined
+  content?:
+    | { [x: string]: unknown; $type: "com.example.text" }
+    | { [x: string]: unknown; $type: "com.example.image" }
+    | undefined
+  author?:
+    | {
+        avatar?: string | undefined
+        did: string
+        handle: string
+      }
+    | undefined
+  metadata?:
+    | {
+        likes?: number | undefined
+        views?: number | undefined
+        shares?: number | undefined
+      }
+    | undefined
+  id: string
 }`);
 });
 
@@ -721,19 +630,7 @@ test("InferNS handles multiple defs in namespace", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  user: { name: string; email: string }
-  post: { content: string; title: string }
-  comment: {
-    author?:
-      | {
-          [key: string]: unknown
-          $type: "com.example.user"
-        }
-      | undefined
-    text: string
-  }
-}`);
+	attest(namespace.infer).type.toString.snap("never");
 });
 
 test("InferNS handles namespace with record and object defs", () => {
@@ -751,11 +648,126 @@ test("InferNS handles namespace with record and object defs", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(`{
-  main: { title: string; body: string }
-  metadata: {
-    tags?: string[] | undefined
-    category?: string | undefined
-  }
+	attest(namespace.infer).type.toString.snap("{ title: string; body: string }");
+});
+
+// ============================================================================
+// LOCAL REF RESOLUTION TESTS
+// ============================================================================
+
+test("Local ref resolution: resolves refs to actual types", () => {
+	const ns = lx.namespace("test", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+			email: lx.string({ required: true }),
+		}),
+		main: lx.object({
+			author: lx.ref("#user", { required: true }),
+			content: lx.string({ required: true }),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  author?:
+    | { name: string; email: string; $type: "#user" }
+    | undefined
+  content: string
+}`);
+});
+
+test("Local ref resolution: refs in arrays", () => {
+	const ns = lx.namespace("test", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+		}),
+		main: lx.object({
+			users: lx.array(lx.ref("#user")),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  users?: { name: string; $type: "#user" }[] | undefined
+}`);
+});
+
+test("Local ref resolution: refs in unions", () => {
+	const ns = lx.namespace("test", {
+		text: lx.object({ content: lx.string({ required: true }) }),
+		image: lx.object({ url: lx.string({ required: true }) }),
+		main: lx.object({
+			embed: lx.union(["#text", "#image"]),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  embed?:
+    | { content: string; $type: "#text" }
+    | { url: string; $type: "#image" }
+    | undefined
+}`);
+});
+
+test("Local ref resolution: nested refs", () => {
+	const ns = lx.namespace("test", {
+		profile: lx.object({
+			bio: lx.string({ required: true }),
+		}),
+		user: lx.object({
+			name: lx.string({ required: true }),
+			profile: lx.ref("#profile", { required: true }),
+		}),
+		main: lx.object({
+			author: lx.ref("#user", { required: true }),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  author?:
+    | {
+        profile?:
+          | { bio: string; $type: "#profile" }
+          | undefined
+        name: string
+        $type: "#user"
+      }
+    | undefined
+}`);
+});
+
+// ============================================================================
+// EDGE CASE TESTS
+// ============================================================================
+
+test("Edge case: circular reference detection", () => {
+	const ns = lx.namespace("test", {
+		main: lx.object({
+			value: lx.string({ required: true }),
+			parent: lx.ref("#main"),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  parent?:
+    | {
+        parent?:
+          | "[Circular reference detected: #main]"
+          | undefined
+        value: string
+        $type: "#main"
+      }
+    | undefined
+  value: string
+}`);
+});
+
+test("Edge case: missing reference detection", () => {
+	const ns = lx.namespace("test", {
+		main: lx.object({
+			author: lx.ref("#user", { required: true }),
+		}),
+	});
+
+	attest(ns.infer).type.toString.snap(`{
+  author?: "[Reference not found: #user]" | undefined
 }`);
 });

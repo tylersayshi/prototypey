@@ -98,5 +98,55 @@ type InferDefs<T extends Record<string, unknown>> = {
 	-readonly [K in keyof T]: InferType<T[K]>;
 };
 
+/**
+ * Recursively replaces stub references in a type with their actual definitions.
+ * Detects circular references and missing references, returning string literal error messages.
+ */
+type ReplaceRefsInType<T, Defs, Visited = never> =
+	// Check if this is a ref stub type (has $type starting with #)
+	T extends { $type: `#${infer DefName}` }
+		? DefName extends keyof Defs
+			? // Check for circular reference
+				DefName extends Visited
+				? `[Circular reference detected: #${DefName}]`
+				: // Recursively resolve the ref and preserve the $type marker
+					Prettify<
+						ReplaceRefsInType<Defs[DefName], Defs, Visited | DefName> & {
+							$type: T["$type"];
+						}
+					>
+			: // Reference not found in definitions
+				`[Reference not found: #${DefName}]`
+		: // Handle arrays (but not Uint8Array or other typed arrays)
+			T extends Uint8Array | Blob
+			? T
+			: T extends readonly (infer Item)[]
+				? ReplaceRefsInType<Item, Defs, Visited>[]
+				: // Handle plain objects (exclude built-in types and functions)
+					T extends object
+					? T extends (...args: unknown[]) => unknown
+						? T
+						: { [K in keyof T]: ReplaceRefsInType<T[K], Defs, Visited> }
+					: // Primitives pass through unchanged
+						T;
+
+/**
+ * Applies ref replacement to all definitions in a namespace.
+ */
+type ReplaceRefs<InferredDefs> = {
+	[K in keyof InferredDefs]: ReplaceRefsInType<InferredDefs[K], InferredDefs>;
+};
+
+/**
+ * Infers the TypeScript type for a lexicon namespace, returning only the 'main' definition
+ * with all local refs (#user, #post, etc.) resolved to their actual types.
+ */
 export type Infer<T extends { id: string; defs: Record<string, unknown> }> =
-	Prettify<InferDefs<T["defs"]>>;
+	"main" extends keyof T["defs"]
+		? Prettify<
+				ReplaceRefsInType<
+					InferType<T["defs"]["main"]>,
+					{ [K in keyof T["defs"]]: InferType<T["defs"][K]> }
+				>
+			>
+		: never;
