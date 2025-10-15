@@ -9,7 +9,7 @@ bench("InferNS with simple object", () => {
 		}),
 	});
 	return schema.infer;
-}).types([62, "instantiations"]);
+}).types([244, "instantiations"]);
 
 bench("InferNS with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
@@ -32,4 +32,4 @@ bench("InferNS with complex nested structure", () => {
 		}),
 	});
 	return schema.infer;
-}).types([124, "instantiations"]);
+}).types([507, "instantiations"]);

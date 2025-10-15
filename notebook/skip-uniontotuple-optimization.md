@@ -122,3 +122,128 @@ type ObjectResult<T extends ObjectProperties> = {
 3. **Helper types aren't always helpful**: While helper types improve code organization, they can add overhead. Always benchmark after introducing abstractions.
 
 4. **Small changes add up**: A 31-instantiation reduction (11%) might seem modest, but combined with other optimizations, we achieved a 57.8% total improvement.
+
+---
+
+## Further Optimization Attempts (Post-Initial Success)
+
+### Attempt 3: Reduce InferObject Intersections (4 → 2) ❌ FAILED
+
+**Change:** Attempted to reduce the number of intersected mapped types in `InferObject` from 4 to 2 by combining key categories:
+
+```typescript
+type InferObject<...> = Prettify<
+  T extends { properties: any }
+    ? {
+        // All REQUIRED keys (with and without nullable)
+        -readonly [K in keyof Props as K extends Required & string ? K : never]-?:
+          K extends NullableAndRequired
+            ? InferType<Props[K]> | null
+            : InferType<Props[K]>;
+      } & {
+        // All OPTIONAL keys (normal and nullable-only)
+        -readonly [K in keyof Props as K extends Exclude<keyof Props & string, Required> ? K : never]?:
+          K extends Nullable
+            ? InferType<Props[K]> | null
+            : InferType<Props[K]>;
+      }
+    : {}
+>;
+```
+
+**Results:**
+- Simple object: **244 instantiations** (unchanged)
+- Complex nested: **507 instantiations** (unchanged)
+
+**Why it failed:**
+- The number of intersections wasn't the bottleneck
+- TypeScript still evaluates the same number of conditional checks
+- Property ordering changed (required first, then optional), breaking snapshot tests
+- No performance benefit to justify the breaking change
+
+**Action taken:** Reverted.
+
+### Attempt 4: Inline Type Parameters in InferObject ❌ FAILED
+
+**Change:** Removed all intermediate type parameters from `InferObject`, similar to what worked for `ObjectResult`:
+
+```typescript
+type InferObject<T> = Prettify<
+  T extends { properties: infer P }
+    ? {
+        -readonly [K in "properties" extends keyof T
+          ? Exclude<keyof T["properties"], (GetRequired<T> & string) | (GetNullable<T> & string)> & string
+          : never]?: InferType<P[K & keyof P]>;
+      } & {
+        -readonly [K in Exclude<GetRequired<T> & string, ...>]-?: InferType<P[K & keyof P]>;
+      } & ...
+    : {}
+>;
+```
+
+**Results:**
+- Simple object: **244 instantiations** (unchanged)
+- Complex nested: **507 instantiations** (unchanged)
+
+**Why it failed:**
+- Unlike `ObjectResult` (which is only evaluated at definition time), `InferObject` is called recursively during type inference
+- The intermediate type parameters are likely cached/memoized by TypeScript during recursive evaluation
+- Inlining forces re-computation of the same values multiple times in each mapped type key
+- Tests passed but no performance improvement
+
+**Action taken:** Reverted.
+
+## Updated Key Learnings
+
+5. **Context matters for optimizations**: What works in one context (removing intermediate params in `ObjectResult`) may not work in another (`InferObject`). The recursive nature of type inference behaves differently than one-time type construction.
+
+6. **Intersection count isn't always the bottleneck**: Reducing from 4 to 2 intersections had zero impact, suggesting the real cost is elsewhere (likely `Prettify` at every nesting level or the recursive `InferType` calls).
+
+7. **TypeScript may optimize intermediate parameters**: In recursive scenarios, intermediate type parameters might be cached, making inlining counterproductive.
+
+### Attempt 5: Reorder InferType Dispatch Chain ❌ FAILED
+
+**Change:** Reordered the `InferType` conditional chain to prioritize the most commonly used types:
+
+**New order:**
+1. object (most common container)
+2. string (most common primitive)
+3. ref (common for schema references)
+4. array (common for collections)
+5. union (common for polymorphic types)
+6. integer, boolean (other common primitives)
+7. record, params, null, token, unknown, bytes, cid-link, blob (less common)
+
+**Previous order:**
+1. record, object, array, params, union, token, ref, unknown, null, boolean, integer, string, bytes, cid-link, blob
+
+```typescript
+type InferType<T> = T extends { type: "object" }
+  ? InferObject<T>
+  : T extends { type: "string" }
+    ? string
+    : T extends { type: "ref" }
+      ? InferRef<T>
+      : T extends { type: "array" }
+        ? InferArray<T>
+        // ... rest of the chain
+```
+
+**Results:**
+- Simple object: **244 instantiations** (unchanged)
+- Complex nested: **507 instantiations** (unchanged)
+
+**Why it failed:**
+- TypeScript's type checker likely doesn't evaluate conditional chains linearly
+- The order of conditionals has no impact on performance
+- TypeScript may cache or optimize type instantiations internally regardless of order
+- Tests pass, proving functional correctness, but zero performance benefit
+
+**Action taken:** Kept the new order (it's more readable with common types first), but no performance gain.
+
+## Next Potential Optimizations to Try
+
+1. **Optimize `Prettify` itself** - Since it's called at every nesting level, making it more efficient could have cascading benefits
+2. **Combine `GetRequired` and `GetNullable`** - Extract both in a single pass to reduce type instantiations
+3. **Cache commonly used helper types** - Though previous attempts suggest this might not help
+4. **Reduce Prettify calls** - Only call Prettify at the outermost level, not at every nesting
