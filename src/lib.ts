@@ -1,6 +1,6 @@
-// deno-lint-ignore-file ban-types
-
-import type { InferNS } from "./infer.ts";
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import type { Infer } from "./infer.ts";
+import type { Prettify, UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
@@ -191,21 +191,39 @@ interface UnionOptions extends LexiconItemCommonOptions {
  * Map of property names to their lexicon item definitions.
  * @see https://atproto.com/specs/lexicon#object
  */
-type ObjectProperties = Record<string, LexiconItem>;
+type ObjectProperties = Record<
+	string,
+	{
+		type: LexiconType;
+	}
+>;
+
+type RequiredKeys<T> = {
+	[K in keyof T]: T[K] extends { required: true } ? K : never;
+}[keyof T];
+
+type NullableKeys<T> = {
+	[K in keyof T]: T[K] extends { nullable: true } ? K : never;
+}[keyof T];
 
 /**
  * Resulting object schema with required and nullable fields extracted.
  * @see https://atproto.com/specs/lexicon#object
  */
-interface ObjectResult<T extends ObjectProperties> {
+type ObjectResult<T extends ObjectProperties> = {
 	type: "object";
 	/** Property definitions */
-	properties: T;
-	/** List of required property names */
-	required?: string[];
-	/** List of nullable property names */
-	nullable?: string[];
-}
+	properties: {
+		[K in keyof T]: T[K] extends { type: "object" }
+			? T[K]
+			: Omit<T[K], "required" | "nullable">;
+	};
+} & ([RequiredKeys<T>] extends [never]
+	? {}
+	: { required: UnionToTuple<RequiredKeys<T>> }) &
+	([NullableKeys<T>] extends [never]
+		? {}
+		: { nullable: UnionToTuple<NullableKeys<T>> });
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -217,13 +235,15 @@ type ParamsProperties = Record<string, LexiconItem>;
  * Resulting params schema with required fields extracted.
  * @see https://atproto.com/specs/lexicon#params
  */
-interface ParamsResult<T extends ParamsProperties> {
+type ParamsResult<T extends ParamsProperties> = {
 	type: "params";
 	/** Parameter definitions */
-	properties: T;
-	/** List of required parameter names */
-	required?: string[];
-}
+	properties: {
+		[K in keyof T]: Omit<T[K], "required" | "nullable">;
+	};
+} & ([RequiredKeys<T>] extends [never]
+	? {}
+	: { required: UnionToTuple<RequiredKeys<T>> });
 
 /**
  * HTTP request or response body schema.
@@ -309,7 +329,7 @@ interface SubscriptionOptions {
 
 class Namespace<T extends LexiconNamespace> {
 	public json: T;
-	public infer: InferNS<T> = null as unknown as InferNS<T>;
+	public infer: Infer<T> = null as unknown as Infer<T>;
 
 	constructor(json: T) {
 		this.json = json;
@@ -409,7 +429,7 @@ export const lx = {
 	 * Creates an array type with item schema and length constraints.
 	 * @see https://atproto.com/specs/lexicon#array
 	 */
-	array<Items extends LexiconItem, Options extends ArrayOptions>(
+	array<Items extends { type: LexiconType }, Options extends ArrayOptions>(
 		items: Items,
 		options?: Options,
 	): Options & { type: "array"; items: Items } {
@@ -470,14 +490,14 @@ export const lx = {
 	 * Creates an object type with defined properties.
 	 * @see https://atproto.com/specs/lexicon#object
 	 */
-	object<T extends ObjectProperties>(options: T): ObjectResult<T> {
+	object<T extends ObjectProperties>(options: T): Prettify<ObjectResult<T>> {
 		const required = Object.keys(options).filter(
-			(key) => options[key].required,
+			(key) => "required" in options[key] && options[key].required,
 		);
 		const nullable = Object.keys(options).filter(
-			(key) => options[key].nullable,
+			(key) => "nullable" in options[key] && options[key].nullable,
 		);
-		const result: ObjectResult<T> = {
+		const result: Record<string, unknown> = {
 			type: "object",
 			properties: options,
 		};
@@ -487,7 +507,7 @@ export const lx = {
 		if (nullable.length > 0) {
 			result.nullable = nullable;
 		}
-		return result;
+		return result as ObjectResult<T>;
 	},
 	/**
 	 * Creates a params type for query string parameters.
@@ -495,22 +515,18 @@ export const lx = {
 	 */
 	params<Properties extends ParamsProperties>(
 		properties: Properties,
-	): ParamsResult<Properties> {
+	): Prettify<ParamsResult<Properties>> {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
-		const result: {
-			type: "params";
-			properties: Properties;
-			required?: string[];
-		} = {
+		const result: Record<string, unknown> = {
 			type: "params",
 			properties,
 		};
 		if (required.length > 0) {
 			result.required = required;
 		}
-		return result;
+		return result as ParamsResult<Properties>;
 	},
 	/**
 	 * Creates a query endpoint definition (HTTP GET).

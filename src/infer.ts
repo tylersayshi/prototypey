@@ -1,3 +1,5 @@
+import { Prettify } from "./type-utils.ts";
+
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 type InferType<T> = T extends { type: "record" }
 	? InferRecord<T>
@@ -33,8 +35,12 @@ type InferType<T> = T extends { type: "record" }
 
 type InferToken<T> = T extends { enum: readonly (infer U)[] } ? U : string;
 
-type GetRequired<T> = T extends { required: readonly (infer R)[] } ? R : never;
-type GetNullable<T> = T extends { nullable: readonly (infer N)[] } ? N : never;
+export type GetRequired<T> = T extends { required: readonly (infer R)[] }
+	? R
+	: never;
+export type GetNullable<T> = T extends { nullable: readonly (infer N)[] }
+	? N
+	: never;
 
 type InferObject<
 	T,
@@ -78,9 +84,7 @@ type InferRef<T> = T extends { ref: infer R }
 		: unknown
 	: unknown;
 
-type InferParams<T> = T extends { properties: infer P }
-	? InferObject<P>
-	: never;
+type InferParams<T> = InferObject<T>;
 
 type InferRecord<T> = T extends { record: infer R }
 	? R extends { type: "object" }
@@ -90,13 +94,9 @@ type InferRecord<T> = T extends { record: infer R }
 			: unknown
 	: unknown;
 
-type Prettify<T> = {
-	[K in keyof T]: T[K];
-} & {};
-
-type InferDefs<T extends Record<string, unknown>> = Prettify<{
+type InferDefs<T extends Record<string, unknown>> = {
 	-readonly [K in keyof T]: InferType<T[K]>;
-}>;
+};
 
-export type InferNS<T extends { id: string; defs: Record<string, unknown> }> =
-	InferDefs<T["defs"]>;
+export type Infer<T extends { id: string; defs: Record<string, unknown> }> =
+	Prettify<InferDefs<T["defs"]>>;

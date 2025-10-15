@@ -3,7 +3,7 @@
 > [!WARNING]
 > this project is in the middle of active initial development and not ready for
 > use. there will be updates posted [here](https://bsky.app/profile/tylur.dev)
-> if you'd like to follow along! or checkout the [todo.md](./todo.md)
+> if you'd like to follow along!
 
 ![demo of jsdoc with typed-lexicon](https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c)
 
