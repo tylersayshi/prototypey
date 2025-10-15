@@ -92,35 +92,32 @@ This tries to extract `properties` from the params result, but should instead pa
 
 ---
 
-### 3. Arrays of Objects Return `never[]` (src/infer.ts)
+### 3. Arrays of Objects - Formatting Only (src/infer.ts)
 **Location**: `InferArray` and `InferType` interaction
 
-**Status**: ❌ BROKEN
+**Status**: ✅ TYPE INFERENCE FIXED - Formatting difference only
 
-**Issue**: Arrays containing objects (created with `lx.array(lx.object({...}))`) infer as `never[]` instead of the correct object array type.
+**Issue**: The type inference is now working correctly! Arrays containing objects now properly infer as `{ id: string; name: string }[]` instead of `never[]`. The only remaining issue is a cosmetic formatting difference in the test snapshot.
 
 **Failing Tests** (1 test):
 - `InferArray handles arrays of objects`
-  - Expected: `users?: { id: string; name: string }[] | undefined`
-  - Actual: `users?: never[] | undefined`
+  - Expected: Multi-line object format
+  - Actual: `users?: { id: string; name: string }[] | undefined` (single-line format)
+  - This is just a snapshot formatting difference, the type is correct!
 
-**Root Cause**: When `lx.array()` receives `lx.object()` as the items type, the `InferType` cannot properly infer the nested `ObjectResult` type. The issue is that `ObjectResult` has properties that have been stripped of `required` and `nullable`, but the type system isn't recognizing it correctly in the array context.
-
-Looking at src/lib.ts:227-231:
+**What Fixed It**: Changed `lx.array` function signature in src/lib.ts:440 from:
 ```typescript
-properties: {
-  [K in keyof T]: T[K] extends { type: "object" }
-    ? T[K]
-    : Prettify<Omit<T[K], "required" | "nullable">>;
-};
+array<Items extends LexiconItem, Options extends ArrayOptions>
+```
+to:
+```typescript
+array<Items extends { type: LexiconType }, Options extends ArrayOptions>
 ```
 
-The problem is that when an `ObjectResult` is nested, it's preserving the object but TypeScript can't match it against the `LexiconItem` type in the array items position.
+This allows `ObjectResult` (which has `type: "object"`) to be accepted as a valid array item type.
 
 **Related Code**:
-- src/infer.ts:65-67 (`InferArray` type)
-- src/infer.ts:2-32 (`InferType` type)
-- src/lib.ts:412-421 (`lx.array` function)
+- src/lib.ts:440-448 (`lx.array` function)
 
 ---
 

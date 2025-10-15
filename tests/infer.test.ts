@@ -18,10 +18,10 @@ test("InferNS produces expected type shape", () => {
 	// Type snapshot - this captures how types appear on hover
 	attest(exampleLexicon.infer).type.toString.snap(`{
   main: {
-    createdAt?: string | undefined
     tags?: string[] | undefined
-    text?: string | undefined
     likes?: number | undefined
+    createdAt: string
+    text: string
   }
 }`);
 });
@@ -46,7 +46,7 @@ test("InferObject handles nullable fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap("{ main: { nullable: string } }");
+	attest(schema.infer).type.toString.snap("{ main: { nullable: string | null } }");
 });
 
 // ============================================================================
@@ -280,9 +280,9 @@ test("InferObject handles nullable optional field", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap(
-		"{ main: { description?: string | null | undefined } }",
-	);
+	attest(namespace.infer).type.toString.snap(`{
+  main: { description?: string | null | undefined }
+}`);
 });
 
 test("InferObject handles multiple nullable fields", () => {
@@ -327,9 +327,9 @@ test("InferObject handles mixed nullable, required, and optional", () => {
 
 	attest(namespace.infer).type.toString.snap(`{
   main: {
-    optionalNullable?: string | null | undefined
     optional?: string | undefined
     required: string
+    optionalNullable?: string | null | undefined
     requiredNullable: string | null
   }
 }`);
@@ -609,10 +609,7 @@ test("InferArray handles arrays of objects", () => {
 
 	attest(namespace.infer).type.toString.snap(`{
   main: {
-    users?: {
-      id: string
-      name: string
-    }[] | undefined
+    users?: { id: string; name: string }[] | undefined
   }
 }`);
 });
@@ -675,24 +672,31 @@ test("InferObject handles complex nested structure", () => {
 
 	attest(namespace.infer).type.toString.snap(`{
   main: {
-    author?: {
-      avatar?: string | undefined
-      did: string
-      handle: string
-    } | undefined
-    content?: {
-      $type: "com.example.text"
-      [key: string]: unknown
-    } | {
-      $type: "com.example.image"
-      [key: string]: unknown
-    } | undefined
     tags?: string[] | undefined
-    metadata?: {
-      views?: number | undefined
-      likes?: number | undefined
-      shares?: number | undefined
-    } | undefined
+    content?:
+      | {
+          [key: string]: unknown
+          $type: "com.example.text"
+        }
+      | {
+          [key: string]: unknown
+          $type: "com.example.image"
+        }
+      | undefined
+    author?:
+      | {
+          avatar?: string | undefined
+          did: string
+          handle: string
+        }
+      | undefined
+    metadata?:
+      | {
+          likes?: number | undefined
+          views?: number | undefined
+          shares?: number | undefined
+        }
+      | undefined
     id: string
   }
 }`);

@@ -1,6 +1,6 @@
 // deno-lint-ignore-file ban-types
 
-import type { GetNullable, GetRequired, InferNS } from "./infer.ts";
+import type { InferNS } from "./infer.ts";
 import { Prettify, UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
@@ -199,19 +199,13 @@ type ObjectProperties = Record<
 	}
 >;
 
-type RequiredKeys<T> =
-	T extends Record<string, { required?: boolean }>
-		? {
-				[K in keyof T]: T[K]["required"] extends true ? K : never;
-			}[keyof T]
-		: never;
+type RequiredKeys<T> = {
+	[K in keyof T]: T[K] extends { required: true } ? K : never;
+}[keyof T];
 
-type NullableKeys<T> =
-	T extends Record<string, { nullable?: boolean }>
-		? {
-				[K in keyof T]: T[K]["nullable"] extends true ? K : never;
-			}[keyof T]
-		: never;
+type NullableKeys<T> = {
+	[K in keyof T]: T[K] extends { nullable: true } ? K : never;
+}[keyof T];
 
 /**
  * Resulting object schema with required and nullable fields extracted.
@@ -230,10 +224,34 @@ type ObjectResult<
 			: Prettify<Omit<T[K], "required" | "nullable">>;
 	};
 } & Omit<
-	{ required: UnionToTuple<R> },
+	{ required: UnionToTuple<R>; nullable: UnionToTuple<N> },
 	| (R extends never ? "required" : never)
 	| (N extends never ? "nullable" : never)
 >;
+
+// type Test = Prettify<
+// 	ObjectResult<{
+// 		requiredNullable: {
+// 			required: true;
+// 			nullable: true;
+// 		} & {
+// 			type: "string";
+// 		};
+// 		optionalNullable: {
+// 			nullable: true;
+// 		} & {
+// 			type: "string";
+// 		};
+// 		required: {
+// 			required: true;
+// 		} & {
+// 			type: "string";
+// 		};
+// 		optional: StringOptions & {
+// 			type: "string";
+// 		};
+// 	}>
+// >;
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -245,13 +263,19 @@ type ParamsProperties = Record<string, LexiconItem>;
  * Resulting params schema with required fields extracted.
  * @see https://atproto.com/specs/lexicon#params
  */
-interface ParamsResult<T extends ParamsProperties> {
+type ParamsResult<
+	T extends ParamsProperties,
+	R = RequiredKeys<T>,
+> = {
 	type: "params";
 	/** Parameter definitions */
-	properties: T;
-	/** List of required parameter names */
-	required?: string[];
-}
+	properties: {
+		[K in keyof T]: Prettify<Omit<T[K], "required" | "nullable">>;
+	};
+} & Omit<
+	{ required: UnionToTuple<R> },
+	R extends never ? "required" : never
+>;
 
 /**
  * HTTP request or response body schema.
@@ -437,7 +461,7 @@ export const lx = {
 	 * Creates an array type with item schema and length constraints.
 	 * @see https://atproto.com/specs/lexicon#array
 	 */
-	array<Items extends LexiconItem, Options extends ArrayOptions>(
+	array<Items extends { type: LexiconType }, Options extends ArrayOptions>(
 		items: Items,
 		options?: Options,
 	): Options & { type: "array"; items: Items } {

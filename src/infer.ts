@@ -84,9 +84,7 @@ type InferRef<T> = T extends { ref: infer R }
 		: unknown
 	: unknown;
 
-type InferParams<T> = T extends { properties: infer P }
-	? InferObject<P>
-	: never;
+type InferParams<T> = InferObject<T>;
 
 type InferRecord<T> = T extends { record: infer R }
 	? R extends { type: "object" }
