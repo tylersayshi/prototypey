@@ -229,30 +229,6 @@ type ObjectResult<
 	| (N extends never ? "nullable" : never)
 >;
 
-// type Test = Prettify<
-// 	ObjectResult<{
-// 		requiredNullable: {
-// 			required: true;
-// 			nullable: true;
-// 		} & {
-// 			type: "string";
-// 		};
-// 		optionalNullable: {
-// 			nullable: true;
-// 		} & {
-// 			type: "string";
-// 		};
-// 		required: {
-// 			required: true;
-// 		} & {
-// 			type: "string";
-// 		};
-// 		optional: StringOptions & {
-// 			type: "string";
-// 		};
-// 	}>
-// >;
-
 /**
  * Map of parameter names to their lexicon item definitions.
  * @see https://atproto.com/specs/lexicon#params
@@ -263,19 +239,13 @@ type ParamsProperties = Record<string, LexiconItem>;
  * Resulting params schema with required fields extracted.
  * @see https://atproto.com/specs/lexicon#params
  */
-type ParamsResult<
-	T extends ParamsProperties,
-	R = RequiredKeys<T>,
-> = {
+type ParamsResult<T extends ParamsProperties, R = RequiredKeys<T>> = {
 	type: "params";
 	/** Parameter definitions */
 	properties: {
 		[K in keyof T]: Prettify<Omit<T[K], "required" | "nullable">>;
 	};
-} & Omit<
-	{ required: UnionToTuple<R> },
-	R extends never ? "required" : never
->;
+} & Omit<{ required: UnionToTuple<R> }, R extends never ? "required" : never>;
 
 /**
  * HTTP request or response body schema.
@@ -529,7 +499,7 @@ export const lx = {
 		const nullable = Object.keys(options).filter(
 			(key) => "nullable" in options[key] && options[key].nullable,
 		);
-		const result: ObjectResult<T> = {
+		const result: Record<string, unknown> = {
 			type: "object",
 			properties: options,
 		};
@@ -539,7 +509,7 @@ export const lx = {
 		if (nullable.length > 0) {
 			result.nullable = nullable;
 		}
-		return result;
+		return result as ObjectResult<T>;
 	},
 	/**
 	 * Creates a params type for query string parameters.
@@ -551,18 +521,14 @@ export const lx = {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
-		const result: {
-			type: "params";
-			properties: Properties;
-			required?: string[];
-		} = {
+		const result: Record<string, unknown> = {
 			type: "params",
 			properties,
 		};
 		if (required.length > 0) {
 			result.required = required;
 		}
-		return result;
+		return result as ParamsResult<Properties>;
 	},
 	/**
 	 * Creates a query endpoint definition (HTTP GET).
