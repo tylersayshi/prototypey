@@ -512,10 +512,7 @@ test("InferParams handles required params", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(`{
-  main: {
-    limit?: number | undefined
-    query: string
-  }
+  main: { limit?: number | undefined; query: string }
 }`);
 });
 
