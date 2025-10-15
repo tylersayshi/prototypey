@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import type { InferNS } from "./infer.ts";
+import type { Infer } from "./infer.ts";
 import type { Prettify, UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
@@ -329,7 +329,7 @@ interface SubscriptionOptions {
 
 class Namespace<T extends LexiconNamespace> {
 	public json: T;
-	public infer: InferNS<T> = null as unknown as InferNS<T>;
+	public infer: Infer<T> = null as unknown as Infer<T>;
 
 	constructor(json: T) {
 		this.json = json;
