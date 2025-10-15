@@ -219,13 +219,12 @@ type ObjectResult<
 	properties: {
 		[K in keyof T]: T[K] extends { type: "object" }
 			? T[K]
-			: Prettify<Omit<T[K], "required" | "nullable">>;
+			: Omit<T[K], "required" | "nullable">;
 	};
-} & Omit<
-	{ required: UnionToTuple<R>; nullable: UnionToTuple<N> },
-	| ([R] extends [never] ? "required" : never)
-	| ([N] extends [never] ? "nullable" : never)
->;
+} & ([R] extends [never]
+	? {}
+	: { required: UnionToTuple<R> }) &
+	([N] extends [never] ? {} : { nullable: UnionToTuple<N> });
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -241,12 +240,9 @@ type ParamsResult<T extends ParamsProperties, R = RequiredKeys<T>> = {
 	type: "params";
 	/** Parameter definitions */
 	properties: {
-		[K in keyof T]: Prettify<Omit<T[K], "required" | "nullable">>;
+		[K in keyof T]: Omit<T[K], "required" | "nullable">;
 	};
-} & Omit<
-	{ required: UnionToTuple<R> },
-	[R] extends [never] ? "required" : never
->;
+} & ([R] extends [never] ? {} : { required: UnionToTuple<R> });
 
 /**
  * HTTP request or response body schema.

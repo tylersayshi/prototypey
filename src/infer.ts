@@ -94,9 +94,9 @@ type InferRecord<T> = T extends { record: infer R }
 			: unknown
 	: unknown;
 
-type InferDefs<T extends Record<string, unknown>> = Prettify<{
+type InferDefs<T extends Record<string, unknown>> = {
 	-readonly [K in keyof T]: InferType<T[K]>;
-}>;
+};
 
 export type InferNS<T extends { id: string; defs: Record<string, unknown> }> =
-	InferDefs<T["defs"]>;
+	Prettify<InferDefs<T["defs"]>>;
