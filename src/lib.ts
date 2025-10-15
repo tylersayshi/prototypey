@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Infer } from "./infer.ts";
-import type { Prettify, UnionToTuple } from "./type-utils.ts";
+import type { UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
@@ -490,7 +490,7 @@ export const lx = {
 	 * Creates an object type with defined properties.
 	 * @see https://atproto.com/specs/lexicon#object
 	 */
-	object<T extends ObjectProperties>(options: T): Prettify<ObjectResult<T>> {
+	object<T extends ObjectProperties>(options: T): ObjectResult<T> {
 		const required = Object.keys(options).filter(
 			(key) => "required" in options[key] && options[key].required,
 		);
@@ -515,7 +515,7 @@ export const lx = {
 	 */
 	params<Properties extends ParamsProperties>(
 		properties: Properties,
-	): Prettify<ParamsResult<Properties>> {
+	): ParamsResult<Properties> {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
