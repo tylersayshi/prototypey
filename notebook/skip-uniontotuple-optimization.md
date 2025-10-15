@@ -152,10 +152,12 @@ type InferObject<...> = Prettify<
 ```
 
 **Results:**
+
 - Simple object: **244 instantiations** (unchanged)
 - Complex nested: **507 instantiations** (unchanged)
 
 **Why it failed:**
+
 - The number of intersections wasn't the bottleneck
 - TypeScript still evaluates the same number of conditional checks
 - Property ordering changed (required first, then optional), breaking snapshot tests
@@ -182,10 +184,12 @@ type InferObject<T> = Prettify<
 ```
 
 **Results:**
+
 - Simple object: **244 instantiations** (unchanged)
 - Complex nested: **507 instantiations** (unchanged)
 
 **Why it failed:**
+
 - Unlike `ObjectResult` (which is only evaluated at definition time), `InferObject` is called recursively during type inference
 - The intermediate type parameters are likely cached/memoized by TypeScript during recursive evaluation
 - Inlining forces re-computation of the same values multiple times in each mapped type key
@@ -206,6 +210,7 @@ type InferObject<T> = Prettify<
 **Change:** Reordered the `InferType` conditional chain to prioritize the most commonly used types:
 
 **New order:**
+
 1. object (most common container)
 2. string (most common primitive)
 3. ref (common for schema references)
@@ -215,6 +220,7 @@ type InferObject<T> = Prettify<
 7. record, params, null, token, unknown, bytes, cid-link, blob (less common)
 
 **Previous order:**
+
 1. record, object, array, params, union, token, ref, unknown, null, boolean, integer, string, bytes, cid-link, blob
 
 ```typescript
@@ -230,10 +236,12 @@ type InferType<T> = T extends { type: "object" }
 ```
 
 **Results:**
+
 - Simple object: **244 instantiations** (unchanged)
 - Complex nested: **507 instantiations** (unchanged)
 
 **Why it failed:**
+
 - TypeScript's type checker likely doesn't evaluate conditional chains linearly
 - The order of conditionals has no impact on performance
 - TypeScript may cache or optimize type instantiations internally regardless of order
