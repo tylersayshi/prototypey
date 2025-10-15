@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { InferNS } from "./infer.ts";
 import type { Prettify, UnionToTuple } from "./type-utils.ts";
 
@@ -209,11 +210,7 @@ type NullableKeys<T> = {
  * Resulting object schema with required and nullable fields extracted.
  * @see https://atproto.com/specs/lexicon#object
  */
-type ObjectResult<
-	T extends ObjectProperties,
-	R = RequiredKeys<T>,
-	N = NullableKeys<T>,
-> = {
+type ObjectResult<T extends ObjectProperties> = {
 	type: "object";
 	/** Property definitions */
 	properties: {
@@ -221,10 +218,12 @@ type ObjectResult<
 			? T[K]
 			: Omit<T[K], "required" | "nullable">;
 	};
-} & ([R] extends [never]
+} & ([RequiredKeys<T>] extends [never]
 	? {}
-	: { required: UnionToTuple<R> }) &
-	([N] extends [never] ? {} : { nullable: UnionToTuple<N> });
+	: { required: UnionToTuple<RequiredKeys<T>> }) &
+	([NullableKeys<T>] extends [never]
+		? {}
+		: { nullable: UnionToTuple<NullableKeys<T>> });
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -236,13 +235,15 @@ type ParamsProperties = Record<string, LexiconItem>;
  * Resulting params schema with required fields extracted.
  * @see https://atproto.com/specs/lexicon#params
  */
-type ParamsResult<T extends ParamsProperties, R = RequiredKeys<T>> = {
+type ParamsResult<T extends ParamsProperties> = {
 	type: "params";
 	/** Parameter definitions */
 	properties: {
 		[K in keyof T]: Omit<T[K], "required" | "nullable">;
 	};
-} & ([R] extends [never] ? {} : { required: UnionToTuple<R> });
+} & ([RequiredKeys<T>] extends [never]
+	? {}
+	: { required: UnionToTuple<RequiredKeys<T>> });
 
 /**
  * HTTP request or response body schema.
