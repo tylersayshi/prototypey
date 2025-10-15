@@ -1,5 +1,5 @@
 import type { InferNS } from "./infer.ts";
-import { Prettify, UnionToTuple } from "./type-utils.ts";
+import type { Prettify, UnionToTuple } from "./type-utils.ts";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =

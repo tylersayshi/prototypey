@@ -46,7 +46,9 @@ test("InferObject handles nullable fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap("{ main: { nullable: string | null } }");
+	attest(schema.infer).type.toString.snap(
+		"{ main: { nullable: string | null } }",
+	);
 });
 
 // ============================================================================
