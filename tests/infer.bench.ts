@@ -1,7 +1,7 @@
 import { bench } from "@ark/attest";
 import { lx } from "../src/lib.ts";
 
-bench("InferNS with simple object", () => {
+bench("infer with simple object", () => {
 	const schema = lx.namespace("test.simple", {
 		main: lx.object({
 			id: lx.string({ required: true }),
@@ -11,7 +11,7 @@ bench("InferNS with simple object", () => {
 	return schema.infer;
 }).types([221, "instantiations"]);
 
-bench("InferNS with complex nested structure", () => {
+bench("infer with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
 		post: lx.record({
 			key: "tid",
@@ -34,7 +34,7 @@ bench("InferNS with complex nested structure", () => {
 	return schema.infer;
 }).types([454, "instantiations"]);
 
-bench("InferNS with app.bsky.feed.defs namespace", () => {
+bench("infer with app.bsky.feed.defs namespace", () => {
 	const schema = lx.namespace("app.bsky.feed.defs", {
 		postView: lx.object({
 			uri: lx.string({ required: true, format: "at-uri" }),
