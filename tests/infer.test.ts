@@ -47,7 +47,9 @@ test("InferObject handles nullable fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap("{ id: \"test\"; nullable: string | null }");
+	attest(schema.infer).type.toString.snap(
+		'{ id: "test"; nullable: string | null }',
+	);
 });
 
 // ============================================================================
@@ -105,7 +107,7 @@ test("InferType handles null primitive", () => {
 	});
 
 	attest(namespace.infer).type.toString.snap(
-		"{ id: \"test.null\"; nullValue?: null | undefined }",
+		'{ id: "test.null"; nullValue?: null | undefined }',
 	);
 });
 
@@ -116,7 +118,9 @@ test("InferType handles unknown primitive", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap("{ id: \"test.unknown\"; metadata?: unknown }");
+	attest(namespace.infer).type.toString.snap(
+		'{ id: "test.unknown"; metadata?: unknown }',
+	);
 });
 
 test("InferType handles bytes primitive", () => {
@@ -139,7 +143,9 @@ test("InferType handles blob primitive", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap("{ id: \"test.blob\"; image?: Blob | undefined }");
+	attest(namespace.infer).type.toString.snap(
+		'{ id: "test.blob"; image?: Blob | undefined }',
+	);
 });
 
 // ============================================================================
@@ -153,7 +159,9 @@ test("InferToken handles basic token without enum", () => {
 		}),
 	});
 
-	attest(namespace.infer).type.toString.snap("{ id: \"test.token\"; symbol?: string | undefined }");
+	attest(namespace.infer).type.toString.snap(
+		'{ id: "test.token"; symbol?: string | undefined }',
+	);
 });
 
 // ============================================================================

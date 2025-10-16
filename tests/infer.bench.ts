@@ -9,7 +9,7 @@ bench("infer with simple object", () => {
 		}),
 	});
 	return schema.infer;
-}).types([723, "instantiations"]);
+}).types([899, "instantiations"]);
 
 bench("infer with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
@@ -32,7 +32,7 @@ bench("infer with complex nested structure", () => {
 		}),
 	});
 	return schema.infer;
-}).types([1022, "instantiations"]);
+}).types([1040, "instantiations"]);
 
 bench("infer with circular reference", () => {
 	const ns = lx.namespace("test", {
@@ -49,7 +49,7 @@ bench("infer with circular reference", () => {
 		}),
 	});
 	return ns.infer;
-}).types([674, "instantiations"]);
+}).types([692, "instantiations"]);
 
 bench("infer with app.bsky.feed.defs namespace", () => {
 	const schema = lx.namespace("app.bsky.feed.defs", {
@@ -116,4 +116,4 @@ bench("infer with app.bsky.feed.defs namespace", () => {
 		interactionShare: lx.token("User shared the feed item"),
 	});
 	return schema.infer;
-}).types([1267, "instantiations"]);
+}).types([1285, "instantiations"]);
