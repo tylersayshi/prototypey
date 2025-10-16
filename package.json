@@ -13,6 +13,9 @@
 	},
 	"type": "module",
 	"main": "lib/index.js",
+	"bin": {
+		"prototypey": "./lib/cli/index.js"
+	},
 	"files": [
 		"LICENSE.md",
 		"README.md",
@@ -21,6 +24,8 @@
 	],
 	"scripts": {
 		"build": "tsdown",
+		"build:cli": "tsdown --entry src/cli/index.ts --format esm --dts false --outDir lib/cli",
+		"codegen:samples": "node lib/cli/index.js gen-inferred ./generated/inferred './samples/*.json'",
 		"format": "prettier . --list-different",
 		"format:fix": "prettier . --write",
 		"lint": "eslint . --max-warnings 0",
@@ -43,5 +48,9 @@
 	"packageManager": "pnpm@10.4.0",
 	"engines": {
 		"node": ">=20.19.0"
+	},
+	"dependencies": {
+		"sade": "^1.8.1",
+		"tinyglobby": "^0.2.15"
 	}
 }
