@@ -170,9 +170,10 @@ Create docs for:
 
 1. ✅ **Phase 1**: Basic CLI structure + Track B (inferred generation) - COMPLETE
 2. ✅ **Phase 2**: File organization + output directory structure - COMPLETE
-3. **Phase 3**: Track A (standard generation, delegate to lex-cli)
-4. **Phase 4**: Configuration file support
-5. **Phase 5**: Documentation + examples
+3. ✅ **Phase 3**: Convert to pnpm workspaces monorepo - COMPLETE
+4. **Phase 4**: Track A (standard generation, delegate to lex-cli)
+5. **Phase 5**: Configuration file support
+6. **Phase 6**: Documentation + examples
 
 ## Phase 1 & 2 Implementation Notes
 
@@ -232,6 +233,128 @@ node lib/cli/index.js gen-inferred ./generated/inferred './samples/*.json'
 - Successfully generated types from sample lexicons
 - Runtime validation works (tested with node)
 - Schema imports work correctly with JSON modules
+
+## Phase 3: Monorepo Strategy
+
+### Why Monorepo?
+
+The CLI tool should be a separate package from the core inference library for several reasons:
+
+1. **Separation of concerns**: Core inference types vs. code generation tooling
+2. **Dependency isolation**: CLI needs `sade`, `tinyglobby`, etc. - consumers of the core library don't
+3. **Bundle size**: Users importing just types don't want CLI bloat
+4. **Independent versioning**: CLI can evolve separately from type inference
+5. **Better organization**: Clear boundaries between runtime and build-time code
+
+### Proposed Structure
+
+```
+prototypey/
+├── package.json                     # Root workspace config
+├── pnpm-workspace.yaml             # Workspace definition
+├── packages/
+│   ├── prototypey/                 # Core inference library
+│   │   ├── package.json           # Main package (prototypey)
+│   │   ├── src/
+│   │   │   ├── index.ts
+│   │   │   ├── infer.ts
+│   │   │   ├── lib.ts
+│   │   │   └── type-utils.ts
+│   │   ├── lib/                   # Built output
+│   │   └── tests/
+│   │
+│   └── cli/                        # CLI package
+│       ├── package.json           # Separate package (@prototypey/cli)
+│       ├── src/
+│       │   ├── index.ts
+│       │   ├── commands/
+│       │   │   └── gen-inferred.ts
+│       │   └── templates/
+│       │       └── inferred.ts
+│       └── lib/                   # Built CLI output
+│
+├── samples/                        # Shared samples
+├── generated/                      # Generated output (gitignored)
+└── lexicons/                       # Input lexicons (gitignored)
+```
+
+### Package Configurations
+
+**Root `pnpm-workspace.yaml`:**
+```yaml
+packages:
+  - 'packages/*'
+```
+
+**Root `package.json`:**
+```json
+{
+  "name": "prototypey-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "format": "prettier . --write"
+  }
+}
+```
+
+**`packages/prototypey/package.json`:**
+```json
+{
+  "name": "prototypey",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./infer": "./lib/infer.js"
+  },
+  "dependencies": {},
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run"
+  }
+}
+```
+
+**`packages/cli/package.json`:**
+```json
+{
+  "name": "@prototypey/cli",
+  "version": "0.0.0",
+  "bin": {
+    "prototypey": "./lib/index.js"
+  },
+  "dependencies": {
+    "prototypey": "workspace:*",
+    "sade": "^1.8.1",
+    "tinyglobby": "^0.2.15"
+  },
+  "scripts": {
+    "build": "tsdown --entry src/index.ts --format esm --dts false"
+  }
+}
+```
+
+### Migration Steps
+
+1. Create `pnpm-workspace.yaml` at root
+2. Create `packages/prototypey/` and move core files
+3. Create `packages/cli/` and move CLI files
+4. Update import paths in CLI to use `prototypey` package
+5. Update root `package.json` to be private workspace root
+6. Update build scripts to use `pnpm -r` (recursive)
+7. Test both packages build independently
+8. Update documentation
+
+### Benefits
+
+- **Cleaner dependency tree**: Core has zero dependencies
+- **Better DX**: Users can `npm install prototypey` for types only
+- **CLI as optional tool**: `npm install -D @prototypey/cli` when needed
+- **Easier testing**: Each package can have its own test suite
+- **Future expansion**: Easy to add more packages (e.g., `@prototypey/validator`)
 
 ## ATProto Lexicon Background Research
 

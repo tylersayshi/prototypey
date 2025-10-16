@@ -1,0 +1,42 @@
+{
+	"name": "prototypey",
+	"version": "0.0.0",
+	"description": "Type-safe lexicon inference for ATProto schemas",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tylersayshi/prototypey.git",
+		"directory": "packages/prototypey"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "tylersayshi",
+		"email": "hi@tylur.dev"
+	},
+	"type": "module",
+	"main": "lib/index.js",
+	"exports": {
+		".": "./lib/index.js",
+		"./infer": "./lib/infer.js"
+	},
+	"files": [
+		"lib/",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"test": "vitest run",
+		"test:bench": "node tests/infer.bench.ts",
+		"test:update-snapshots": "vitest run -u",
+		"tsc": "tsc"
+	},
+	"devDependencies": {
+		"@ark/attest": "^0.49.0",
+		"@types/node": "24.0.4",
+		"tsdown": "0.12.7",
+		"typescript": "5.8.3",
+		"vitest": "^3.2.4"
+	},
+	"engines": {
+		"node": ">=20.19.0"
+	}
+}
