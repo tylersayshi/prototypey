@@ -9,34 +9,60 @@ bench("infer with simple object", () => {
 		}),
 	});
 	return schema.infer;
-}).types([221, "instantiations"]);
+}).types([899, "instantiations"]);
 
 bench("infer with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
-		post: lx.record({
-			key: "tid",
-			record: lx.object({
-				author: lx.ref("test.complex#user", { required: true }),
-				replies: lx.array(lx.ref("test.complex#reply")),
-				content: lx.string({ required: true }),
-				createdAt: lx.string({ required: true, format: "datetime" }),
-			}),
-		}),
 		user: lx.object({
 			handle: lx.string({ required: true }),
 			displayName: lx.string(),
 		}),
 		reply: lx.object({
 			text: lx.string({ required: true }),
-			author: lx.ref("test.complex#user", { required: true }),
+			author: lx.ref("#user", { required: true }),
+		}),
+		main: lx.record({
+			key: "tid",
+			record: lx.object({
+				author: lx.ref("#user", { required: true }),
+				replies: lx.array(lx.ref("#reply")),
+				content: lx.string({ required: true }),
+				createdAt: lx.string({ required: true, format: "datetime" }),
+			}),
 		}),
 	});
 	return schema.infer;
-}).types([454, "instantiations"]);
+}).types([1040, "instantiations"]);
+
+bench("infer with circular reference", () => {
+	const ns = lx.namespace("test", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+			posts: lx.array(lx.ref("#post")),
+		}),
+		post: lx.object({
+			title: lx.string({ required: true }),
+			author: lx.ref("#user", { required: true }),
+		}),
+		main: lx.object({
+			users: lx.array(lx.ref("#user")),
+		}),
+	});
+	return ns.infer;
+}).types([692, "instantiations"]);
 
 bench("infer with app.bsky.feed.defs namespace", () => {
 	const schema = lx.namespace("app.bsky.feed.defs", {
-		postView: lx.object({
+		viewerState: lx.object({
+			repost: lx.string({ format: "at-uri" }),
+			like: lx.string({ format: "at-uri" }),
+			bookmarked: lx.boolean(),
+			threadMuted: lx.boolean(),
+			replyDisabled: lx.boolean(),
+			embeddingDisabled: lx.boolean(),
+			pinned: lx.boolean(),
+		}),
+		main: lx.object({
 			uri: lx.string({ required: true, format: "at-uri" }),
 			cid: lx.string({ required: true, format: "cid" }),
 			author: lx.ref("app.bsky.actor.defs#profileViewBasic", {
@@ -59,15 +85,6 @@ bench("infer with app.bsky.feed.defs namespace", () => {
 			viewer: lx.ref("#viewerState"),
 			labels: lx.array(lx.ref("com.atproto.label.defs#label")),
 			threadgate: lx.ref("#threadgateView"),
-		}),
-		viewerState: lx.object({
-			repost: lx.string({ format: "at-uri" }),
-			like: lx.string({ format: "at-uri" }),
-			bookmarked: lx.boolean(),
-			threadMuted: lx.boolean(),
-			replyDisabled: lx.boolean(),
-			embeddingDisabled: lx.boolean(),
-			pinned: lx.boolean(),
 		}),
 		requestLess: lx.token(
 			"Request that less content like the given feed item be shown in the feed",
@@ -99,4 +116,4 @@ bench("infer with app.bsky.feed.defs namespace", () => {
 		interactionShare: lx.token("User shared the feed item"),
 	});
 	return schema.infer;
-}).types([658, "instantiations"]);
+}).types([1285, "instantiations"]);
