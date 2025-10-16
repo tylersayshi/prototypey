@@ -133,7 +133,7 @@ type ReplaceRefsInType<T, Defs, Visited = never> =
 export type Infer<T extends { id: string; defs: Record<string, unknown> }> =
 	Prettify<
 		"main" extends keyof T["defs"]
-			? { id: T["id"] } & ReplaceRefsInType<
+			? { $type: T["id"] } & ReplaceRefsInType<
 					InferType<T["defs"]["main"]>,
 					{ [K in keyof T["defs"]]: InferType<T["defs"][K]> }
 				>
