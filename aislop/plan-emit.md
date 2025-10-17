@@ -52,12 +52,12 @@ Add to `package.json`:
 
 ```json
 {
-  "bin": {
-    "prototypey": "./lib/cli/index.js"
-  },
-  "scripts": {
-    "codegen": "prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json"
-  }
+	"bin": {
+		"prototypey": "./lib/cli/index.js"
+	},
+	"scripts": {
+		"codegen": "prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json"
+	}
 }
 ```
 
@@ -73,17 +73,21 @@ Generate minimal runtime code that leverages your inference:
 
 ```typescript
 // Example output: generated/inferred/app/bsky/feed/post.ts
-import type { Infer } from 'prototypey'
-import schema from '../../../../lexicons/app/bsky/feed/post.json' with { type: 'json' }
+import type { Infer } from "prototypey";
+import schema from "../../../../lexicons/app/bsky/feed/post.json" with { type: "json" };
 
-export type Post = Infer<typeof schema>
+export type Post = Infer<typeof schema>;
 
 // Minimal runtime helpers
-export const PostSchema = schema
+export const PostSchema = schema;
 export const isPost = (v: unknown): v is Post => {
-  return typeof v === 'object' && v !== null && '$type' in v &&
-    v.$type === 'app.bsky.feed.post'
-}
+	return (
+		typeof v === "object" &&
+		v !== null &&
+		"$type" in v &&
+		v.$type === "app.bsky.feed.post"
+	);
+};
 ```
 
 Benefits:
@@ -97,17 +101,17 @@ Benefits:
 
 ```json
 {
-  "dependencies": {
-    "@atproto/lexicon": "^0.3.0"
-  },
-  "devDependencies": {
-    "@atproto/lex-cli": "^0.9.1",
-    "commander": "^12.0.0",
-    "glob": "^10.0.0"
-  },
-  "peerDependencies": {
-    "typescript": ">=5.0.0"
-  }
+	"dependencies": {
+		"@atproto/lexicon": "^0.3.0"
+	},
+	"devDependencies": {
+		"@atproto/lex-cli": "^0.9.1",
+		"commander": "^12.0.0",
+		"glob": "^10.0.0"
+	},
+	"peerDependencies": {
+		"typescript": ">=5.0.0"
+	}
 }
 ```
 
@@ -117,12 +121,12 @@ Update `package.json` scripts:
 
 ```json
 {
-  "scripts": {
-    "build": "tsdown",
-    "build:cli": "tsdown --entry src/cli/index.ts --format esm --dts false",
-    "codegen:samples": "prototypey gen-inferred ./generated/samples ./samples/*.json",
-    "prepack": "pnpm build && pnpm build:cli"
-  }
+	"scripts": {
+		"build": "tsdown",
+		"build:cli": "tsdown --entry src/cli/index.ts --format esm --dts false",
+		"codegen:samples": "prototypey gen-inferred ./generated/samples ./samples/*.json",
+		"prepack": "pnpm build && pnpm build:cli"
+	}
 }
 ```
 
@@ -132,13 +136,13 @@ Update `package.json` scripts:
 
 ```json
 {
-  "lexicons": "./lexicons",
-  "output": {
-    "inferred": "./generated/inferred",
-    "types": "./generated/types"
-  },
-  "include": ["**/*.json"],
-  "exclude": ["**/node_modules/**"]
+	"lexicons": "./lexicons",
+	"output": {
+		"inferred": "./generated/inferred",
+		"types": "./generated/types"
+	},
+	"include": ["**/*.json"],
+	"exclude": ["**/node_modules/**"]
 }
 ```
 
@@ -170,7 +174,7 @@ Create docs for:
 
 1. ✅ **Phase 1**: Basic CLI structure + Track B (inferred generation) - COMPLETE
 2. ✅ **Phase 2**: File organization + output directory structure - COMPLETE
-3. ✅ **Phase 3**: Convert to pnpm workspaces monorepo - COMPLETE
+3. ✅ **Phase 3**: Convert to pnpm workspaces monorepo - COMPLETE - this was marked complete but we still have src and packages
 4. **Phase 4**: Track A (standard generation, delegate to lex-cli)
 5. **Phase 5**: Configuration file support
 6. **Phase 6**: Documentation + examples
@@ -180,11 +184,13 @@ Create docs for:
 ### ✅ Completed (2025-10-16)
 
 **Tech Stack Choices:**
+
 - Used `sade` instead of `commander` (modern, minimal CLI framework from awesome-e18e)
 - Used `tinyglobby` instead of `glob` (faster, modern alternative)
 - Built with `tsdown` for CLI bundling
 
 **Structure Created:**
+
 ```
 prototypey/
 ├── src/cli/
@@ -200,6 +206,7 @@ prototypey/
 ```
 
 **Generated Code Pattern:**
+
 ```typescript
 // generated/inferred/app/bsky/actor/profile.ts
 import type { Infer } from "prototypey";
@@ -211,6 +218,7 @@ export function isProfile(v: unknown): v is Profile { ... }
 ```
 
 **CLI Usage:**
+
 ```bash
 # Build CLI
 pnpm build:cli
@@ -223,6 +231,7 @@ node lib/cli/index.js gen-inferred ./generated/inferred './samples/*.json'
 ```
 
 **Key Features:**
+
 - Converts NSID to file paths: `app.bsky.feed.post` → `app/bsky/feed/post.ts`
 - Generates minimal runtime code with type inference
 - Auto-creates directory structure
@@ -230,6 +239,7 @@ node lib/cli/index.js gen-inferred ./generated/inferred './samples/*.json'
 - Type guard functions for runtime checks
 
 **Testing:**
+
 - Successfully generated types from sample lexicons
 - Runtime validation works (tested with node)
 - Schema imports work correctly with JSON modules
@@ -281,59 +291,63 @@ prototypey/
 ### Package Configurations
 
 **Root `pnpm-workspace.yaml`:**
+
 ```yaml
 packages:
-  - 'packages/*'
+  - "packages/*"
 ```
 
 **Root `package.json`:**
+
 ```json
 {
-  "name": "prototypey-monorepo",
-  "private": true,
-  "scripts": {
-    "build": "pnpm -r build",
-    "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
-    "format": "prettier . --write"
-  }
+	"name": "prototypey-monorepo",
+	"private": true,
+	"scripts": {
+		"build": "pnpm -r build",
+		"test": "pnpm -r test",
+		"lint": "pnpm -r lint",
+		"format": "prettier . --write"
+	}
 }
 ```
 
 **`packages/prototypey/package.json`:**
+
 ```json
 {
-  "name": "prototypey",
-  "version": "0.0.0",
-  "main": "lib/index.js",
-  "exports": {
-    ".": "./lib/index.js",
-    "./infer": "./lib/infer.js"
-  },
-  "dependencies": {},
-  "scripts": {
-    "build": "tsdown",
-    "test": "vitest run"
-  }
+	"name": "prototypey",
+	"version": "0.0.0",
+	"main": "lib/index.js",
+	"exports": {
+		".": "./lib/index.js",
+		"./infer": "./lib/infer.js"
+	},
+	"dependencies": {},
+	"scripts": {
+		"build": "tsdown",
+		"test": "vitest run"
+	}
 }
 ```
 
 **`packages/cli/package.json`:**
+
 ```json
 {
-  "name": "@prototypey/cli",
-  "version": "0.0.0",
-  "bin": {
-    "prototypey": "./lib/index.js"
-  },
-  "dependencies": {
-    "prototypey": "workspace:*",
-    "sade": "^1.8.1",
-    "tinyglobby": "^0.2.15"
-  },
-  "scripts": {
-    "build": "tsdown --entry src/index.ts --format esm --dts false"
-  }
+	"name": "@prototypey/cli",
+	"version": "0.0.0",
+	"bin": {
+		"prototypey": "./lib/index.js"
+	},
+	"dependencies": {
+		"prototypey": "workspace:*",
+		"sade": "^1.8.1",
+		"tinyglobby": "^0.2.15"
+	},
+	"scripts": {
+		"build": "tsdown --entry src/index.ts --format esm --dts false"
+	}
 }
 ```
 
@@ -442,29 +456,29 @@ Example:
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { ValidationResult, BlobRef } from '@atproto/lexicon'
-import { lexicons } from '../../../../lexicons'
-import { isObj, hasProp } from '../../../../util'
-import { CID } from 'multiformats/cid'
+import { ValidationResult, BlobRef } from "@atproto/lexicon";
+import { lexicons } from "../../../../lexicons";
+import { isObj, hasProp } from "../../../../util";
+import { CID } from "multiformats/cid";
 
 export interface Main {
-  $type?: 'app.bsky.richtext.facet'
-  index: ByteSlice
-  features: (Mention | Link | Tag | { $type: string; [k: string]: unknown })[]
-  [k: string]: unknown
+	$type?: "app.bsky.richtext.facet";
+	index: ByteSlice;
+	features: (Mention | Link | Tag | { $type: string; [k: string]: unknown })[];
+	[k: string]: unknown;
 }
 
 export function isMain(v: unknown): v is Main {
-  return (
-    isObj(v) &&
-    hasProp(v, '$type') &&
-    (v.$type === 'app.bsky.richtext.facet#main' ||
-      v.$type === 'app.bsky.richtext.facet')
-  )
+	return (
+		isObj(v) &&
+		hasProp(v, "$type") &&
+		(v.$type === "app.bsky.richtext.facet#main" ||
+			v.$type === "app.bsky.richtext.facet")
+	);
 }
 
 export function validateMain(v: unknown): ValidationResult {
-  return lexicons.validate('app.bsky.richtext.facet#main', v)
+	return lexicons.validate("app.bsky.richtext.facet#main", v);
 }
 ```
 
@@ -474,13 +488,13 @@ Example `package.json` scripts:
 
 ```json
 {
-  "scripts": {
-    "codegen": "lex gen-api --yes ./src/client ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/*",
-    "build": "tsc --build tsconfig.build.json"
-  },
-  "devDependencies": {
-    "@atproto/lex-cli": "^0.9.1"
-  }
+	"scripts": {
+		"codegen": "lex gen-api --yes ./src/client ../../lexicons/com/atproto/*/* ../../lexicons/app/bsky/*/*",
+		"build": "tsc --build tsconfig.build.json"
+	},
+	"devDependencies": {
+		"@atproto/lex-cli": "^0.9.1"
+	}
 }
 ```
 
