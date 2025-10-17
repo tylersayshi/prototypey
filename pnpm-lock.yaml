@@ -42,6 +42,9 @@ importers:
       typescript:
         specifier: 5.8.3
         version: 5.8.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.0.4)(jiti@2.6.1)
 
   packages/prototypey:
     devDependencies:

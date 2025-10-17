@@ -21,7 +21,9 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "tsdown --entry src/index.ts --format esm --dts false"
+		"build": "tsdown --entry src/index.ts --format esm --dts false",
+		"test": "vitest run",
+		"tsc": "tsc"
 	},
 	"dependencies": {
 		"prototypey": "workspace:*",
@@ -31,7 +33,8 @@
 	"devDependencies": {
 		"@types/node": "24.0.4",
 		"tsdown": "0.12.7",
-		"typescript": "5.8.3"
+		"typescript": "5.8.3",
+		"vitest": "^3.2.4"
 	},
 	"engines": {
 		"node": ">=20.19.0"
