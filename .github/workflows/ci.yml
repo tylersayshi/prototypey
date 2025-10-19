@@ -35,6 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
+      - run: pnpm build
       - run: pnpm codegen:samples
       - run: pnpm test
   benchmark_types:
