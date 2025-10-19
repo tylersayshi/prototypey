@@ -1,5 +1,6 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
+import reactCompiler from "eslint-plugin-react-compiler";
 
 export default tseslint.config(
 	{ ignores: ["lib", "node_modules", "pnpm-lock.yaml", "setup-vitest.ts"] },
@@ -18,6 +19,15 @@ export default tseslint.config(
 		},
 		rules: {
 			"@typescript-eslint/consistent-type-definitions": "off",
+		},
+	},
+	{
+		files: ["**/*.{jsx,tsx}"],
+		plugins: {
+			"react-compiler": reactCompiler,
+		},
+		rules: {
+			"react-compiler/react-compiler": "error",
 		},
 	},
 	{

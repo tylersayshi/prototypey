@@ -30,5 +30,12 @@ function servePrototypeyTypes() {
 }
 
 export default defineConfig({
-	plugins: [react(), servePrototypeyTypes()],
+	plugins: [
+		react({
+			babel: {
+				plugins: [["babel-plugin-react-compiler", {}]],
+			},
+		}),
+		servePrototypeyTypes(),
+	],
 });
