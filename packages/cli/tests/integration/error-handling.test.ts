@@ -122,7 +122,7 @@ describe("CLI Error Handling", () => {
 
 		expect(code).toBe(0); // Should not crash
 		expect(stdout).toContain("Found 1 source file(s)");
-		expect(stderr).toContain("No lexicon namespaces found");
+		expect(stderr).toContain("No lexicons found");
 	});
 
 	test("handles permission errors when writing output", async () => {
