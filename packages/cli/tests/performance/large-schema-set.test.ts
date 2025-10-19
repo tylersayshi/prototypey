@@ -1,8 +1,9 @@
 import { expect, test, describe, beforeEach, afterEach } from "vitest";
 import { mkdir, writeFile, rm } from "node:fs/promises";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { tmpdir } from "node:os";
 import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 describe("CLI Performance", () => {
 	let testDir: string;
@@ -213,7 +214,7 @@ function runCLI(
 	args: string[],
 ): Promise<{ stdout: string; stderr: string; code: number }> {
 	return new Promise((resolve) => {
-		const cliPath = join(__dirname, "../../lib/index.js");
+		const cliPath = join(dirname(fileURLToPath(import.meta.url)), "../../lib/index.js");
 		const child = spawn("node", [cliPath, ...args]);
 
 		let stdout = "";

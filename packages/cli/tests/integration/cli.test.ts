@@ -1,6 +1,7 @@
 import { expect, test, describe } from "vitest";
 import { spawn } from "node:child_process";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 describe("CLI Integration", () => {
 	test("shows error when called without arguments", async () => {
@@ -55,7 +56,7 @@ function runCLI(
 	args: string[] = [],
 ): Promise<{ stdout: string; stderr: string; code: number }> {
 	return new Promise((resolve) => {
-		const cliPath = join(__dirname, "../../lib/index.js");
+		const cliPath = join(dirname(fileURLToPath(import.meta.url)), "../../lib/index.js");
 		const child = spawn("node", [cliPath, ...args]);
 
 		let stdout = "";
