@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
       - name: Build site
-        run: pnpm -F @prototypey/site build
+        run: pnpm build
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
