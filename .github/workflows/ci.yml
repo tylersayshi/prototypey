@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
-      - run: pnpm test:bench
+      - run: pnpm -F prototypey test:bench
 
 name: CI
 

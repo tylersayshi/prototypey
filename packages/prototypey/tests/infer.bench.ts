@@ -9,7 +9,7 @@ bench("infer with simple object", () => {
 		}),
 	});
 	return schema.infer;
-}).types([899, "instantiations"]);
+}).types([741, "instantiations"]);
 
 bench("infer with complex nested structure", () => {
 	const schema = lx.namespace("test.complex", {
