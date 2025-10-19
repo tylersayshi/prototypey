@@ -55,10 +55,10 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 		});
 
 		Promise.all([
-			fetch("/types/type-utils.d.ts").then((r) => r.text()),
-			fetch("/types/infer.d.ts").then((r) => r.text()),
-			fetch("/types/lib.d.ts").then((r) => r.text()),
-		]).then(([typeUtilsDts, inferDts, libDts]) => {
+			import("prototypey/lib/type-utils.d.ts?raw"),
+			import("prototypey/lib/infer.d.ts?raw"),
+			import("prototypey/lib/lib.d.ts?raw"),
+		]).then(([typeUtilsModule, inferModule, libModule]) => {
 			const stripImportsExports = (content: string) =>
 				content
 					.replace(/import\s+{[^}]*}\s+from\s+['""][^'"]*['""];?\s*/g, "")
@@ -70,9 +70,9 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 					.replace(/\/\/#endregion.*\n?/g, "");
 
 			const combinedTypes = `
-${stripImportsExports(typeUtilsDts)}
-${stripImportsExports(inferDts)}
-${stripImportsExports(libDts)}
+${stripImportsExports(typeUtilsModule.default)}
+${stripImportsExports(inferModule.default)}
+${stripImportsExports(libModule.default)}
 `;
 
 			const moduleDeclaration = `declare module "prototypey" {
