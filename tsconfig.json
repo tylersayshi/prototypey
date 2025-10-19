@@ -5,13 +5,15 @@
 		"esModuleInterop": true,
 		"module": "NodeNext",
 		"moduleResolution": "NodeNext",
+		"isolatedModules": true,
 		"noEmit": true,
 		"resolveJsonModule": true,
 		"noErrorTruncation": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "ES2022",
-		"allowImportingTsExtensions": true
-	},
-	"include": ["src", "tests"]
+		"allowImportingTsExtensions": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true
+	}
 }
