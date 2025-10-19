@@ -1,10 +1,10 @@
 {
-	"name": "@prototypekit/cli",
+	"name": "@prototypey/cli",
 	"version": "0.0.0",
 	"description": "CLI tool for generating types from ATProto lexicon schemas",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tylersayshi/prototypekit.git",
+		"url": "git+https://github.com/tylersayshi/prototypey.git",
 		"directory": "packages/cli"
 	},
 	"license": "MIT",
@@ -14,7 +14,7 @@
 	},
 	"type": "module",
 	"bin": {
-		"prototypekit": "./lib/index.js"
+		"prototypey": "./lib/index.js"
 	},
 	"files": [
 		"lib/",
@@ -26,7 +26,7 @@
 		"tsc": "tsc"
 	},
 	"dependencies": {
-		"prototypekit": "workspace:*",
+		"prototypey": "workspace:*",
 		"sade": "^1.8.1",
 		"tinyglobby": "^0.2.15"
 	},

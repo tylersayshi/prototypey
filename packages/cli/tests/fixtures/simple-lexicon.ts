@@ -1,4 +1,4 @@
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
 	main: lx.record({

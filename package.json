@@ -1,11 +1,11 @@
 {
-	"name": "prototypekit-monorepo",
+	"name": "prototypey-monorepo",
 	"version": "0.0.0",
 	"private": true,
 	"description": "Type-safe lexicon inference for ATProto schemas",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tylersayshi/prototypekit.git"
+		"url": "git+https://github.com/tylersayshi/prototypey.git"
 	},
 	"license": "MIT",
 	"author": {

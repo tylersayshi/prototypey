@@ -10,7 +10,7 @@ describe("genEmit", () => {
 
 	beforeEach(async () => {
 		// Create a temporary directory for test files
-		testDir = join(tmpdir(), `prototypekit-test-${Date.now()}`);
+		testDir = join(tmpdir(), `prototypey-test-${Date.now()}`);
 		outDir = join(testDir, "output");
 		await mkdir(testDir, { recursive: true });
 		await mkdir(outDir, { recursive: true });
@@ -27,7 +27,7 @@ describe("genEmit", () => {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
 	main: lx.record({
@@ -83,7 +83,7 @@ export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const profile = lx.namespace("app.bsky.actor.profile", {
 	main: lx.record({
@@ -128,7 +128,7 @@ export const post = lx.namespace("app.bsky.feed.post", {
 		await writeFile(
 			join(lexicons, "profile.ts"),
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 export const schema = lx.namespace("app.bsky.actor.profile", {
 	main: lx.record({ key: "self", record: lx.object({}) }),
 });
@@ -138,7 +138,7 @@ export const schema = lx.namespace("app.bsky.actor.profile", {
 		await writeFile(
 			join(lexicons, "post.ts"),
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 export const schema = lx.namespace("app.bsky.feed.post", {
 	main: lx.record({ key: "tid", record: lx.object({}) }),
 });
@@ -167,7 +167,7 @@ export const schema = lx.namespace("app.bsky.feed.post", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const searchPosts = lx.namespace("app.bsky.feed.searchPosts", {
 	main: lx.query({
@@ -236,7 +236,7 @@ export const searchPosts = lx.namespace("app.bsky.feed.searchPosts", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const createPost = lx.namespace("com.atproto.repo.createRecord", {
 	main: lx.procedure({
@@ -307,7 +307,7 @@ export const createPost = lx.namespace("com.atproto.repo.createRecord", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const subscribeRepos = lx.namespace("com.atproto.sync.subscribeRepos", {
 	main: lx.subscription({
@@ -394,7 +394,7 @@ export const subscribeRepos = lx.namespace("com.atproto.sync.subscribeRepos", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const feedDefs = lx.namespace("app.bsky.feed.defs", {
 	postView: lx.object({
@@ -458,7 +458,7 @@ export const feedDefs = lx.namespace("app.bsky.feed.defs", {
 		await writeFile(
 			lexiconFile,
 			`
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export const imagePost = lx.namespace("app.example.imagePost", {
 	main: lx.record({

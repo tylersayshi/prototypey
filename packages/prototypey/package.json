@@ -1,11 +1,11 @@
 {
-	"name": "prototypekit",
+	"name": "prototypey",
 	"version": "0.0.0",
 	"description": "Type-safe lexicon inference for ATProto schemas",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tylersayshi/prototypekit.git",
-		"directory": "packages/prototypekit"
+		"url": "git+https://github.com/tylersayshi/prototypey.git",
+		"directory": "packages/prototypey"
 	},
 	"license": "MIT",
 	"author": {
