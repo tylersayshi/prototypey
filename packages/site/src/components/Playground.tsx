@@ -191,7 +191,7 @@ export function Playground() {
 					Playground available on desktop
 				</div>
 
-				<MobileStaticDemo />
+				<MobileStaticDemo code={code} json={output.json} />
 			</div>
 		</>
 	);
@@ -227,16 +227,22 @@ function formatTypeString(typeStr: string): string {
 	return indentedLines.join("\n");
 }
 
-function MobileStaticDemo({
-	code,
-	json,
-}: {
-	code: string;
-	json: string;
-}) {
+function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 	// Calculate line counts to size editors appropriately
 	const codeLines = code.split("\n").length;
 	const jsonLines = json.split("\n").length;
+
+	const estimateWrappedLines = (text: string, maxCharsPerLine: number) => {
+		return text.split("\n").reduce((total, line) => {
+			const wrappedLines = Math.ceil(
+				Math.max(1, line.length) / maxCharsPerLine,
+			);
+			return total + wrappedLines;
+		}, 0);
+	};
+
+	const codeWrappedLines = estimateWrappedLines(code, 50);
+	const jsonWrappedLines = estimateWrappedLines(json, 50);
 
 	return (
 		<div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -266,7 +272,7 @@ function MobileStaticDemo({
 					}}
 				>
 					<MonacoEditor
-						height={`${Math.min(codeLines * 19 + 32, 500)}px`}
+						height={`${codeWrappedLines * 18 + 32}px`}
 						defaultLanguage="typescript"
 						value={code}
 						theme="vs-light"
@@ -280,8 +286,10 @@ function MobileStaticDemo({
 							padding: { top: 16, bottom: 16 },
 							scrollbar: {
 								vertical: "hidden",
-								horizontal: "auto",
-								horizontalScrollbarSize: 8,
+								horizontal: "hidden",
+								verticalScrollbarSize: 0,
+								horizontalScrollbarSize: 0,
+								handleMouseWheel: false,
 							},
 							wordWrap: "on",
 							overviewRulerLanes: 0,
@@ -316,7 +324,7 @@ function MobileStaticDemo({
 					}}
 				>
 					<MonacoEditor
-						height={`${Math.min(jsonLines * 19 + 32, 600)}px`}
+						height={`${jsonWrappedLines * 18 + 32}px`}
 						defaultLanguage="json"
 						value={json}
 						theme="vs-light"
@@ -330,8 +338,10 @@ function MobileStaticDemo({
 							padding: { top: 16, bottom: 16 },
 							scrollbar: {
 								vertical: "hidden",
-								horizontal: "auto",
-								horizontalScrollbarSize: 8,
+								horizontal: "hidden",
+								verticalScrollbarSize: 0,
+								horizontalScrollbarSize: 0,
+								handleMouseWheel: false,
 							},
 							wordWrap: "on",
 							overviewRulerLanes: 0,
