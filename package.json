@@ -14,7 +14,7 @@
 	},
 	"scripts": {
 		"build": "pnpm -r build",
-		"codegen:samples": "node packages/cli/lib/index.js gen-inferred ./generated/inferred './samples/*.json'",
+		"codegen:samples": "node packages/cli/src/index.ts gen-inferred ./generated/inferred './samples/*.json'",
 		"format": "prettier . --list-different",
 		"format:fix": "prettier . --write",
 		"lint": "pnpm -r lint",
