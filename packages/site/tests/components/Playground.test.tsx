@@ -10,8 +10,22 @@ vi.mock("@monaco-editor/react", () => ({
 			onChange={(e) => onChange(e.target.value)}
 		/>
 	),
-	useMonaco: () => null,
+	useMonaco: () => ({
+		languages: {
+			typescript: {
+				typescriptDefaults: {
+					setCompilerOptions: vi.fn(),
+					setDiagnosticsOptions: vi.fn(),
+					addExtraLib: vi.fn(),
+				},
+				ScriptTarget: { ES2020: 7 },
+				ModuleResolutionKind: { NodeJs: 2 },
+				ModuleKind: { ESNext: 99 },
+			},
+		},
+	}),
 	loader: {
+		config: vi.fn(),
 		init: vi.fn(() =>
 			Promise.resolve({
 				languages: {

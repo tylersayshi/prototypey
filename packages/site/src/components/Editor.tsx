@@ -5,20 +5,25 @@ import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
 
-// Configure loader to use local monaco-editor 0.52.0 instead of CDN 0.54.0
-self.MonacoEnvironment = {
-	getWorker(_: string, label: string) {
-		if (label === "json") {
-			return new jsonWorker();
-		}
-		if (label === "typescript" || label === "javascript") {
-			return new tsWorker();
-		}
-		return new editorWorker();
-	},
-};
+// Configure Monaco Environment for web workers
+if (typeof self !== "undefined") {
+	self.MonacoEnvironment = {
+		getWorker(_: string, label: string) {
+			if (label === "json") {
+				return new jsonWorker();
+			}
+			if (label === "typescript" || label === "javascript") {
+				return new tsWorker();
+			}
+			return new editorWorker();
+		},
+	};
+}
 
-loader.config({ monaco });
+// Configure loader to use local monaco-editor 0.52.0 instead of CDN 0.54.0
+if (loader?.config) {
+	loader.config({ monaco });
+}
 
 interface EditorProps {
 	value: string;
@@ -36,8 +41,7 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
 			target: monaco.languages.typescript.ScriptTarget.ES2020,
 			allowNonTsExtensions: true,
-			moduleResolution:
-				monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+			moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
 			module: monaco.languages.typescript.ModuleKind.ESNext,
 			noEmit: true,
 			esModuleInterop: true,
