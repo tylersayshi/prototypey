@@ -130,13 +130,12 @@ type ReplaceRefsInType<T, Defs, Visited = never> =
  * Infers the TypeScript type for a lexicon namespace, returning only the 'main' definition
  * with all local refs (#user, #post, etc.) resolved to their actual types.
  */
-export type Infer<
-	T extends { json: { id: string; defs: Record<string, unknown> } },
-> = Prettify<
-	"main" extends keyof T["json"]["defs"]
-		? { $type: T["json"]["id"] } & ReplaceRefsInType<
-				InferType<T["json"]["defs"]["main"]>,
-				{ [K in keyof T["json"]["defs"]]: InferType<T["json"]["defs"][K]> }
-			>
-		: never
->;
+export type Infer<T extends { id: string; defs: Record<string, unknown> }> =
+	Prettify<
+		"main" extends keyof T["defs"]
+			? { $type: T["id"] } & ReplaceRefsInType<
+					InferType<T["defs"]["main"]>,
+					{ [K in keyof T["defs"]]: InferType<T["defs"][K]> }
+				>
+			: never
+	>;

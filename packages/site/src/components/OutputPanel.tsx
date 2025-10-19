@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 
 interface OutputPanelProps {
@@ -9,19 +10,53 @@ interface OutputPanelProps {
 }
 
 export function OutputPanel({ output }: OutputPanelProps) {
+	const [activeTab, setActiveTab] = useState<"json" | "types">("json");
+
 	return (
 		<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
 			<div
 				style={{
-					padding: "0.75rem 1rem",
+					display: "flex",
 					backgroundColor: "#f9fafb",
 					borderBottom: "1px solid #e5e7eb",
-					fontSize: "0.875rem",
-					fontWeight: "600",
-					color: "#374151",
 				}}
 			>
-				Output
+				<button
+					onClick={() => setActiveTab("json")}
+					style={{
+						padding: "0.75rem 1rem",
+						fontSize: "0.875rem",
+						fontWeight: "600",
+						color: activeTab === "json" ? "#1f2937" : "#6b7280",
+						backgroundColor: activeTab === "json" ? "#ffffff" : "transparent",
+						border: "none",
+						borderBottom:
+							activeTab === "json"
+								? "2px solid #3b82f6"
+								: "2px solid transparent",
+						cursor: "pointer",
+					}}
+				>
+					JSON Output
+				</button>
+				<button
+					onClick={() => setActiveTab("types")}
+					style={{
+						padding: "0.75rem 1rem",
+						fontSize: "0.875rem",
+						fontWeight: "600",
+						color: activeTab === "types" ? "#1f2937" : "#6b7280",
+						backgroundColor: activeTab === "types" ? "#ffffff" : "transparent",
+						border: "none",
+						borderBottom:
+							activeTab === "types"
+								? "2px solid #3b82f6"
+								: "2px solid transparent",
+						cursor: "pointer",
+					}}
+				>
+					Type Info
+				</button>
 			</div>
 			<div style={{ flex: 1 }}>
 				{output.error ? (
@@ -39,8 +74,8 @@ export function OutputPanel({ output }: OutputPanelProps) {
 				) : (
 					<MonacoEditor
 						height="100%"
-						defaultLanguage="json"
-						value={output.json}
+						defaultLanguage={activeTab === "json" ? "json" : "typescript"}
+						value={activeTab === "json" ? output.json : output.typeInfo}
 						theme="vs-light"
 						options={{
 							readOnly: true,
