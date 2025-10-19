@@ -84,9 +84,7 @@ describe("Playground", () => {
 		const editors = screen.getAllByTestId("monaco-editor");
 		const inputEditor = editors[0] as HTMLTextAreaElement;
 
-		expect(inputEditor.value).toContain(
-			'lx.lexicon("app.bsky.actor.profile"',
-		);
+		expect(inputEditor.value).toContain('lx.lexicon("app.bsky.actor.profile"');
 	});
 
 	it("evaluates code and displays output", async () => {

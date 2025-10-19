@@ -7,7 +7,10 @@ export function runCLI(
 	options?: { cwd?: string; env?: NodeJS.ProcessEnv },
 ): Promise<{ stdout: string; stderr: string; code: number }> {
 	return new Promise((resolve) => {
-		const cliPath = join(dirname(fileURLToPath(import.meta.url)), "../lib/index.js");
+		const cliPath = join(
+			dirname(fileURLToPath(import.meta.url)),
+			"../lib/index.js",
+		);
 		const child = spawn("node", [cliPath, ...args], {
 			cwd: options?.cwd ?? process.cwd(),
 			env: options?.env ?? process.env,
