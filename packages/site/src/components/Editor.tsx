@@ -50,13 +50,13 @@ ${stripImportsExports(inferDts)}
 ${stripImportsExports(libDts)}
 `;
 
-				const moduleDeclaration = `declare module "prototypekit" {
+				const moduleDeclaration = `declare module "prototypey" {
 ${combinedTypes}
 }`;
 
 				monaco.languages.typescript.typescriptDefaults.addExtraLib(
 					moduleDeclaration,
-					"prototypekit.d.ts",
+					"prototypey.d.ts",
 				);
 
 				setIsReady(true);

@@ -14,7 +14,7 @@ export function Header() {
 						marginBottom: "0.5rem",
 					}}
 				>
-					<span style={{ color: "#6b7280" }}>at://</span>prototypekit
+					<span style={{ color: "#6b7280" }}>at://</span>prototypey
 				</h1>
 				<p
 					style={{

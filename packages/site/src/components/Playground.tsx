@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Editor } from "./Editor";
 import { OutputPanel } from "./OutputPanel";
-import { lx } from "prototypekit";
+import { lx } from "prototypey";
 
 export function Playground() {
 	const [code, setCode] = useState(DEFAULT_CODE);
@@ -79,7 +79,7 @@ export function Playground() {
 	);
 }
 
-const DEFAULT_CODE = `import { lx } from "prototypekit";
+const DEFAULT_CODE = `import { lx } from "prototypey";
 
 const profileNamespace = lx.namespace("app.bsky.actor.profile", {
   main: lx.record({

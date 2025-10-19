@@ -3,19 +3,15 @@ import react from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
-function servePrototypeKitTypes() {
+function servePrototypeyTypes() {
 	return {
-		name: "serve-prototypekit-types",
+		name: "serve-prototypey-types",
 		configureServer(server) {
 			server.middlewares.use((req, res, next) => {
 				if (req.url?.startsWith("/types/") && req.url.endsWith(".d.ts")) {
 					const fileName = req.url.slice(7);
 					try {
-						const filePath = resolve(
-							__dirname,
-							"../prototypekit/lib",
-							fileName,
-						);
+						const filePath = resolve(__dirname, "../prototypey/lib", fileName);
 						const content = readFileSync(filePath, "utf-8");
 						res.setHeader("Content-Type", "application/typescript");
 						res.end(content);
@@ -33,5 +29,5 @@ function servePrototypeKitTypes() {
 }
 
 export default defineConfig({
-	plugins: [react(), servePrototypeKitTypes()],
+	plugins: [react(), servePrototypeyTypes()],
 });

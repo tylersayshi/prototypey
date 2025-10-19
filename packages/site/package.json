@@ -1,5 +1,5 @@
 {
-	"name": "@prototypekit/site",
+	"name": "@prototypey/site",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@monaco-editor/react": "^4.6.0",
 		"monaco-editor": "^0.52.2",
-		"prototypekit": "workspace:*",
+		"prototypey": "workspace:*",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
 	},

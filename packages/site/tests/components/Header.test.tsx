@@ -5,7 +5,7 @@ import { Header } from "../../src/components/Header";
 describe("Header", () => {
 	it("renders the title", () => {
 		render(<Header />);
-		expect(screen.getByText("prototypekit")).toBeInTheDocument();
+		expect(screen.getByText("prototypey")).toBeInTheDocument();
 		expect(screen.getByText("at://")).toBeInTheDocument();
 	});
 
