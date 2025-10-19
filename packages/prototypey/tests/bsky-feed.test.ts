@@ -607,8 +607,8 @@ test("app.bsky.feed.defs - interactionShare token", () => {
 	});
 });
 
-test("app.bsky.feed.defs - full namespace", () => {
-	const feedDefs = lx.namespace("app.bsky.feed.defs", {
+test("app.bsky.feed.defs - full lexicon", () => {
+	const feedDefs = lx.lexicon("app.bsky.feed.defs", {
 		postView: lx.object({
 			uri: lx.string({ required: true, format: "at-uri" }),
 			cid: lx.string({ required: true, format: "cid" }),

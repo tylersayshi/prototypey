@@ -85,7 +85,7 @@ describe("Playground", () => {
 		const inputEditor = editors[0] as HTMLTextAreaElement;
 
 		expect(inputEditor.value).toContain(
-			'lx.namespace("app.bsky.actor.profile"',
+			'lx.lexicon("app.bsky.actor.profile"',
 		);
 	});
 

@@ -29,7 +29,7 @@ describe("genEmit", () => {
 			`
 import { lx } from "prototypey";
 
-export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
+export const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({
@@ -85,7 +85,7 @@ export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
 			`
 import { lx } from "prototypey";
 
-export const profile = lx.namespace("app.bsky.actor.profile", {
+export const profile = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({
@@ -94,7 +94,7 @@ export const profile = lx.namespace("app.bsky.actor.profile", {
 	}),
 });
 
-export const post = lx.namespace("app.bsky.feed.post", {
+export const post = lx.lexicon("app.bsky.feed.post", {
 	main: lx.record({
 		key: "tid",
 		record: lx.object({
@@ -129,7 +129,7 @@ export const post = lx.namespace("app.bsky.feed.post", {
 			join(lexicons, "profile.ts"),
 			`
 import { lx } from "prototypey";
-export const schema = lx.namespace("app.bsky.actor.profile", {
+export const schema = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({ key: "self", record: lx.object({}) }),
 });
 `,
@@ -139,7 +139,7 @@ export const schema = lx.namespace("app.bsky.actor.profile", {
 			join(lexicons, "post.ts"),
 			`
 import { lx } from "prototypey";
-export const schema = lx.namespace("app.bsky.feed.post", {
+export const schema = lx.lexicon("app.bsky.feed.post", {
 	main: lx.record({ key: "tid", record: lx.object({}) }),
 });
 `,
@@ -169,7 +169,7 @@ export const schema = lx.namespace("app.bsky.feed.post", {
 			`
 import { lx } from "prototypey";
 
-export const searchPosts = lx.namespace("app.bsky.feed.searchPosts", {
+export const searchPosts = lx.lexicon("app.bsky.feed.searchPosts", {
 	main: lx.query({
 		description: "Find posts matching search criteria",
 		parameters: lx.params({
@@ -238,7 +238,7 @@ export const searchPosts = lx.namespace("app.bsky.feed.searchPosts", {
 			`
 import { lx } from "prototypey";
 
-export const createPost = lx.namespace("com.atproto.repo.createRecord", {
+export const createPost = lx.lexicon("com.atproto.repo.createRecord", {
 	main: lx.procedure({
 		description: "Create a record",
 		input: {
@@ -309,7 +309,7 @@ export const createPost = lx.namespace("com.atproto.repo.createRecord", {
 			`
 import { lx } from "prototypey";
 
-export const subscribeRepos = lx.namespace("com.atproto.sync.subscribeRepos", {
+export const subscribeRepos = lx.lexicon("com.atproto.sync.subscribeRepos", {
 	main: lx.subscription({
 		description: "Repository event stream",
 		parameters: lx.params({
@@ -396,7 +396,7 @@ export const subscribeRepos = lx.namespace("com.atproto.sync.subscribeRepos", {
 			`
 import { lx } from "prototypey";
 
-export const feedDefs = lx.namespace("app.bsky.feed.defs", {
+export const feedDefs = lx.lexicon("app.bsky.feed.defs", {
 	postView: lx.object({
 		uri: lx.string({ required: true, format: "at-uri" }),
 		cid: lx.string({ required: true, format: "cid" }),
@@ -460,7 +460,7 @@ export const feedDefs = lx.namespace("app.bsky.feed.defs", {
 			`
 import { lx } from "prototypey";
 
-export const imagePost = lx.namespace("app.example.imagePost", {
+export const imagePost = lx.lexicon("app.example.imagePost", {
 	main: lx.record({
 		key: "tid",
 		record: lx.object({

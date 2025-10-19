@@ -563,10 +563,10 @@ export const lx = {
 		} as T & { type: "subscription" };
 	},
 	/**
-	 * Creates a lexicon namespace document.
+	 * Creates a lexicon schema document.
 	 * @see https://atproto.com/specs/lexicon#lexicon-document
 	 */
-	namespace<ID extends string, D extends LexiconNamespace["defs"]>(
+	lexicon<ID extends string, D extends LexiconNamespace["defs"]>(
 		id: ID,
 		defs: D,
 	): Namespace<{ lexicon: 1; id: ID; defs: D }> {

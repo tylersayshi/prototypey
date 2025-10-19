@@ -67,8 +67,8 @@ prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
 
 **What it does:**
 
-- Scans TypeScript files for exported lexicon namespace definitions
-- Extracts the `.json` property from each namespace
+- Scans TypeScript files for exported lexicon definitions
+- Extracts the `.json` property from each lexicon
 - Emits properly formatted JSON lexicon schema files
 - Names output files by lexicon ID (e.g., `app.bsky.feed.post.json`)
 

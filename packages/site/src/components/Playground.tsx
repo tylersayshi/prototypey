@@ -47,14 +47,14 @@ export function Playground() {
 		const timeoutId = setTimeout(async () => {
 			try {
 				const nsMatch = code.match(
-					/const\s+ns\s*=\s*lx\.namespace\([^]*?\}\s*\);/,
+					/const\s+ns\s*=\s*lx\.lexicon\([^]*?\}\s*\);/,
 				);
 				if (!nsMatch) {
-					throw new Error("No namespace definition found");
+					throw new Error("No lexicon definition found");
 				}
 
 				const cleanedCode = nsMatch[0];
-				const wrappedCode = `${cleanedCode}\nreturn ns;`;
+				const wrappedCode = `${cleanedCode}\nreturn lex;`;
 				const fn = new Function("lx", wrappedCode);
 				const result = fn(lx);
 				let typeInfo = "// Hover over .infer in the editor to see the type";
@@ -180,7 +180,7 @@ function formatTypeString(typeStr: string): string {
 
 const DEFAULT_CODE = `import { lx, type Infer } from "prototypey";
 
-const ns = lx.namespace("app.bsky.actor.profile", {
+const lex = lx.lexicon("app.bsky.actor.profile", {
   main: lx.record({
     key: "self",
     record: lx.object({
@@ -190,9 +190,9 @@ const ns = lx.namespace("app.bsky.actor.profile", {
   }),
 });
 
-type ProfileInferred = Infer<typeof ns>;
+type Profile = Infer<typeof lex>;
 
-const aProfile: ProfileInferred = {
+const aProfile: Profile = {
   $type: "app.bsky.actor.profile",
   displayName: "Benny Harvey"
 }`;

@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { lx } from "../src/lib.ts";
 
 test("app.bsky.actor.profile", () => {
-	const profileNamespace = lx.namespace("app.bsky.actor.profile", {
+	const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 		main: lx.record({
 			key: "self",
 			record: lx.object({

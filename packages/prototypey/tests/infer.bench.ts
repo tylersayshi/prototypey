@@ -2,7 +2,7 @@ import { bench } from "@ark/attest";
 import { lx } from "../src/lib.ts";
 
 bench("infer with simple object", () => {
-	const schema = lx.namespace("test.simple", {
+	const schema = lx.lexicon("test.simple", {
 		main: lx.object({
 			id: lx.string({ required: true }),
 			name: lx.string({ required: true }),
@@ -12,7 +12,7 @@ bench("infer with simple object", () => {
 }).types([741, "instantiations"]);
 
 bench("infer with complex nested structure", () => {
-	const schema = lx.namespace("test.complex", {
+	const schema = lx.lexicon("test.complex", {
 		user: lx.object({
 			handle: lx.string({ required: true }),
 			displayName: lx.string(),
@@ -35,7 +35,7 @@ bench("infer with complex nested structure", () => {
 }).types([1040, "instantiations"]);
 
 bench("infer with circular reference", () => {
-	const ns = lx.namespace("test", {
+	const ns = lx.lexicon("test", {
 		user: lx.object({
 			name: lx.string({ required: true }),
 			posts: lx.array(lx.ref("#post")),
@@ -51,8 +51,8 @@ bench("infer with circular reference", () => {
 	return ns.infer;
 }).types([692, "instantiations"]);
 
-bench("infer with app.bsky.feed.defs namespace", () => {
-	const schema = lx.namespace("app.bsky.feed.defs", {
+bench("infer with app.bsky.feed.defs lexicon", () => {
+	const schema = lx.lexicon("app.bsky.feed.defs", {
 		viewerState: lx.object({
 			repost: lx.string({ format: "at-uri" }),
 			like: lx.string({ format: "at-uri" }),

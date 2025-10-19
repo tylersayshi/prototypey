@@ -1,6 +1,6 @@
 import { lx } from "prototypey";
 
-export const profileNamespace = lx.namespace("app.bsky.actor.profile", {
+export const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({

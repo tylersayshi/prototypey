@@ -830,8 +830,8 @@ test("app.bsky.actor.defs - statusView", () => {
 	});
 });
 
-test("app.bsky.actor.defs - full namespace", () => {
-	const actorDefs = lx.namespace("app.bsky.actor.defs", {
+test("app.bsky.actor.defs - full lexicon", () => {
+	const actorDefs = lx.lexicon("app.bsky.actor.defs", {
 		profileViewBasic: lx.object({
 			did: lx.string({ required: true, format: "did" }),
 			handle: lx.string({ required: true, format: "handle" }),

@@ -57,11 +57,11 @@ async function processSourceFile(
 		// Dynamically import the module
 		const module = await import(fileUrl);
 
-		// Find all exported namespaces
-		const namespaces: LexiconNamespace[] = [];
+		// Find all exported lexicons
+		const lexicons: LexiconNamespace[] = [];
 		for (const key of Object.keys(module)) {
 			const exported = module[key];
-			// Check if it's a namespace with a json property
+			// Check if it's a lexicon with a json property
 			if (
 				exported &&
 				typeof exported === "object" &&
@@ -72,24 +72,24 @@ async function processSourceFile(
 				"id" in exported.json &&
 				"defs" in exported.json
 			) {
-				namespaces.push(exported as LexiconNamespace);
+				lexicons.push(exported as LexiconNamespace);
 			}
 		}
 
-		if (namespaces.length === 0) {
-			console.warn(`  ⚠ ${sourcePath}: No lexicon namespaces found`);
+		if (lexicons.length === 0) {
+			console.warn(`  ⚠ ${sourcePath}: No lexicon lexicons found`);
 			return;
 		}
 
-		// Emit JSON for each namespace
-		for (const namespace of namespaces) {
-			const { id } = namespace.json;
+		// Emit JSON for each lexicon
+		for (const lexicon of lexicons) {
+			const { id } = lexicon.json;
 			const outputPath = join(outdir, `${id}.json`);
 
 			// Write the JSON file
 			await writeFile(
 				outputPath,
-				JSON.stringify(namespace.json, null, "\t"),
+				JSON.stringify(lexicon.json, null, "\t"),
 				"utf-8",
 			);
 

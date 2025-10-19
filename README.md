@@ -29,7 +29,7 @@ those as the authoring and validation tools.
 **what you'd write:**
 
 ```typescript
-const profileNamespace = lx.namespace("app.bsky.actor.profile", {
+const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({
