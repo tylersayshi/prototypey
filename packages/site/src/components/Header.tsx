@@ -34,7 +34,9 @@ export function Header() {
 							Type-safe lexicon inference for ATProto schemas
 						</p>
 					</div>
-					<div style={{ display: "flex", gap: "1.25rem", paddingTop: "0.5rem" }}>
+					<div
+						style={{ display: "flex", gap: "1.25rem", paddingTop: "0.5rem" }}
+					>
 						<a
 							href="https://github.com/tylersayshi/prototypey"
 							target="_blank"
