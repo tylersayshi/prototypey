@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { readFileSync } from "fs";
 import { resolve } from "path";
 
+// TODO replace this, it's gross and idek if it's being used
 function servePrototypeyTypes() {
 	return {
 		name: "serve-prototypey-types",
