@@ -1,12 +1,16 @@
-#!/usr/bin/env node
+import { readFile } from "node:fs/promises";
 import sade from "sade";
 import { genInferred } from "./commands/gen-inferred.ts";
 import { genEmit } from "./commands/gen-emit.ts";
 
+const pkg = JSON.parse(
+	await readFile(new URL("../package.json", import.meta.url), "utf-8"),
+) as { version: string };
+
 const prog = sade("prototypey");
 
 prog
-	.version("0.0.0")
+	.version(pkg.version)
 	.describe("Type-safe lexicon inference and code generation");
 
 prog
