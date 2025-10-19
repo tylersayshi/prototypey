@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { Playground } from "../../src/components/Playground";
+import { NuqsTestingAdapter } from "nuqs/adapters/testing";
 
 vi.mock("@monaco-editor/react", () => ({
 	default: ({ value, onChange }: any) => (
@@ -60,9 +61,18 @@ vi.mock("@monaco-editor/react", () => ({
 	},
 }));
 
+// Helper function to render Playground with NuqsTestingAdapter
+function renderPlayground() {
+	return render(<Playground />, {
+		wrapper: ({ children }) => (
+			<NuqsTestingAdapter searchParams="">{children}</NuqsTestingAdapter>
+		),
+	});
+}
+
 describe("Playground", () => {
 	it("renders Editor and OutputPanel components", async () => {
-		render(<Playground />);
+		renderPlayground();
 
 		expect(screen.getByText("Input")).toBeInTheDocument();
 		expect(screen.getByText("Output")).toBeInTheDocument();
@@ -74,7 +84,7 @@ describe("Playground", () => {
 	});
 
 	it("starts with default code in editor", async () => {
-		render(<Playground />);
+		renderPlayground();
 
 		// Wait for editors to be ready
 		await waitFor(() => {
@@ -88,7 +98,7 @@ describe("Playground", () => {
 	});
 
 	it("evaluates code and displays output", async () => {
-		render(<Playground />);
+		renderPlayground();
 
 		await waitFor(
 			() => {
