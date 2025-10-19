@@ -4,12 +4,27 @@ import { OutputPanel } from "./OutputPanel";
 import { lx } from "prototypey";
 import { useMonaco } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
+import { parseAsString, useQueryState } from "nuqs";
+import LZString from "lz-string";
 
 let tsWorkerInstance: Monaco.languages.typescript.TypeScriptWorker | null =
 	null;
 
 export function Playground() {
-	const [code, setCode] = useState(DEFAULT_CODE);
+	// Use URL state with compression for code
+	const [compressedCode, setCompressedCode] = useQueryState(
+		"code",
+		parseAsString.withDefault(""),
+	);
+
+	// Decompress code from URL or use default
+	const initialCode =
+		compressedCode && compressedCode.trim() !== ""
+			? LZString.decompressFromEncodedURIComponent(compressedCode) ||
+				DEFAULT_CODE
+			: DEFAULT_CODE;
+
+	const [code, setCode] = useState(initialCode);
 	const [output, setOutput] = useState({ json: "", typeInfo: "", error: "" });
 	const [editorReady, setEditorReady] = useState(false);
 	const monaco = useMonaco();
@@ -18,6 +33,9 @@ export function Playground() {
 
 	const handleCodeChange = (newCode: string) => {
 		setCode(newCode);
+		// Compress and update URL
+		const compressed = LZString.compressToEncodedURIComponent(newCode);
+		setCompressedCode(compressed);
 	};
 
 	const handleEditorReady = () => {
