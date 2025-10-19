@@ -128,7 +128,7 @@ export function Playground() {
 				if (result && typeof result === "object" && "json" in result) {
 					const jsonOutput = (result as { json: unknown }).json;
 					setOutput({
-						json: JSON.stringify(jsonOutput, null, 2),
+						json: JSON.stringify(jsonOutput, null, 2) + "\n",
 						typeInfo,
 						error: "",
 					});
@@ -390,4 +390,5 @@ type Profile = Infer<typeof lex>;
 const aProfile: Profile = {
   $type: "app.bsky.actor.profile",
   displayName: "Benny Harvey"
-}`;
+}
+`;
