@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@monaco-editor/react": "^4.6.0",
-		"monaco-editor": "^0.52.2",
+		"monaco-editor": "0.52.0",
 		"prototypey": "workspace:*",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
@@ -22,7 +22,7 @@
 		"@testing-library/user-event": "^14.5.2",
 		"@types/react": "^18.3.18",
 		"@types/react-dom": "^18.3.5",
-		"@vitejs/plugin-react": "^4.3.4",
+		"@vitejs/plugin-react": "^5.0.4",
 		"jsdom": "^25.0.1",
 		"typescript": "5.8.3",
 		"vite": "^6.0.5",

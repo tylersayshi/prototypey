@@ -1,6 +1,24 @@
-import MonacoEditor from "@monaco-editor/react";
-import { loader } from "@monaco-editor/react";
+import MonacoEditor, { useMonaco, loader } from "@monaco-editor/react";
 import { useEffect, useState } from "react";
+import * as monaco from "monaco-editor";
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+
+// Configure loader to use local monaco-editor 0.52.0 instead of CDN 0.54.0
+self.MonacoEnvironment = {
+	getWorker(_: string, label: string) {
+		if (label === "json") {
+			return new jsonWorker();
+		}
+		if (label === "typescript" || label === "javascript") {
+			return new tsWorker();
+		}
+		return new editorWorker();
+	},
+};
+
+loader.config({ monaco });
 
 interface EditorProps {
 	value: string;
@@ -10,61 +28,62 @@ interface EditorProps {
 
 export function Editor({ value, onChange, onReady }: EditorProps) {
 	const [isReady, setIsReady] = useState(false);
+	const monaco = useMonaco();
 
 	useEffect(() => {
-		loader.init().then((monaco) => {
-			monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-				target: monaco.languages.typescript.ScriptTarget.ES2020,
-				allowNonTsExtensions: true,
-				moduleResolution:
-					monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-				module: monaco.languages.typescript.ModuleKind.ESNext,
-				noEmit: true,
-				esModuleInterop: true,
-				allowSyntheticDefaultImports: true,
-				strict: false,
-			});
+		if (!monaco) return;
 
-			monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-				noSemanticValidation: false,
-				noSyntaxValidation: false,
-			});
+		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+			target: monaco.languages.typescript.ScriptTarget.ES2020,
+			allowNonTsExtensions: true,
+			moduleResolution:
+				monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+			module: monaco.languages.typescript.ModuleKind.ESNext,
+			noEmit: true,
+			esModuleInterop: true,
+			allowSyntheticDefaultImports: true,
+			strict: false,
+		});
 
-			Promise.all([
-				fetch("/types/type-utils.d.ts").then((r) => r.text()),
-				fetch("/types/infer.d.ts").then((r) => r.text()),
-				fetch("/types/lib.d.ts").then((r) => r.text()),
-			]).then(([typeUtilsDts, inferDts, libDts]) => {
-				const stripImportsExports = (content: string) =>
-					content
-						.replace(/import\s+{[^}]*}\s+from\s+['""][^'"]*['""];?\s*/g, "")
-						.replace(/import\s+.*\s+from\s+['""][^'"]*['""];?\s*/g, "")
-						.replace(/^export\s+{[^}]*};?\s*/gm, "")
-						.replace(/^export\s+/gm, "")
-						.replace(/\/\/# sourceMappingURL=.*/g, "")
-						.replace(/\/\/#region.*\n?/g, "")
-						.replace(/\/\/#endregion.*\n?/g, "");
+		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+			noSemanticValidation: false,
+			noSyntaxValidation: false,
+		});
 
-				const combinedTypes = `
+		Promise.all([
+			fetch("/types/type-utils.d.ts").then((r) => r.text()),
+			fetch("/types/infer.d.ts").then((r) => r.text()),
+			fetch("/types/lib.d.ts").then((r) => r.text()),
+		]).then(([typeUtilsDts, inferDts, libDts]) => {
+			const stripImportsExports = (content: string) =>
+				content
+					.replace(/import\s+{[^}]*}\s+from\s+['""][^'"]*['""];?\s*/g, "")
+					.replace(/import\s+.*\s+from\s+['""][^'"]*['""];?\s*/g, "")
+					.replace(/^export\s+{[^}]*};?\s*/gm, "")
+					.replace(/^export\s+/gm, "")
+					.replace(/\/\/# sourceMappingURL=.*/g, "")
+					.replace(/\/\/#region.*\n?/g, "")
+					.replace(/\/\/#endregion.*\n?/g, "");
+
+			const combinedTypes = `
 ${stripImportsExports(typeUtilsDts)}
 ${stripImportsExports(inferDts)}
 ${stripImportsExports(libDts)}
 `;
 
-				const moduleDeclaration = `declare module "prototypey" {
+			const moduleDeclaration = `declare module "prototypey" {
 ${combinedTypes}
 }`;
 
-				monaco.languages.typescript.typescriptDefaults.addExtraLib(
-					moduleDeclaration,
-					"prototypey.d.ts",
-				);
+			monaco.languages.typescript.typescriptDefaults.addExtraLib(
+				moduleDeclaration,
+				"prototypey.d.ts",
+			);
 
-				setIsReady(true);
-				onReady?.();
-			});
+			setIsReady(true);
+			onReady?.();
 		});
-	}, [onReady]);
+	}, [monaco, onReady]);
 
 	if (!isReady) {
 		return (
