@@ -46,31 +46,28 @@ export function Playground() {
 	useEffect(() => {
 		const timeoutId = setTimeout(async () => {
 			try {
-				const cleanedCode = code
-					.replace(/import\s+{[^}]*}\s+from\s+['"][^'"]+['"]\s*;?\s*/g, "")
-					.replace(/^type\s+\w+\s*=\s*[^;]+;?\s*$/gm, "");
+				const nsMatch = code.match(
+					/const\s+ns\s*=\s*lx\.namespace\([^]*?\}\s*\);/,
+				);
+				if (!nsMatch) {
+					throw new Error("No namespace definition found");
+				}
 
-				const lastVarMatch = cleanedCode.match(/(?:const|let|var)\s+(\w+)\s*=/);
-				const lastVarName = lastVarMatch ? lastVarMatch[1] : null;
-
-				const wrappedCode = lastVarName
-					? `${cleanedCode}\nreturn ${lastVarName};`
-					: cleanedCode;
-
+				const cleanedCode = nsMatch[0];
+				const wrappedCode = `${cleanedCode}\nreturn ns;`;
 				const fn = new Function("lx", wrappedCode);
 				const result = fn(lx);
 				let typeInfo = "// Hover over .infer in the editor to see the type";
 
-				if (lastVarName && monaco && tsWorkerRef.current) {
+				if (monaco && tsWorkerRef.current) {
 					try {
 						const uri = monaco.Uri.parse("file:///main.ts");
 						const existingModel = monaco.editor.getModel(uri);
 
 						if (existingModel) {
-							const inferPosition = code.indexOf(`${lastVarName}.infer`);
+							const inferPosition = code.indexOf(`ns.infer`);
 							if (inferPosition !== -1) {
-								const offset =
-									inferPosition + `${lastVarName}.infer`.length - 1;
+								const offset = inferPosition + `ns.infer`.length - 1;
 
 								const quickInfo =
 									await tsWorkerRef.current.getQuickInfoAtPosition(
@@ -183,7 +180,7 @@ function formatTypeString(typeStr: string): string {
 
 const DEFAULT_CODE = `import { lx, type Infer } from "prototypey";
 
-const profileNamespace = lx.namespace("app.bsky.actor.profile", {
+const ns = lx.namespace("app.bsky.actor.profile", {
   main: lx.record({
     key: "self",
     record: lx.object({
@@ -193,4 +190,9 @@ const profileNamespace = lx.namespace("app.bsky.actor.profile", {
   }),
 });
 
-type ProfileInferred = Infer<typeof profileNamespace>;`;
+type ProfileInferred = Infer<typeof ns>;
+
+const aProfile: ProfileInferred = {
+  $type: "app.bsky.actor.profile",
+  displayName: "Benny Harvey"
+}`;
