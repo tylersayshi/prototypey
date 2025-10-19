@@ -1,0 +1,47 @@
+{
+	"lexicon": 1,
+	"id": "app.bsky.feed.searchPosts",
+	"defs": {
+		"main": {
+			"type": "query",
+			"description": "Find posts matching search criteria",
+			"parameters": {
+				"type": "params",
+				"required": ["q"],
+				"properties": {
+					"q": {
+						"type": "string"
+					},
+					"limit": {
+						"type": "integer",
+						"minimum": 1,
+						"maximum": 100,
+						"default": 25
+					},
+					"cursor": {
+						"type": "string"
+					}
+				}
+			},
+			"output": {
+				"encoding": "application/json",
+				"schema": {
+					"type": "object",
+					"required": ["posts"],
+					"properties": {
+						"cursor": {
+							"type": "string"
+						},
+						"posts": {
+							"type": "array",
+							"items": {
+								"type": "ref",
+								"ref": "app.bsky.feed.defs#postView"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

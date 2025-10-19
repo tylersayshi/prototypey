@@ -1,7 +1,8 @@
 {
-	"name": "prototypey",
+	"name": "prototypey-monorepo",
 	"version": "0.0.0",
-	"description": "A very lovely package. Hooray!",
+	"private": true,
+	"description": "Type-safe lexicon inference for ATProto schemas",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/tylersayshi/prototypey.git"
@@ -11,34 +12,20 @@
 		"name": "tylersayshi",
 		"email": "hi@tylur.dev"
 	},
-	"type": "module",
-	"main": "lib/index.js",
-	"files": [
-		"LICENSE.md",
-		"README.md",
-		"lib/",
-		"package.json"
-	],
 	"scripts": {
-		"build": "tsdown",
+		"build": "pnpm -r build",
+		"codegen:samples": "node packages/cli/src/index.ts gen-inferred ./generated/inferred './samples/*.json'",
 		"format": "prettier . --list-different",
 		"format:fix": "prettier . --write",
-		"lint": "eslint . --max-warnings 0",
-		"test": "vitest run",
-		"test:bench": "node tests/infer.bench.ts",
-		"test:update-snapshots": "vitest run -u",
-		"tsc": "tsc"
+		"lint": "pnpm -r lint",
+		"test": "pnpm -r test",
+		"tsc": "pnpm -r tsc"
 	},
 	"devDependencies": {
-		"@ark/attest": "^0.49.0",
 		"@eslint/js": "9.29.0",
-		"@types/node": "24.0.4",
 		"eslint": "9.29.0",
 		"prettier": "3.6.1",
-		"tsdown": "0.12.7",
-		"typescript": "5.8.3",
-		"typescript-eslint": "8.35.0",
-		"vitest": "^3.2.4"
+		"typescript-eslint": "8.35.0"
 	},
 	"packageManager": "pnpm@10.4.0",
 	"engines": {

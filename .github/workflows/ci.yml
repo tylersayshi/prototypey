@@ -6,7 +6,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
       - run: pnpm build
-      - run: node lib/index.js
+      - run: node packages/prototypey/lib/index.js
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -27,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
+      - run: pnpm build
       - run: pnpm tsc
   test:
     name: Test
@@ -34,6 +35,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
+      - run: pnpm build
+      - run: pnpm codegen:samples
       - run: pnpm test
   benchmark_types:
     name: Benchmark Types
@@ -41,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare
-      - run: pnpm test:bench
+      - run: pnpm -F prototypey test:bench
 
 name: CI
 
