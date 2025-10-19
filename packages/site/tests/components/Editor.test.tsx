@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { Editor } from "../../src/components/Editor";
 
@@ -53,7 +53,9 @@ describe("Editor", () => {
 		expect(screen.getByText("Input")).toBeInTheDocument();
 
 		// Wait for loader to complete
-		await screen.findByTestId("monaco-editor");
+		await waitFor(() => {
+			expect(screen.getByTestId("monaco-editor")).toBeInTheDocument();
+		});
 	});
 
 	it("calls onChange when value changes", async () => {
@@ -61,7 +63,11 @@ describe("Editor", () => {
 		render(<Editor value="" onChange={mockOnChange} />);
 
 		// Wait for loader to complete
-		const editor = await screen.findByTestId("monaco-editor");
+		await waitFor(() => {
+			expect(screen.getByTestId("monaco-editor")).toBeInTheDocument();
+		});
+
+		const editor = screen.getByTestId("monaco-editor");
 		await userEvent.type(editor, "test");
 
 		expect(mockOnChange).toHaveBeenCalled();
@@ -72,7 +78,11 @@ describe("Editor", () => {
 		render(<Editor value="const x = 1" onChange={mockOnChange} />);
 
 		// Wait for loader to complete
-		const editor = await screen.findByTestId("monaco-editor");
+		await waitFor(() => {
+			expect(screen.getByTestId("monaco-editor")).toBeInTheDocument();
+		});
+
+		const editor = screen.getByTestId("monaco-editor");
 		expect(editor).toHaveValue("const x = 1");
 	});
 });

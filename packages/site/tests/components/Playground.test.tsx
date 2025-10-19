@@ -61,11 +61,16 @@ vi.mock("@monaco-editor/react", () => ({
 }));
 
 describe("Playground", () => {
-	it("renders Editor and OutputPanel components", () => {
+	it("renders Editor and OutputPanel components", async () => {
 		render(<Playground />);
 
 		expect(screen.getByText("Input")).toBeInTheDocument();
 		expect(screen.getByText("Output")).toBeInTheDocument();
+
+		// Wait for async state updates to complete
+		await waitFor(() => {
+			expect(screen.getAllByTestId("monaco-editor").length).toBeGreaterThan(0);
+		});
 	});
 
 	it("starts with default code in editor", async () => {
