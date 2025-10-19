@@ -10,6 +10,20 @@ interface EditorProps {
 export function Editor({ value, onChange, onReady }: EditorProps) {
 	const [isReady, setIsReady] = useState(false);
 	const monaco = useMonaco();
+	const [theme, setTheme] = useState<"vs-light" | "vs-dark">(
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+			? "vs-dark"
+			: "vs-light",
+	);
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = (e: MediaQueryListEvent) => {
+			setTheme(e.matches ? "vs-dark" : "vs-light");
+		};
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, []);
 
 	useEffect(() => {
 		if (!monaco) return;
@@ -71,11 +85,11 @@ ${combinedTypes}
 				<div
 					style={{
 						padding: "0.75rem 1rem",
-						backgroundColor: "#f9fafb",
-						borderBottom: "1px solid #e5e7eb",
+						backgroundColor: "var(--color-bg-secondary)",
+						borderBottom: "1px solid var(--color-border)",
 						fontSize: "0.875rem",
 						fontWeight: "600",
-						color: "#374151",
+						color: "var(--color-text-secondary)",
 					}}
 				>
 					Input
@@ -99,11 +113,11 @@ ${combinedTypes}
 			<div
 				style={{
 					padding: "0.75rem 1rem",
-					backgroundColor: "#f9fafb",
-					borderBottom: "1px solid #e5e7eb",
+					backgroundColor: "var(--color-bg-secondary)",
+					borderBottom: "1px solid var(--color-border)",
 					fontSize: "0.875rem",
 					fontWeight: "600",
-					color: "#374151",
+					color: "var(--color-text-secondary)",
 				}}
 			>
 				Input
@@ -115,7 +129,7 @@ ${combinedTypes}
 					path="file:///main.ts"
 					value={value}
 					onChange={(value) => onChange(value || "")}
-					theme="vs-light"
+					theme={theme}
 					options={{
 						minimap: { enabled: false },
 						fontSize: 14,

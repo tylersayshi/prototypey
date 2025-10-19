@@ -1,4 +1,5 @@
 import MonacoEditor from "@monaco-editor/react";
+import { useEffect, useState } from "react";
 
 interface OutputPanelProps {
 	output: {
@@ -9,16 +10,31 @@ interface OutputPanelProps {
 }
 
 export function OutputPanel({ output }: OutputPanelProps) {
+	const [theme, setTheme] = useState<"vs-light" | "vs-dark">(
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+			? "vs-dark"
+			: "vs-light",
+	);
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = (e: MediaQueryListEvent) => {
+			setTheme(e.matches ? "vs-dark" : "vs-light");
+		};
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, []);
+
 	return (
 		<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
 			<div
 				style={{
 					padding: "0.75rem 1rem",
-					backgroundColor: "#f9fafb",
-					borderBottom: "1px solid #e5e7eb",
+					backgroundColor: "var(--color-bg-secondary)",
+					borderBottom: "1px solid var(--color-border)",
 					fontSize: "0.875rem",
 					fontWeight: "600",
-					color: "#374151",
+					color: "var(--color-text-secondary)",
 				}}
 			>
 				Output
@@ -28,8 +44,8 @@ export function OutputPanel({ output }: OutputPanelProps) {
 					<div
 						style={{
 							padding: "1rem",
-							color: "#dc2626",
-							backgroundColor: "#fef2f2",
+							color: "var(--color-error)",
+							backgroundColor: "var(--color-error-bg)",
 							height: "100%",
 							overflow: "auto",
 						}}
@@ -41,7 +57,7 @@ export function OutputPanel({ output }: OutputPanelProps) {
 						height="100%"
 						defaultLanguage="json"
 						value={output.json}
-						theme="vs-light"
+						theme={theme}
 						options={{
 							readOnly: true,
 							minimap: { enabled: false },

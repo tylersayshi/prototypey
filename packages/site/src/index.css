@@ -10,12 +10,35 @@
 		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
-	color: #213547;
-	background-color: #ffffff;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+
+	--color-text: #213547;
+	--color-text-secondary: #6b7280;
+	--color-text-heading: #111827;
+	--color-bg: #ffffff;
+	--color-bg-secondary: #f9fafb;
+	--color-border: #e5e7eb;
+	--color-error: #dc2626;
+	--color-error-bg: #fef2f2;
+
+	color: var(--color-text);
+	background-color: var(--color-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-text: #e5e7eb;
+		--color-text-secondary: #9ca3af;
+		--color-text-heading: #f9fafb;
+		--color-bg: #111827;
+		--color-bg-secondary: #1f2937;
+		--color-border: #374151;
+		--color-error: #f87171;
+		--color-error-bg: #3f1f1f;
+	}
 }
 
 body {

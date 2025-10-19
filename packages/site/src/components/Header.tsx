@@ -3,7 +3,7 @@ export function Header() {
 		<header
 			style={{
 				padding: "2rem 2rem 1rem 2rem",
-				borderBottom: "1px solid #e5e7eb",
+				borderBottom: "1px solid var(--color-border)",
 			}}
 		>
 			<div style={{ maxWidth: "1400px", margin: "0 auto" }}>
@@ -16,12 +16,15 @@ export function Header() {
 								marginBottom: "0.5rem",
 							}}
 						>
-							<span style={{ color: "#6b7280" }}>at://</span>prototypey
+							<span style={{ color: "var(--color-text-secondary)" }}>
+								at://
+							</span>
+							prototypey
 						</h1>
 						<p
 							style={{
 								fontSize: "1.125rem",
-								color: "#6b7280",
+								color: "var(--color-text-secondary)",
 								marginTop: "0.5rem",
 							}}
 						>
@@ -34,7 +37,7 @@ export function Header() {
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{
-								color: "#111827",
+								color: "var(--color-text-heading)",
 								textDecoration: "none",
 								fontSize: "1rem",
 								fontWeight: "600",
@@ -62,7 +65,7 @@ export function Header() {
 							target="_blank"
 							rel="noopener noreferrer"
 							style={{
-								color: "#111827",
+								color: "var(--color-text-heading)",
 								textDecoration: "none",
 								fontSize: "1rem",
 								fontWeight: "600",

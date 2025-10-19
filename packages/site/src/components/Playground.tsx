@@ -12,13 +12,11 @@ let tsWorkerInstance: Monaco.languages.typescript.TypeScriptWorker | null =
 	null;
 
 export function Playground() {
-	// Use URL state with compression for code
 	const [compressedCode, setCompressedCode] = useQueryState(
 		"code",
 		parseAsString.withDefault(""),
 	);
 
-	// Decompress code from URL or use default
 	const initialCode =
 		compressedCode && compressedCode.trim() !== ""
 			? LZString.decompressFromEncodedURIComponent(compressedCode) ||
@@ -28,6 +26,11 @@ export function Playground() {
 	const [code, setCode] = useState(initialCode);
 	const [output, setOutput] = useState({ json: "", typeInfo: "", error: "" });
 	const [editorReady, setEditorReady] = useState(false);
+	const [theme, setTheme] = useState<"vs-light" | "vs-dark">(
+		window.matchMedia("(prefers-color-scheme: dark)").matches
+			? "vs-dark"
+			: "vs-light",
+	);
 	const monaco = useMonaco();
 	const tsWorkerRef =
 		useRef<Monaco.languages.typescript.TypeScriptWorker | null>(null);
@@ -42,6 +45,15 @@ export function Playground() {
 	const handleEditorReady = () => {
 		setEditorReady(true);
 	};
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+		const handleChange = (e: MediaQueryListEvent) => {
+			setTheme(e.matches ? "vs-dark" : "vs-light");
+		};
+		mediaQuery.addEventListener("change", handleChange);
+		return () => mediaQuery.removeEventListener("change", handleChange);
+	}, []);
 
 	useEffect(() => {
 		if (monaco && editorReady && !tsWorkerRef.current && !tsWorkerInstance) {
@@ -153,7 +165,7 @@ export function Playground() {
 					style={{
 						flex: 1,
 						display: "flex",
-						borderRight: "1px solid #e5e7eb",
+						borderRight: "1px solid var(--color-border)",
 					}}
 				>
 					<Editor
@@ -179,19 +191,19 @@ export function Playground() {
 			>
 				<div
 					style={{
-						backgroundColor: "#f9fafb",
+						backgroundColor: "var(--color-bg-secondary)",
 						padding: "1rem",
 						borderRadius: "0.5rem",
 						marginBottom: "1rem",
 						textAlign: "center",
-						color: "#6b7280",
+						color: "var(--color-text-secondary)",
 						fontSize: "0.875rem",
 					}}
 				>
 					Playground available on desktop
 				</div>
 
-				<MobileStaticDemo code={code} json={output.json} />
+				<MobileStaticDemo code={code} json={output.json} theme={theme} />
 			</div>
 		</>
 	);
@@ -227,7 +239,15 @@ function formatTypeString(typeStr: string): string {
 	return indentedLines.join("\n");
 }
 
-function MobileStaticDemo({ code, json }: { code: string; json: string }) {
+function MobileStaticDemo({
+	code,
+	json,
+	theme,
+}: {
+	code: string;
+	json: string;
+	theme: "vs-light" | "vs-dark";
+}) {
 	// Calculate line counts to size editors appropriately
 	const codeLines = code.split("\n").length;
 	const jsonLines = json.split("\n").length;
@@ -251,11 +271,11 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 				<div
 					style={{
 						padding: "0.75rem 1rem",
-						backgroundColor: "#f9fafb",
-						borderBottom: "1px solid #e5e7eb",
+						backgroundColor: "var(--color-bg-secondary)",
+						borderBottom: "1px solid var(--color-border)",
 						fontSize: "0.875rem",
 						fontWeight: "600",
-						color: "#374151",
+						color: "var(--color-text-secondary)",
 						borderTopLeftRadius: "0.5rem",
 						borderTopRightRadius: "0.5rem",
 					}}
@@ -264,7 +284,7 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 				</div>
 				<div
 					style={{
-						border: "1px solid #e5e7eb",
+						border: "1px solid var(--color-border)",
 						borderTop: "none",
 						borderBottomLeftRadius: "0.5rem",
 						borderBottomRightRadius: "0.5rem",
@@ -275,7 +295,7 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 						height={`${codeWrappedLines * 18 + 32}px`}
 						defaultLanguage="typescript"
 						value={code}
-						theme="vs-light"
+						theme={theme}
 						options={{
 							readOnly: true,
 							minimap: { enabled: false },
@@ -303,11 +323,11 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 				<div
 					style={{
 						padding: "0.75rem 1rem",
-						backgroundColor: "#f9fafb",
-						borderBottom: "1px solid #e5e7eb",
+						backgroundColor: "var(--color-bg-secondary)",
+						borderBottom: "1px solid var(--color-border)",
 						fontSize: "0.875rem",
 						fontWeight: "600",
-						color: "#374151",
+						color: "var(--color-text-secondary)",
 						borderTopLeftRadius: "0.5rem",
 						borderTopRightRadius: "0.5rem",
 					}}
@@ -316,7 +336,7 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 				</div>
 				<div
 					style={{
-						border: "1px solid #e5e7eb",
+						border: "1px solid var(--color-border)",
 						borderTop: "none",
 						borderBottomLeftRadius: "0.5rem",
 						borderBottomRightRadius: "0.5rem",
@@ -327,7 +347,7 @@ function MobileStaticDemo({ code, json }: { code: string; json: string }) {
 						height={`${jsonWrappedLines * 18 + 32}px`}
 						defaultLanguage="json"
 						value={json}
-						theme="vs-light"
+						theme={theme}
 						options={{
 							readOnly: true,
 							minimap: { enabled: false },
