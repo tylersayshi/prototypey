@@ -14,24 +14,20 @@ export function Playground() {
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
 			try {
-				const AsyncFunction = async function () {}.constructor as new (
-					...args: string[]
-				) => (...args: unknown[]) => Promise<unknown>;
+				const cleanedCode = code.replace(
+					/import\s+{[^}]*}\s+from\s+['"][^'"]+['"]\s*;?\s*/g,
+					"",
+				);
 
-				const wrappedCode = `
-					const { lx } = arguments[0];
-					${code}
-					const exports = {};
-					for (const key in this) {
-						if (this.hasOwnProperty(key) && key !== 'lx') {
-							exports[key] = this[key];
-						}
-					}
-					return Object.values(exports)[0];
-				`;
+				const lastVarMatch = cleanedCode.match(/(?:const|let|var)\s+(\w+)\s*=/);
+				const lastVarName = lastVarMatch ? lastVarMatch[1] : null;
 
-				const fn = new AsyncFunction(wrappedCode);
-				const result = fn.call({}, { lx });
+				const wrappedCode = lastVarName
+					? `${cleanedCode}\nreturn ${lastVarName};`
+					: cleanedCode;
+
+				const fn = new Function("lx", wrappedCode);
+				const result = fn(lx);
 
 				if (result && typeof result === "object" && "json" in result) {
 					const jsonOutput = (result as { json: unknown }).json;
