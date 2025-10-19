@@ -10,6 +10,40 @@ vi.mock("@monaco-editor/react", () => ({
 			onChange={(e) => onChange(e.target.value)}
 		/>
 	),
+	useMonaco: () => null,
+	loader: {
+		init: vi.fn(() =>
+			Promise.resolve({
+				languages: {
+					typescript: {
+						typescriptDefaults: {
+							setCompilerOptions: vi.fn(),
+							setDiagnosticsOptions: vi.fn(),
+							addExtraLib: vi.fn(),
+						},
+						ScriptTarget: { ES2020: 5 },
+						ModuleResolutionKind: { NodeJs: 2 },
+						ModuleKind: { ESNext: 99 },
+						getTypeScriptWorker: vi.fn(() =>
+							Promise.resolve(() =>
+								Promise.resolve({
+									getQuickInfoAtPosition: vi.fn(() => Promise.resolve(null)),
+								}),
+							),
+						),
+					},
+				},
+				editor: {
+					defineTheme: vi.fn(),
+					createModel: vi.fn(() => ({ dispose: vi.fn() })),
+					getModel: vi.fn(() => null),
+				},
+				Uri: {
+					parse: vi.fn((uri: string) => ({ toString: () => uri })),
+				},
+			}),
+		),
+	},
 }));
 
 describe("Playground", () => {
