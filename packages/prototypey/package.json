@@ -16,7 +16,8 @@
 	"main": "lib/index.js",
 	"exports": {
 		".": "./lib/index.js",
-		"./infer": "./lib/infer.js"
+		"./infer": "./lib/infer.js",
+		"./lib/lib.d.ts": "./lib/lib.d.ts"
 	},
 	"files": [
 		"lib/",

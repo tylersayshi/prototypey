@@ -329,7 +329,7 @@ interface SubscriptionOptions {
 
 class Namespace<T extends LexiconNamespace> {
 	public json: T;
-	public infer: Infer<T> = null as unknown as Infer<T>;
+	public infer: Infer<{ json: T }> = null as unknown as Infer<{ json: T }>;
 
 	constructor(json: T) {
 		this.json = json;
