@@ -1,4 +1,6 @@
 import MonacoEditor from "@monaco-editor/react";
+import { loader } from "@monaco-editor/react";
+import { useEffect, useState } from "react";
 
 interface EditorProps {
 	value: string;
@@ -6,56 +8,90 @@ interface EditorProps {
 }
 
 export function Editor({ value, onChange }: EditorProps) {
-	const handleEditorWillMount = async (
-		monaco: typeof import("monaco-editor"),
-	) => {
-		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-			noSemanticValidation: false,
-			noSyntaxValidation: false,
-		});
+	const [isReady, setIsReady] = useState(false);
 
-		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-			target: monaco.languages.typescript.ScriptTarget.ES2020,
-			allowNonTsExtensions: true,
-			moduleResolution:
-				monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-			module: monaco.languages.typescript.ModuleKind.ESNext,
-			noEmit: true,
-			esModuleInterop: true,
-			allowSyntheticDefaultImports: true,
-		});
+	useEffect(() => {
+		loader.init().then((monaco) => {
+			monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+				target: monaco.languages.typescript.ScriptTarget.ES2020,
+				allowNonTsExtensions: true,
+				moduleResolution:
+					monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+				module: monaco.languages.typescript.ModuleKind.ESNext,
+				noEmit: true,
+				esModuleInterop: true,
+				allowSyntheticDefaultImports: true,
+				strict: false,
+			});
 
-		try {
-			const [typeUtilsDts, inferDts, libDts, indexDts] = await Promise.all([
+			monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+				noSemanticValidation: false,
+				noSyntaxValidation: false,
+			});
+
+			Promise.all([
 				fetch("/types/type-utils.d.ts").then((r) => r.text()),
 				fetch("/types/infer.d.ts").then((r) => r.text()),
 				fetch("/types/lib.d.ts").then((r) => r.text()),
-				fetch("/types/index.d.ts").then((r) => r.text()),
-			]);
+			]).then(([typeUtilsDts, inferDts, libDts]) => {
+				const stripImportsExports = (content: string) =>
+					content
+						.replace(/import\s+{[^}]*}\s+from\s+['""][^'"]*['""];?\s*/g, "")
+						.replace(/import\s+.*\s+from\s+['""][^'"]*['""];?\s*/g, "")
+						.replace(/^export\s+{[^}]*};?\s*/gm, "")
+						.replace(/^export\s+/gm, "")
+						.replace(/\/\/# sourceMappingURL=.*/g, "")
+						.replace(/\/\/#region.*\n?/g, "")
+						.replace(/\/\/#endregion.*\n?/g, "");
 
-			monaco.languages.typescript.typescriptDefaults.addExtraLib(
-				typeUtilsDts,
-				"file:///node_modules/prototypekit/type-utils.d.ts",
-			);
+				const combinedTypes = `
+${stripImportsExports(typeUtilsDts)}
+${stripImportsExports(inferDts)}
+${stripImportsExports(libDts)}
+`;
 
-			monaco.languages.typescript.typescriptDefaults.addExtraLib(
-				inferDts,
-				"file:///node_modules/prototypekit/infer.d.ts",
-			);
+				const moduleDeclaration = `declare module "prototypekit" {
+${combinedTypes}
+}`;
 
-			monaco.languages.typescript.typescriptDefaults.addExtraLib(
-				libDts,
-				"file:///node_modules/prototypekit/lib.d.ts",
-			);
+				monaco.languages.typescript.typescriptDefaults.addExtraLib(
+					moduleDeclaration,
+					"prototypekit.d.ts",
+				);
 
-			monaco.languages.typescript.typescriptDefaults.addExtraLib(
-				indexDts,
-				"file:///node_modules/prototypekit/index.d.ts",
-			);
-		} catch (error) {
-			console.error("Failed to load prototypekit types:", error);
-		}
-	};
+				setIsReady(true);
+			});
+		});
+	}, []);
+
+	if (!isReady) {
+		return (
+			<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+				<div
+					style={{
+						padding: "0.75rem 1rem",
+						backgroundColor: "#f9fafb",
+						borderBottom: "1px solid #e5e7eb",
+						fontSize: "0.875rem",
+						fontWeight: "600",
+						color: "#374151",
+					}}
+				>
+					Input
+				</div>
+				<div
+					style={{
+						flex: 1,
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					Loading...
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -78,7 +114,6 @@ export function Editor({ value, onChange }: EditorProps) {
 					value={value}
 					onChange={(value) => onChange(value || "")}
 					theme="vs-light"
-					beforeMount={handleEditorWillMount}
 					options={{
 						minimap: { enabled: false },
 						fontSize: 14,
