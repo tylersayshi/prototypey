@@ -1,29 +1,5 @@
-import MonacoEditor, { useMonaco, loader } from "@monaco-editor/react";
+import MonacoEditor, { useMonaco } from "@monaco-editor/react";
 import { useEffect, useState } from "react";
-import * as monaco from "monaco-editor";
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
-
-// Configure Monaco Environment for web workers
-if (typeof self !== "undefined") {
-	self.MonacoEnvironment = {
-		getWorker(_: string, label: string) {
-			if (label === "json") {
-				return new jsonWorker();
-			}
-			if (label === "typescript" || label === "javascript") {
-				return new tsWorker();
-			}
-			return new editorWorker();
-		},
-	};
-}
-
-// Configure loader to use local monaco-editor 0.52.0 instead of CDN 0.54.0
-if (loader?.config) {
-	loader.config({ monaco });
-}
 
 interface EditorProps {
 	value: string;
