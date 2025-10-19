@@ -4,8 +4,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "rolldown -c --watch",
-		"build": "tsc && rolldown -c",
+		"dev": "vite",
+		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"test": "vitest"
 	},
@@ -23,7 +23,6 @@
 		"@types/react-dom": "^18.3.5",
 		"@vitejs/plugin-react": "^4.3.4",
 		"jsdom": "^25.0.1",
-		"rolldown": "^1.0.0-beta.5",
 		"typescript": "5.8.3",
 		"vite": "^6.0.5",
 		"vitest": "^3.2.4"
