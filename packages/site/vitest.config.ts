@@ -34,7 +34,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			"monaco-editor": "/Users/tyler/gitspace/prototypey/packages/site/tests/mocks/monaco-editor.ts",
+			"monaco-editor": `${import.meta.dirname}/tests/mocks/monaco-editor.ts`,
 		},
 	},
 });
