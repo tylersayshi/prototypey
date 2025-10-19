@@ -47,7 +47,7 @@ export function Playground() {
 		const timeoutId = setTimeout(async () => {
 			try {
 				const nsMatch = code.match(
-					/const\s+ns\s*=\s*lx\.lexicon\([^]*?\}\s*\);/,
+					/const\s+lex\s*=\s*lx\.lexicon\([^]*?\}\s*\);/,
 				);
 				if (!nsMatch) {
 					throw new Error("No lexicon definition found");
