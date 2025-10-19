@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 interface EditorProps {
 	value: string;
 	onChange: (value: string) => void;
+	onReady?: () => void;
 }
 
-export function Editor({ value, onChange }: EditorProps) {
+export function Editor({ value, onChange, onReady }: EditorProps) {
 	const [isReady, setIsReady] = useState(false);
 
 	useEffect(() => {
@@ -60,9 +61,10 @@ ${combinedTypes}
 				);
 
 				setIsReady(true);
+				onReady?.();
 			});
 		});
-	}, []);
+	}, [onReady]);
 
 	if (!isReady) {
 		return (
@@ -111,6 +113,7 @@ ${combinedTypes}
 				<MonacoEditor
 					height="100%"
 					defaultLanguage="typescript"
+					path="file:///main.ts"
 					value={value}
 					onChange={(value) => onChange(value || "")}
 					theme="vs-light"
