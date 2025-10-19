@@ -77,7 +77,7 @@ async function processSourceFile(
 		}
 
 		if (lexicons.length === 0) {
-			console.warn(`  ⚠ ${sourcePath}: No lexicon lexicons found`);
+			console.warn(`  ⚠ ${sourcePath}: No lexicons found`);
 			return;
 		}
 
