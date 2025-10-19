@@ -7,13 +7,7 @@ export function Header() {
 			}}
 		>
 			<div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-				<div
-					style={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "flex-start",
-					}}
-				>
+				<div className="header-content">
 					<div>
 						<h1
 							style={{
@@ -34,9 +28,7 @@ export function Header() {
 							Type-safe lexicon inference for ATProto schemas
 						</p>
 					</div>
-					<div
-						style={{ display: "flex", gap: "1.25rem", paddingTop: "0.5rem" }}
-					>
+					<div className="header-links">
 						<a
 							href="https://github.com/tylersayshi/prototypey"
 							target="_blank"

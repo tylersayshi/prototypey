@@ -6,6 +6,7 @@ import { useMonaco } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
 import { parseAsString, useQueryState } from "nuqs";
 import LZString from "lz-string";
+import MonacoEditor from "@monaco-editor/react";
 
 let tsWorkerInstance: Monaco.languages.typescript.TypeScriptWorker | null =
 	null;
@@ -139,30 +140,60 @@ export function Playground() {
 	}, [code, monaco]);
 
 	return (
-		<div
-			style={{
-				flex: 1,
-				display: "flex",
-				overflow: "hidden",
-			}}
-		>
+		<>
+			{/* Desktop playground */}
 			<div
+				className="desktop-only"
 				style={{
 					flex: 1,
-					display: "flex",
-					borderRight: "1px solid #e5e7eb",
+					overflow: "hidden",
 				}}
 			>
-				<Editor
-					value={code}
-					onChange={handleCodeChange}
-					onReady={handleEditorReady}
-				/>
+				<div
+					style={{
+						flex: 1,
+						display: "flex",
+						borderRight: "1px solid #e5e7eb",
+					}}
+				>
+					<Editor
+						value={code}
+						onChange={handleCodeChange}
+						onReady={handleEditorReady}
+					/>
+				</div>
+				<div style={{ flex: 1, display: "flex" }}>
+					<OutputPanel output={output} />
+				</div>
 			</div>
-			<div style={{ flex: 1, display: "flex" }}>
-				<OutputPanel output={output} />
+
+			{/* Mobile static demo */}
+			<div
+				className="mobile-only"
+				style={{
+					flex: 1,
+					flexDirection: "column",
+					overflow: "auto",
+					padding: "1rem",
+				}}
+			>
+				<div
+					style={{
+						backgroundColor: "#f9fafb",
+						padding: "1rem",
+						borderRadius: "0.5rem",
+						marginBottom: "1rem",
+						textAlign: "center",
+						color: "#6b7280",
+						fontSize: "0.875rem",
+					}}
+				>
+					Playground available on desktop
+				</div>
+
+				<MobileStaticDemo />
 			</div>
-		</div>
+		</>
 	);
 }
 
@@ -194,6 +225,122 @@ function formatTypeString(typeStr: string): string {
 	}
 
 	return indentedLines.join("\n");
+}
+
+function MobileStaticDemo({
+	code,
+	json,
+}: {
+	code: string;
+	json: string;
+}) {
+	// Calculate line counts to size editors appropriately
+	const codeLines = code.split("\n").length;
+	const jsonLines = json.split("\n").length;
+
+	return (
+		<div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+			{/* You write section */}
+			<div style={{ display: "flex", flexDirection: "column" }}>
+				<div
+					style={{
+						padding: "0.75rem 1rem",
+						backgroundColor: "#f9fafb",
+						borderBottom: "1px solid #e5e7eb",
+						fontSize: "0.875rem",
+						fontWeight: "600",
+						color: "#374151",
+						borderTopLeftRadius: "0.5rem",
+						borderTopRightRadius: "0.5rem",
+					}}
+				>
+					You write
+				</div>
+				<div
+					style={{
+						border: "1px solid #e5e7eb",
+						borderTop: "none",
+						borderBottomLeftRadius: "0.5rem",
+						borderBottomRightRadius: "0.5rem",
+						overflow: "hidden",
+					}}
+				>
+					<MonacoEditor
+						height={`${Math.min(codeLines * 19 + 32, 500)}px`}
+						defaultLanguage="typescript"
+						value={code}
+						theme="vs-light"
+						options={{
+							readOnly: true,
+							minimap: { enabled: false },
+							fontSize: 12,
+							lineNumbers: "on",
+							renderLineHighlight: "none",
+							scrollBeyondLastLine: false,
+							padding: { top: 16, bottom: 16 },
+							scrollbar: {
+								vertical: "hidden",
+								horizontal: "auto",
+								horizontalScrollbarSize: 8,
+							},
+							wordWrap: "on",
+							overviewRulerLanes: 0,
+						}}
+					/>
+				</div>
+			</div>
+
+			{/* JSON generated section */}
+			<div style={{ display: "flex", flexDirection: "column" }}>
+				<div
+					style={{
+						padding: "0.75rem 1rem",
+						backgroundColor: "#f9fafb",
+						borderBottom: "1px solid #e5e7eb",
+						fontSize: "0.875rem",
+						fontWeight: "600",
+						color: "#374151",
+						borderTopLeftRadius: "0.5rem",
+						borderTopRightRadius: "0.5rem",
+					}}
+				>
+					JSON generated
+				</div>
+				<div
+					style={{
+						border: "1px solid #e5e7eb",
+						borderTop: "none",
+						borderBottomLeftRadius: "0.5rem",
+						borderBottomRightRadius: "0.5rem",
+						overflow: "hidden",
+					}}
+				>
+					<MonacoEditor
+						height={`${Math.min(jsonLines * 19 + 32, 600)}px`}
+						defaultLanguage="json"
+						value={json}
+						theme="vs-light"
+						options={{
+							readOnly: true,
+							minimap: { enabled: false },
+							fontSize: 12,
+							lineNumbers: "on",
+							renderLineHighlight: "none",
+							scrollBeyondLastLine: false,
+							padding: { top: 16, bottom: 16 },
+							scrollbar: {
+								vertical: "hidden",
+								horizontal: "auto",
+								horizontalScrollbarSize: 8,
+							},
+							wordWrap: "on",
+							overviewRulerLanes: 0,
+						}}
+					/>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 const DEFAULT_CODE = `import { lx, type Infer } from "prototypey";
