@@ -14,26 +14,14 @@ describe("OutputPanel", () => {
 		error: "",
 	};
 
-	it("renders JSON Output tab by default", () => {
+	it("renders Output header", () => {
 		render(<OutputPanel output={mockOutput} />);
-		expect(screen.getByText("JSON Output")).toBeInTheDocument();
-		expect(screen.getByText("Type Info")).toBeInTheDocument();
+		expect(screen.getByText("Output")).toBeInTheDocument();
 	});
 
-	it("displays json content by default", () => {
+	it("displays json content", () => {
 		render(<OutputPanel output={mockOutput} />);
 		expect(screen.getByText('{"test": "value"}')).toBeInTheDocument();
-	});
-
-	it("switches to Type Info tab when clicked", async () => {
-		render(<OutputPanel output={mockOutput} />);
-
-		const typeInfoTab = screen.getByText("Type Info");
-		await userEvent.click(typeInfoTab);
-
-		expect(
-			screen.getByText("type Test = { test: string }"),
-		).toBeInTheDocument();
 	});
 
 	it("displays error message when error exists", () => {

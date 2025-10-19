@@ -51,18 +51,22 @@ describe("Playground", () => {
 		render(<Playground />);
 
 		expect(screen.getByText("Input")).toBeInTheDocument();
-		expect(screen.getByText("JSON Output")).toBeInTheDocument();
-		expect(screen.getByText("Type Info")).toBeInTheDocument();
+		expect(screen.getByText("Output")).toBeInTheDocument();
 	});
 
-	it("starts with default code in editor", () => {
+	it("starts with default code in editor", async () => {
 		render(<Playground />);
 
-		const editors = screen.getAllByTestId("monaco-editor");
-		const inputEditor = editors[0];
+		// Wait for editors to be ready
+		await waitFor(() => {
+			expect(screen.getAllByTestId("monaco-editor").length).toBeGreaterThan(0);
+		});
 
-		expect(inputEditor).toHaveValue(
-			expect.stringContaining('lx.namespace("app.bsky.actor.profile"'),
+		const editors = screen.getAllByTestId("monaco-editor");
+		const inputEditor = editors[0] as HTMLTextAreaElement;
+
+		expect(inputEditor.value).toContain(
+			'lx.namespace("app.bsky.actor.profile"',
 		);
 	});
 
