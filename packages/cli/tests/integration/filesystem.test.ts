@@ -7,10 +7,9 @@ import {
 	access,
 	constants,
 } from "node:fs/promises";
-import { join, dirname } from "node:path";
+import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { spawn } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { runCLI } from "../test-utils.js";
 
 describe("CLI File System Handling", () => {
 	let testDir: string;
@@ -185,27 +184,3 @@ describe("CLI File System Handling", () => {
 		expect([0, 1]).toContain(code);
 	});
 });
-
-function runCLI(
-	args: string[],
-): Promise<{ stdout: string; stderr: string; code: number }> {
-	return new Promise((resolve) => {
-		const cliPath = join(dirname(fileURLToPath(import.meta.url)), "../../lib/index.js");
-		const child = spawn("node", [cliPath, ...args]);
-
-		let stdout = "";
-		let stderr = "";
-
-		child.stdout.on("data", (data) => {
-			stdout += data.toString();
-		});
-
-		child.stderr.on("data", (data) => {
-			stderr += data.toString();
-		});
-
-		child.on("close", (code) => {
-			resolve({ stdout, stderr, code: code ?? 0 });
-		});
-	});
-}
