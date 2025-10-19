@@ -23,9 +23,9 @@ importers:
 
   packages/cli:
     dependencies:
-      prototypey:
+      prototypekit:
         specifier: workspace:*
-        version: link:../prototypey
+        version: link:../prototypekit
       sade:
         specifier: ^1.8.1
         version: 1.8.1
@@ -46,7 +46,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.0.4)(jiti@2.6.1)
 
-  packages/prototypey:
+  packages/prototypekit:
     devDependencies:
       '@ark/attest':
         specifier: ^0.49.0

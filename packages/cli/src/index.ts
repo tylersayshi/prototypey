@@ -7,7 +7,7 @@ const pkg = JSON.parse(
 	await readFile(new URL("../package.json", import.meta.url), "utf-8"),
 ) as { version: string };
 
-const prog = sade("prototypey");
+const prog = sade("prototypekit");
 
 prog
 	.version(pkg.version)

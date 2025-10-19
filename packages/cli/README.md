@@ -1,17 +1,17 @@
-# @prototypey/cli
+# @prototypekit/cli
 
 CLI tool for generating types from ATProto lexicon schemas.
 
 ## Installation
 
 ```bash
-npm install -g @prototypey/cli
+npm install -g @prototypekit/cli
 ```
 
 Or use directly with npx:
 
 ```bash
-npx @prototypey/cli
+npx @prototypekit/cli
 ```
 
 ## Commands
@@ -23,7 +23,7 @@ Generate type-inferred TypeScript code from JSON lexicon schemas.
 **Usage:**
 
 ```bash
-prototypey gen-inferred <outdir> <schemas...>
+prototypekit gen-inferred <outdir> <schemas...>
 ```
 
 **Arguments:**
@@ -34,7 +34,7 @@ prototypey gen-inferred <outdir> <schemas...>
 **Example:**
 
 ```bash
-prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json
+prototypekit gen-inferred ./generated/inferred ./lexicons/**/*.json
 ```
 
 **What it does:**
@@ -51,7 +51,7 @@ Emit JSON lexicon schemas from authored TypeScript files.
 **Usage:**
 
 ```bash
-prototypey gen-emit <outdir> <sources...>
+prototypekit gen-emit <outdir> <sources...>
 ```
 
 **Arguments:**
@@ -62,7 +62,7 @@ prototypey gen-emit <outdir> <sources...>
 **Example:**
 
 ```bash
-prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
+prototypekit gen-emit ./lexicons ./src/lexicons/**/*.ts
 ```
 
 **What it does:**
@@ -76,7 +76,7 @@ prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
 
 The typical workflow combines both commands for bidirectional type safety:
 
-1. **Author lexicons in TypeScript** using the `prototypey` library
+1. **Author lexicons in TypeScript** using the `prototypekit` library
 2. **Emit to JSON** with `gen-emit` for runtime validation and API contracts
 3. **Generate inferred types** with `gen-inferred` for consuming code
 
@@ -85,10 +85,10 @@ The typical workflow combines both commands for bidirectional type safety:
 # src/lexicons/app.bsky.actor.profile.ts
 
 # Emit JSON schemas
-prototypey gen-emit ./schemas ./src/lexicons/**/*.ts
+prototypekit gen-emit ./schemas ./src/lexicons/**/*.ts
 
 # Generate TypeScript types from schemas
-prototypey gen-inferred ./generated ./schemas/**/*.json
+prototypekit gen-inferred ./generated ./schemas/**/*.json
 ```
 
 ## Requirements
