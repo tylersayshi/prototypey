@@ -7,6 +7,7 @@
 		"url": "git+https://github.com/tylersayshi/prototypey.git",
 		"directory": "packages/prototypey"
 	},
+	"homepage": "https://prototypey.org",
 	"license": "MIT",
 	"author": {
 		"name": "tylersayshi",
