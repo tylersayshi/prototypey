@@ -1,5 +1,11 @@
 import { expect, test, describe } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { runCLI } from "../test-utils.js";
+
+const pkg = JSON.parse(
+	readFileSync(resolve(__dirname, "../../package.json"), "utf-8"),
+) as { version: string };
 
 describe("CLI Integration", () => {
 	test("shows error when called without arguments", async () => {
@@ -12,7 +18,7 @@ describe("CLI Integration", () => {
 	test("shows version", async () => {
 		const { stdout, stderr } = await runCLI(["--version"]);
 		expect(stderr).toBe("");
-		expect(stdout).toContain("prototypey, 0.0.0");
+		expect(stdout).toContain(`prototypey, ${pkg.version}`);
 	});
 
 	test("shows help for gen-inferred command", async () => {
