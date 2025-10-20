@@ -1,6 +1,6 @@
 {
 	"name": "prototypey",
-	"version": "0.0.1-3",
+	"version": "0.1.0",
 	"description": "Type-safe lexicon inference for ATProto schemas",
 	"repository": {
 		"type": "git",
