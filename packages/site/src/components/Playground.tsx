@@ -4,26 +4,18 @@ import { OutputPanel } from "./OutputPanel";
 import { lx } from "prototypey";
 import { useMonaco } from "@monaco-editor/react";
 import type * as Monaco from "monaco-editor";
-import { parseAsString, useQueryState } from "nuqs";
-import LZString from "lz-string";
+import { useQueryState } from "nuqs";
 import MonacoEditor from "@monaco-editor/react";
+import { parseAsCompressed } from "../utils/parsers";
 
 let tsWorkerInstance: Monaco.languages.typescript.TypeScriptWorker | null =
 	null;
 
 export function Playground() {
-	const [compressedCode, setCompressedCode] = useQueryState(
+	const [code, setCode] = useQueryState(
 		"code",
-		parseAsString.withDefault(""),
+		parseAsCompressed.withDefault(DEFAULT_CODE),
 	);
-
-	const initialCode =
-		compressedCode && compressedCode.trim() !== ""
-			? LZString.decompressFromEncodedURIComponent(compressedCode) ||
-				DEFAULT_CODE
-			: DEFAULT_CODE;
-
-	const [code, setCode] = useState(initialCode);
 	const [output, setOutput] = useState({ json: "", typeInfo: "", error: "" });
 	const [editorReady, setEditorReady] = useState(false);
 	const [theme, setTheme] = useState<"vs-light" | "vs-dark">(
@@ -37,9 +29,6 @@ export function Playground() {
 
 	const handleCodeChange = (newCode: string) => {
 		setCode(newCode);
-		// Compress and update URL
-		const compressed = LZString.compressToEncodedURIComponent(newCode);
-		setCompressedCode(compressed);
 	};
 
 	const handleEditorReady = () => {
@@ -249,9 +238,6 @@ function MobileStaticDemo({
 	theme: "vs-light" | "vs-dark";
 }) {
 	// Calculate line counts to size editors appropriately
-	const codeLines = code.split("\n").length;
-	const jsonLines = json.split("\n").length;
-
 	const estimateWrappedLines = (text: string, maxCharsPerLine: number) => {
 		return text.split("\n").reduce((total, line) => {
 			const wrappedLines = Math.ceil(
