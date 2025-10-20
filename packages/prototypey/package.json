@@ -1,7 +1,7 @@
 {
 	"name": "prototypey",
-	"version": "0.1.0",
-	"description": "Type-safe lexicon inference for ATProto schemas",
+	"version": "0.1.1",
+	"description": "atproto lexicon typescript toolkit",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/tylersayshi/prototypey.git",

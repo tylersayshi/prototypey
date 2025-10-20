@@ -28,7 +28,7 @@ export function Header() {
 								marginTop: "0.5rem",
 							}}
 						>
-							Type-safe lexicon inference for ATProto schemas
+							ATProto lexicon typescript toolkit
 						</p>
 					</div>
 					<div className="header-links">

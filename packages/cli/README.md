@@ -42,7 +42,7 @@ prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json
 - Reads ATProto lexicon JSON schemas
 - Generates TypeScript types that match the schema structure
 - Organizes output files by namespace (e.g., `app.bsky.feed.post` → `app/bsky/feed/post.ts`)
-- Provides type-safe interfaces for working with lexicon data
+- Provides typescript definitions of the lexicons for inference and later: validation
 
 ### `gen-emit`
 

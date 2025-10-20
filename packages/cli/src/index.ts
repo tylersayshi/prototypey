@@ -9,9 +9,7 @@ const pkg = JSON.parse(
 
 const prog = sade("prototypey");
 
-prog
-	.version(pkg.version)
-	.describe("Type-safe lexicon inference and code generation");
+prog.version(pkg.version).describe("atproto lexicon typescript toolkit");
 
 prog
 	.command("gen-inferred <outdir> <schemas...>")

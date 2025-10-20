@@ -12,7 +12,7 @@ describe("Header", () => {
 	it("renders the description", () => {
 		render(<Header />);
 		expect(
-			screen.getByText("Type-safe lexicon inference for ATProto schemas"),
+			screen.getByText("ATProto lexicon typescript toolkit"),
 		).toBeInTheDocument();
 	});
 });
