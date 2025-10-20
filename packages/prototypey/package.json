@@ -14,6 +14,9 @@
 	},
 	"type": "module",
 	"main": "lib/index.js",
+	"bin": {
+		"prototypey": "./cli.js"
+	},
 	"exports": {
 		".": "./lib/index.js",
 		"./lib/*.d.ts": "./lib/*.d.ts"
@@ -28,6 +31,9 @@
 		"test:bench": "node tests/infer.bench.ts",
 		"test:update-snapshots": "vitest run -u",
 		"tsc": "tsc"
+	},
+	"dependencies": {
+		"@prototypey/cli": "workspace:*"
 	},
 	"devDependencies": {
 		"@ark/attest": "^0.49.0",

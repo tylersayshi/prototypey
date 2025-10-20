@@ -50,6 +50,10 @@ importers:
         version: 3.2.4(@types/node@24.0.4)(esbuild@0.25.10)(jiti@2.6.1)(jsdom@25.0.1)
 
   packages/prototypey:
+    dependencies:
+      '@prototypey/cli':
+        specifier: workspace:*
+        version: link:../cli
     devDependencies:
       '@ark/attest':
         specifier: ^0.49.0
