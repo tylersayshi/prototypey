@@ -1,35 +1,25 @@
-# typed-lexicon
+# prototypey
 
-> [!WARNING]
-> this project is in the middle of active initial development and not ready for
-> use. there will be updates posted [here](https://bsky.app/profile/tylur.dev)
-> if you'd like to follow along!
+A (soon-to-be) fully-featured sdk for developing lexicons with typescript.
 
-![demo of jsdoc with typed-lexicon](https://github.com/user-attachments/assets/1dbc0901-a950-4779-bf20-2e818456fd3c)
+## Installation
 
-this will be a toolkit for writing lexicon json schema's in typescript and
-providing types for lexicon data shape. it will:
+```bash
+npm install prototypey
+```
 
-- remove boilerplate and improve ergonomics
-- type hint for
-  [atproto type parameters](https://atproto.com/specs/lexicon#overview-of-types)
-- infer the typescript type definitions for the data shape to avoid duplication
-  and skew
-- methods and a cli for generating json
+## Usage
 
-With each of the above finished, i'll plan to write a `validate` method that
-will be published alongside this that takes any lexicon json definition and
-validates payloads off that.
+Prototypey provides both a TypeScript library for authoring lexicons and a CLI for code generation.
 
-My working hypothesis: it will be easier to write lexicons in typescript with a
-single api, then validate based off the json definition, than it would be to
-start with validation library types (standard-schema style) and attempt to use
-those as the authoring and validation tools.
+### Authoring Lexicons
 
-**what you'd write:**
+Use the library to author type-safe lexicon schemas in TypeScript:
 
-```typescript
-const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
+**what you'll write:**
+
+```ts
+const lex = lx.lexicon("app.bsky.actor.profile", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({
@@ -70,25 +60,85 @@ const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 }
 ```
 
----
+### CLI Commands
 
-<p align="center">
-  <a href="https://github.com/tylersayshi/prototypey/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
-  <a href="https://github.com/tylersayshi/prototypey/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg" /></a>
-  <img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
-</p>
+The `prototypey` package includes a CLI with two main commands:
 
-## Usage
+#### `gen-inferred` - Generate TypeScript from JSON schemas
 
-tbd
+```bash
+prototypey gen-inferred <outdir> <schemas...>
+```
 
-## Development
+Reads ATProto lexicon JSON schemas and generates TypeScript types.
 
-See [`.github/CONTRIBUTING.md`](./.github/CONTRIBUTING.md), then
-[`.github/DEVELOPMENT.md`](./.github/DEVELOPMENT.md). Thanks! 💖
+**Example:**
 
-<!-- You can remove this notice if you don't want it 🙂 no worries! -->
+```bash
+prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json
+```
 
+#### `gen-emit` - Emit JSON schemas from TypeScript
+
+```bash
+prototypey gen-emit <outdir> <sources...>
+```
+
+Extracts JSON schemas from TypeScript lexicon definitions.
+
+**Example:**
+
+```bash
+prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
+```
+
+### Typical Workflow
+
+1. Author lexicons in TypeScript using the library
+2. Emit JSON schemas with `gen-emit` for runtime validation
+
+**Recommended:** Add as a script to your `package.json`:
+
+```json
+{
+	"scripts": {
+		"lexicon:emit": "prototypey gen-emit ./schemas ./src/lexicons/**/*.ts"
+	}
+}
+```
+
+Then run:
+
+```bash
+npm run lexicon:emit
+```
+
+## State of the Project
+
+**Done:**
+
+- Full atproto spec lexicon authoring with in IDE docs & hints for each attribute (ts => json)
+- CLI generates json from ts definitions
+- CLI generates ts from json definitions
+- Inferrance of valid type from full lexicon definition
+  - the really cool part of this is that it fills in the refs from the defs all at the type level
+
+**TODO/In Progress:**
+
+- Library art! Please reach out if you'd be willing to contribute some drawings or anything!
+- Runtime validation using [@atproto/lexicon](https://www.npmjs.com/package/@atproto/lexicon)
+  - this will be hard to get correct, I'm weary of loading all of the json in a project's lexicons into js memory and would like to run benchmarks and find the best way to get this right.
+- The CLI needs more real world use and mileage. I expect bugs and weird behavior in this initial release (sorry).
+
+## Disclaimer:
+
+I'm considering how to use the json for validation (there will likely be some lazy-loading). For the cli,
+files may need to adopt a convention so it's easy to determine what is an `lx.lexicon` and then generate out it's json and export it as a validator that lazy loads json to validate. (these are just ideas right now, but I want to share where we are now :)
+
+Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense" 😂. Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
+
+<small>
 > 💝 This package was templated with
 > [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app)
 > using the [Bingo framework](https://create.bingo).
+</small>
