@@ -64,20 +64,6 @@ you could also access the json definition with `lex.json()`.
 
 The `prototypey` package includes a CLI with two main commands:
 
-#### `gen-inferred` - Generate TypeScript from JSON schemas
-
-```bash
-prototypey gen-inferred <outdir> <schemas...>
-```
-
-Reads ATProto lexicon JSON schemas and generates TypeScript types.
-
-**Example:**
-
-```bash
-prototypey gen-inferred ./generated/inferred ./lexicons/**/*.json
-```
-
 #### `gen-emit` - Emit JSON schemas from TypeScript
 
 ```bash

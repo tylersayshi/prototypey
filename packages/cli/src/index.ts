@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import sade from "sade";
-import { genInferred } from "./commands/gen-inferred.ts";
 import { genEmit } from "./commands/gen-emit.ts";
 
 const pkg = JSON.parse(
@@ -10,12 +9,6 @@ const pkg = JSON.parse(
 const prog = sade("prototypey");
 
 prog.version(pkg.version).describe("atproto lexicon typescript toolkit");
-
-prog
-	.command("gen-inferred <outdir> <schemas...>")
-	.describe("Generate type-inferred code from lexicon schemas")
-	.example("gen-inferred ./generated/inferred ./lexicons/**/*.json")
-	.action(genInferred);
 
 prog
 	.command("gen-emit <outdir> <sources...>")

@@ -21,15 +21,6 @@ describe("CLI Integration", () => {
 		expect(stdout).toContain(`prototypey, ${pkg.version}`);
 	});
 
-	test("shows help for gen-inferred command", async () => {
-		const { stdout, stderr } = await runCLI(["gen-inferred", "--help"]);
-		expect(stderr).toBe("");
-		expect(stdout).toContain("gen-inferred <outdir> <schemas...>");
-		expect(stdout).toContain(
-			"Generate type-inferred code from lexicon schemas",
-		);
-	});
-
 	test("shows help for gen-emit command", async () => {
 		const { stdout, stderr } = await runCLI(["gen-emit", "--help"]);
 		expect(stderr).toBe("");
@@ -44,14 +35,5 @@ describe("CLI Integration", () => {
 		expect(code).toBe(1);
 		expect(stderr).toContain("Invalid command: unknown-command");
 		expect(stderr).toContain("Run `$ prototypey --help` for more info");
-	});
-
-	test("handles missing arguments", async () => {
-		const { stdout, stderr, code } = await runCLI(["gen-inferred"]);
-		expect(code).toBe(1);
-		expect(stderr).toContain("Insufficient arguments!");
-		expect(stderr).toContain(
-			"Run `$ prototypey gen-inferred --help` for more info",
-		);
 	});
 });

@@ -24,66 +24,6 @@ describe("CLI End-to-End Workflow", () => {
 		await rm(testDir, { recursive: true, force: true });
 	});
 
-	test("complete workflow: JSON schema -> inferred types", async () => {
-		// Step 1: Create JSON schema file directly (avoiding dynamic import issues)
-		const schemaPath = join(schemasDir, "app.test.profile.json");
-		await writeFile(
-			schemaPath,
-			JSON.stringify(
-				{
-					lexicon: 1,
-					id: "app.test.profile",
-					defs: {
-						main: {
-							type: "record",
-							key: "self",
-							record: {
-								type: "object",
-								properties: {
-									displayName: { type: "string", maxLength: 64 },
-									description: { type: "string", maxLength: 256 },
-								},
-							},
-						},
-					},
-				},
-				null,
-				2,
-			),
-		);
-
-		// Step 2: Generate inferred TypeScript from JSON schema
-		const inferResult = await runCLI([
-			"gen-inferred",
-			generatedDir,
-			schemaPath,
-		]);
-
-		console.log("Infer result code:", inferResult.code);
-		console.log("Infer stdout:", inferResult.stdout);
-		console.log("Infer stderr:", inferResult.stderr);
-
-		expect(inferResult.code).toBe(0);
-		expect(inferResult.stdout).toContain("Generated inferred types in");
-		expect(inferResult.stdout).toContain(
-			"app.test.profile -> app/test/profile.ts",
-		);
-
-		// Verify generated TypeScript file
-		const generatedPath = join(generatedDir, "app/test/profile.ts");
-		const generatedContent = await readFile(generatedPath, "utf-8");
-		expect(generatedContent).toContain(
-			'import type { Infer } from "prototypey"',
-		);
-		expect(generatedContent).toContain(
-			"export type Profile = Infer<typeof schema>",
-		);
-		expect(generatedContent).toContain("export const ProfileSchema = schema");
-		expect(generatedContent).toContain(
-			"export function isProfile(v: unknown): v is Profile",
-		);
-	});
-
 	test("workflow with multiple schemas", async () => {
 		// Create multiple JSON schema files
 		const postSchema = join(schemasDir, "app.test.post.json");
@@ -159,33 +99,6 @@ describe("CLI End-to-End Workflow", () => {
 				null,
 				2,
 			),
-		);
-
-		// Generate inferred types
-		const inferResult = await runCLI([
-			"gen-inferred",
-			generatedDir,
-			`${schemasDir}/*.json`,
-		]);
-		expect(inferResult.code).toBe(0);
-		expect(inferResult.stdout).toContain("app.test.post -> app/test/post.ts");
-		expect(inferResult.stdout).toContain(
-			"app.test.searchPosts -> app/test/searchPosts.ts",
-		);
-
-		// Verify both generated files exist and have correct content
-		const postContent = await readFile(
-			join(generatedDir, "app/test/post.ts"),
-			"utf-8",
-		);
-		const searchContent = await readFile(
-			join(generatedDir, "app/test/searchPosts.ts"),
-			"utf-8",
-		);
-
-		expect(postContent).toContain("export type Post = Infer<typeof schema>");
-		expect(searchContent).toContain(
-			"export type SearchPosts = Infer<typeof schema>",
 		);
 	});
 });

@@ -24,79 +24,6 @@ describe("CLI Error Handling", () => {
 		await rm(testDir, { recursive: true, force: true });
 	});
 
-	test("handles non-existent schema files gracefully", async () => {
-		const { stdout, stderr, code } = await runCLI([
-			"gen-inferred",
-			outDir,
-			join(schemasDir, "non-existent.json"),
-		]);
-
-		expect(code).toBe(0); // Should not crash
-		expect(stdout).toContain("No schema files found matching patterns");
-		expect(stderr).toBe("");
-	});
-
-	test("handles invalid JSON schema files", async () => {
-		// Create an invalid JSON file
-		const invalidSchema = join(schemasDir, "invalid.json");
-		await writeFile(invalidSchema, "not valid json");
-
-		const { stdout, stderr, code } = await runCLI([
-			"gen-inferred",
-			outDir,
-			invalidSchema,
-		]);
-
-		expect(code).toBe(1); // Should exit with error
-		expect(stderr).toContain("Error generating inferred types");
-	});
-
-	test("handles schema files with missing id", async () => {
-		// Create a schema with missing id
-		const schemaFile = join(schemasDir, "missing-id.json");
-		await writeFile(
-			schemaFile,
-			JSON.stringify({
-				lexicon: 1,
-				defs: { main: { type: "record" } },
-			}),
-		);
-
-		const { stdout, stderr, code } = await runCLI([
-			"gen-inferred",
-			outDir,
-			schemaFile,
-		]);
-
-		expect(code).toBe(0); // Should not crash
-		expect(stdout).toContain("Found 1 schema file(s)");
-		expect(stdout).toContain("Generated inferred types in");
-		// Should skip the invalid file silently
-	});
-
-	test("handles schema files with missing defs", async () => {
-		// Create a schema with missing defs
-		const schemaFile = join(schemasDir, "missing-defs.json");
-		await writeFile(
-			schemaFile,
-			JSON.stringify({
-				lexicon: 1,
-				id: "app.test.missing",
-			}),
-		);
-
-		const { stdout, stderr, code } = await runCLI([
-			"gen-inferred",
-			outDir,
-			schemaFile,
-		]);
-
-		expect(code).toBe(0); // Should not crash
-		expect(stdout).toContain("Found 1 schema file(s)");
-		expect(stdout).toContain("Generated inferred types in");
-		// Should skip the invalid file silently
-	});
-
 	test("handles non-existent source files for gen-emit", async () => {
 		const { stdout, stderr, code } = await runCLI([
 			"gen-emit",
@@ -123,33 +50,5 @@ describe("CLI Error Handling", () => {
 		expect(code).toBe(0); // Should not crash
 		expect(stdout).toContain("Found 1 source file(s)");
 		expect(stderr).toContain("No lexicons found");
-	});
-
-	test("handles permission errors when writing output", async () => {
-		// This test might be platform-specific, so we'll make it lenient
-		// Create a schema file first
-		const schemaFile = join(schemasDir, "test.json");
-		await writeFile(
-			schemaFile,
-			JSON.stringify({
-				lexicon: 1,
-				id: "app.test.permission",
-				defs: { main: { type: "record" } },
-			}),
-		);
-
-		// Try to write to a directory that might have permission issues
-		// We'll use a path that likely won't exist and is invalid
-		const invalidOutDir = "/invalid/path/that/does/not/exist";
-
-		const { stdout, stderr, code } = await runCLI([
-			"gen-inferred",
-			invalidOutDir,
-			schemaFile,
-		]);
-
-		// Should handle the error gracefully
-		expect(code).toBe(1);
-		expect(stderr).toContain("Error generating inferred types");
 	});
 });
