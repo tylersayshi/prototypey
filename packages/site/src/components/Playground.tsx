@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { useState, useEffect, useRef } from "react";
 import { Editor } from "./Editor";
 import { OutputPanel } from "./OutputPanel";
@@ -28,7 +32,7 @@ export function Playground() {
 		useRef<Monaco.languages.typescript.TypeScriptWorker | null>(null);
 
 	const handleCodeChange = (newCode: string) => {
-		setCode(newCode);
+		void setCode(newCode);
 	};
 
 	const handleEditorReady = () => {
@@ -41,7 +45,9 @@ export function Playground() {
 			setTheme(e.matches ? "vs-dark" : "vs-light");
 		};
 		mediaQuery.addEventListener("change", handleChange);
-		return () => mediaQuery.removeEventListener("change", handleChange);
+		return () => {
+			mediaQuery.removeEventListener("change", handleChange);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -66,8 +72,8 @@ export function Playground() {
 	useEffect(() => {
 		const timeoutId = setTimeout(async () => {
 			try {
-				const nsMatch = code.match(
-					/const\s+lex\s*=\s*lx\.lexicon\([^]*?\}\s*\);/,
+				const nsMatch = /const\s+lex\s*=\s*lx\.lexicon\([^]*?\}\s*\);/.exec(
+					code,
 				);
 				if (!nsMatch) {
 					throw new Error("No lexicon definition found");
@@ -75,7 +81,9 @@ export function Playground() {
 
 				const cleanedCode = nsMatch[0];
 				const wrappedCode = `${cleanedCode}\nreturn lex;`;
+				// eslint-disable-next-line @typescript-eslint/no-implied-eval
 				const fn = new Function("lx", wrappedCode);
+
 				const result = fn(lx);
 				let typeInfo = "// Hover over .infer in the editor to see the type";
 
@@ -137,7 +145,9 @@ export function Playground() {
 			}
 		}, 500);
 
-		return () => clearTimeout(timeoutId);
+		return () => {
+			clearTimeout(timeoutId);
+		};
 	}, [code, monaco]);
 
 	return (

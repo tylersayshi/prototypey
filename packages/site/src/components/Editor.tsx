@@ -22,7 +22,9 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 			setTheme(e.matches ? "vs-dark" : "vs-light");
 		};
 		mediaQuery.addEventListener("change", handleChange);
-		return () => mediaQuery.removeEventListener("change", handleChange);
+		return () => {
+			mediaQuery.removeEventListener("change", handleChange);
+		};
 	}, []);
 
 	useEffect(() => {
@@ -128,7 +130,9 @@ ${combinedTypes}
 					defaultLanguage="typescript"
 					path="file:///main.ts"
 					value={value}
-					onChange={(value) => onChange(value || "")}
+					onChange={(value) => {
+						onChange(value ?? "");
+					}}
 					theme={theme}
 					options={{
 						minimap: { enabled: false },

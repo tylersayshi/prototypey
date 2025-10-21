@@ -22,7 +22,7 @@ export function OutputPanel({ output }: OutputPanelProps) {
 			setTheme(e.matches ? "vs-dark" : "vs-light");
 		};
 		mediaQuery.addEventListener("change", handleChange);
-		return () => mediaQuery.removeEventListener("change", handleChange);
+		return () => { mediaQuery.removeEventListener("change", handleChange); };
 	}, []);
 
 	return (
