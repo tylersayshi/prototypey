@@ -11,7 +11,7 @@ describe("CLI Error Handling", () => {
 
 	beforeEach(async () => {
 		// Create a temporary directory for test files
-		testDir = join(tmpdir(), `prototypey-error-test-${Date.now()}`);
+		testDir = join(tmpdir(), `prototypey-error-test-${String(Date.now())}`);
 		outDir = join(testDir, "output");
 		schemasDir = join(testDir, "schemas");
 		await mkdir(testDir, { recursive: true });

@@ -44,7 +44,7 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 			noSyntaxValidation: false,
 		});
 
-		Promise.all([
+		void Promise.all([
 			import("prototypey/lib/type-utils.d.ts?raw"),
 			import("prototypey/lib/infer.d.ts?raw"),
 			import("prototypey/lib/lib.d.ts?raw"),

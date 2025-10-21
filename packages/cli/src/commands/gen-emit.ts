@@ -29,7 +29,7 @@ export async function genEmit(
 			return;
 		}
 
-		console.log(`Found ${sourceFiles.length} source file(s)`);
+		console.log(`Found ${String(sourceFiles.length)} source file(s)`);
 
 		// Ensure output directory exists
 		await mkdir(outdir, { recursive: true });

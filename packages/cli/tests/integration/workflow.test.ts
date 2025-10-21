@@ -11,7 +11,7 @@ describe("CLI End-to-End Workflow", () => {
 
 	beforeEach(async () => {
 		// Create a temporary directory for test files
-		testDir = join(tmpdir(), `prototypey-e2e-test-${Date.now()}`);
+		testDir = join(tmpdir(), `prototypey-e2e-test-${String(Date.now())}`);
 		schemasDir = join(testDir, "schemas");
 		generatedDir = join(testDir, "generated");
 		await mkdir(testDir, { recursive: true });

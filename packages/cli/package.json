@@ -22,6 +22,7 @@
 	],
 	"scripts": {
 		"build": "tsdown --entry src/index.ts --format esm --dts false",
+		"lint": "eslint .",
 		"test": "vitest run",
 		"tsc": "tsc"
 	},

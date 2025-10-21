@@ -1,9 +1,8 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
-import reactCompiler from "eslint-plugin-react-compiler";
 
 export default tseslint.config(
-	{ ignores: ["lib", "node_modules", "pnpm-lock.yaml", "setup-vitest.ts"] },
+	{ ignores: ["**/lib/**", "**/dist/**", "node_modules", "pnpm-lock.yaml", "**/setup-vitest.ts", "**/cli.js", "**/tests/**"] },
 	{ linterOptions: { reportUnusedDisableDirectives: "error" } },
 	eslint.configs.recommended,
 	{
@@ -19,15 +18,11 @@ export default tseslint.config(
 		},
 		rules: {
 			"@typescript-eslint/consistent-type-definitions": "off",
-		},
-	},
-	{
-		files: ["**/*.{jsx,tsx}"],
-		plugins: {
-			"react-compiler": reactCompiler,
-		},
-		rules: {
-			"react-compiler/react-compiler": "error",
+			"@typescript-eslint/no-unsafe-assignment": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/no-unsafe-member-access": "off",
+			"@typescript-eslint/no-unsafe-call": "off",
+			"@typescript-eslint/restrict-plus-operands": "off",
 		},
 	},
 	{

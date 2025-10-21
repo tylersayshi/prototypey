@@ -18,7 +18,7 @@ describe("CLI File System Handling", () => {
 
 	beforeEach(async () => {
 		// Create a temporary directory for test files
-		testDir = join(tmpdir(), `prototypey-fs-test-${Date.now()}`);
+		testDir = join(tmpdir(), `prototypey-fs-test-${String(Date.now())}`);
 		outDir = join(testDir, "output");
 		schemasDir = join(testDir, "schemas");
 		await mkdir(testDir, { recursive: true });

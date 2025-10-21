@@ -28,6 +28,7 @@
 	],
 	"scripts": {
 		"build": "tsdown",
+		"lint": "eslint .",
 		"test": "vitest run",
 		"test:bench": "node tests/infer.bench.ts",
 		"test:update-snapshots": "vitest run -u",

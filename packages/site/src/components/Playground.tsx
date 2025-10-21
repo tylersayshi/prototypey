@@ -59,7 +59,7 @@ export function Playground() {
 					console.error("Failed to initialize TypeScript worker:", err);
 				}
 			};
-			initWorker();
+			void initWorker();
 		}
 	}, [monaco, editorReady]);
 
@@ -278,7 +278,7 @@ function MobileStaticDemo({
 					}}
 				>
 					<MonacoEditor
-						height={`${codeWrappedLines * 18 + 32}px`}
+						height={`${String(codeWrappedLines * 18 + 32)}px`}
 						defaultLanguage="typescript"
 						value={code}
 						theme={theme}
@@ -330,7 +330,7 @@ function MobileStaticDemo({
 					}}
 				>
 					<MonacoEditor
-						height={`${jsonWrappedLines * 18 + 32}px`}
+						height={`${String(jsonWrappedLines * 18 + 32)}px`}
 						defaultLanguage="json"
 						value={json}
 						theme={theme}

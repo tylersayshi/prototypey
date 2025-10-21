@@ -10,7 +10,7 @@ describe("genEmit", () => {
 
 	beforeEach(async () => {
 		// Create a temporary directory for test files
-		testDir = join(tmpdir(), `prototypey-test-${Date.now()}`);
+		testDir = join(tmpdir(), `prototypey-test-${String(Date.now())}`);
 		outDir = join(testDir, "output");
 		await mkdir(testDir, { recursive: true });
 		await mkdir(outDir, { recursive: true });
