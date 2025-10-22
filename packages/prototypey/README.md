@@ -108,12 +108,13 @@ npm run lexicon:emit
 - CLI generates ts from json definitions
 - Inferrance of valid type from full lexicon definition
   - the really cool part of this is that it fills in the refs from the defs all at the type level
+- `lx.lexicon(...).validate(data)` for validating data using `@atproto/lexicon` and your lexicon definitions
 
 **TODO/In Progress:**
 
 - Library art! Please reach out if you'd be willing to contribute some drawings or anything!
-- Runtime validation using [@atproto/lexicon](https://www.npmjs.com/package/@atproto/lexicon)
-  - this will be hard to get correct, I'm weary of loading all of the json in a project's lexicons into js memory and would like to run benchmarks and find the best way to get this right.
+- Runtime validation `assert*` api's with `@atproto/lexicon`
+- Add CLI support for inferring and validating from json as the starting point
 - The CLI needs more real world use and mileage. I expect bugs and weird behavior in this initial release (sorry).
 
 ## Disclaimer:

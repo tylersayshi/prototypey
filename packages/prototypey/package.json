@@ -1,6 +1,6 @@
 {
 	"name": "prototypey",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"description": "atproto lexicon typescript toolkit",
 	"repository": {
 		"type": "git",
@@ -31,10 +31,12 @@
 		"lint": "eslint .",
 		"test": "vitest run",
 		"test:bench": "node tests/infer.bench.ts",
+		"test:bench:validation": "vitest bench --run tests/validation-baseline.bench.ts",
 		"test:update-snapshots": "vitest run -u",
 		"tsc": "tsc"
 	},
 	"dependencies": {
+		"@atproto/lexicon": "^0.5.1",
 		"@prototypey/cli": "workspace:*"
 	},
 	"devDependencies": {

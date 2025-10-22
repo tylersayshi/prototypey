@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import type { Infer } from "./infer.ts";
 import type { UnionToTuple } from "./type-utils.ts";
+import type { LexiconDoc, ValidationResult } from "@atproto/lexicon";
+import { Lexicons } from "@atproto/lexicon";
 
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
@@ -327,12 +329,44 @@ interface SubscriptionOptions {
 	errors?: ErrorDef[];
 }
 
-class Namespace<T extends LexiconNamespace> {
+/**
+ * Public interface for Lexicon to avoid exposing private implementation details
+ */
+export interface LexiconSchema<T extends LexiconNamespace> {
+	json: T;
+	infer: Infer<{ json: T }>;
+	validate(
+		data: unknown,
+		def?: keyof T["defs"],
+	): ValidationResult<Infer<{ json: T }>>;
+}
+
+class Lexicon<T extends LexiconNamespace> implements LexiconSchema<T> {
 	public json: T;
 	public infer: Infer<{ json: T }> = null as unknown as Infer<{ json: T }>;
+	private _validator: Lexicons;
 
 	constructor(json: T) {
 		this.json = json;
+		// Clone before passing to Lexicons to prevent mutation of this.json
+		this._validator = new Lexicons([
+			structuredClone(json) as unknown as LexiconDoc,
+		]);
+	}
+
+	/**
+	 * Validate data against this lexicon's main definition.
+	 * @param data - The data to validate
+	 * @returns ValidationResult with success status and value or error
+	 */
+	validate(
+		data: unknown,
+		def: keyof T["defs"] = "main",
+	): ValidationResult<Infer<{ json: T }>> {
+		return this._validator.validate(
+			`${this.json.id}#${def as string}`,
+			data,
+		) as ValidationResult<Infer<{ json: T }>>;
 	}
 }
 
@@ -569,8 +603,8 @@ export const lx = {
 	lexicon<ID extends string, D extends LexiconNamespace["defs"]>(
 		id: ID,
 		defs: D,
-	): Namespace<{ lexicon: 1; id: ID; defs: D }> {
-		return new Namespace({
+	): LexiconSchema<{ lexicon: 1; id: ID; defs: D }> {
+		return new Lexicon({
 			lexicon: 1,
 			id,
 			defs,
