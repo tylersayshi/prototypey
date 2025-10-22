@@ -60,6 +60,66 @@ const lex = lx.lexicon("app.bsky.actor.profile", {
 
 you could also access the json definition with `lex.json()`.
 
+### Runtime Validation
+
+Prototypey provides runtime validation using [@atproto/lexicon](https://www.npmjs.com/package/@atproto/lexicon):
+
+```ts
+const lex = lx.lexicon("app.bsky.actor.profile", {
+	main: lx.record({
+		key: "self",
+		record: lx.object({
+			displayName: lx.string({ maxLength: 64, maxGraphemes: 64 }),
+			description: lx.string({ maxLength: 256, maxGraphemes: 256 }),
+		}),
+	}),
+});
+
+// Validate data against the schema
+const result = lex.validate({
+	displayName: "Alice",
+	description: "Software engineer",
+});
+
+if (result.success) {
+	console.log("Valid data:", result.value);
+} else {
+	console.error("Validation error:", result.error);
+}
+```
+
+**Validating against specific definitions:**
+
+If your lexicon has multiple definitions, you can validate against a specific one:
+
+```ts
+const lex = lx.lexicon("app.bsky.feed.post", {
+	user: lx.object({
+		handle: lx.string({ required: true }),
+		displayName: lx.string(),
+	}),
+	main: lx.record({
+		key: "tid",
+		record: lx.object({
+			text: lx.string({ required: true }),
+			author: lx.ref("#user", { required: true }),
+		}),
+	}),
+});
+
+// Validate against the "user" definition
+const userResult = lex.validate(
+	{ handle: "alice.bsky.social", displayName: "Alice" },
+	"user",
+);
+
+// Validate against "main" (default if not specified)
+const postResult = lex.validate({
+	text: "Hello world",
+	author: { handle: "bob.bsky.social" },
+});
+```
+
 ### CLI Commands
 
 The `prototypey` package includes a CLI with two main commands:
