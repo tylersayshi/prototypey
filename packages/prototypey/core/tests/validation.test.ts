@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 describe("basic validation", () => {
 	const schema = lx.lexicon("test.simple", {

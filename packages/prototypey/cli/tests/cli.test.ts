@@ -1,11 +1,6 @@
 import { expect, test, describe } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { runCLI } from "../test-utils.js";
-
-const pkg = JSON.parse(
-	readFileSync(resolve(__dirname, "../../package.json"), "utf-8"),
-) as { version: string };
+import { runCLI } from "./test-utils.ts";
+import pkg from "../../package.json" with { type: "json" };
 
 describe("CLI Integration", () => {
 	test("shows error when called without arguments", async () => {

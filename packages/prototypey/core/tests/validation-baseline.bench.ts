@@ -1,6 +1,6 @@
 import { bench, describe } from "vitest";
 import { Lexicons } from "@atproto/lexicon";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 // Phase 1 Benchmarks: Baseline measurements before implementation
 

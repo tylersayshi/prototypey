@@ -14,13 +14,12 @@
 		"email": "hi@tylur.dev"
 	},
 	"type": "module",
-	"main": "lib/index.js",
 	"bin": {
-		"prototypey": "./cli.js"
+		"prototypey": "./lib/cli/main.js"
 	},
 	"exports": {
-		".": "./lib/index.js",
-		"./lib/*.d.ts": "./lib/*.d.ts"
+		".": "./lib/core/main.js",
+		"./lib/core/*.d.ts": "./lib/core/*.d.ts"
 	},
 	"files": [
 		"lib/",
@@ -37,7 +36,8 @@
 	},
 	"dependencies": {
 		"@atproto/lexicon": "^0.5.1",
-		"@prototypey/cli": "workspace:*"
+		"sade": "^1.8.1",
+		"tinyglobby": "^0.2.15"
 	},
 	"devDependencies": {
 		"@ark/attest": "^0.49.0",

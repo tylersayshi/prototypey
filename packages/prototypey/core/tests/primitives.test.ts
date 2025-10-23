@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 test("lx.null()", () => {
 	const result = lx.null();

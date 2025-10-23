@@ -1,8 +1,7 @@
-import { expect, test, describe, beforeEach, afterEach } from "vitest";
-import { mkdir, writeFile, rm, readFile } from "node:fs/promises";
+import { test, describe, beforeEach, afterEach } from "vitest";
+import { mkdir, writeFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { runCLI } from "../test-utils.js";
 
 describe("CLI End-to-End Workflow", () => {
 	let testDir: string;

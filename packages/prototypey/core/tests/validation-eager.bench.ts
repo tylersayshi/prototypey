@@ -1,5 +1,5 @@
 import { bench, describe } from "vitest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 // Phase 2 Benchmarks: Eager loading strategy
 

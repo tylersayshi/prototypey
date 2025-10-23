@@ -1,6 +1,6 @@
 import { test } from "vitest";
 import { attest } from "@ark/attest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 test("InferNS produces expected type shape", () => {
 	const exampleLexicon = lx.lexicon("com.example.post", {

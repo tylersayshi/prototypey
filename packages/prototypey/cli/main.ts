@@ -1,6 +1,8 @@
+#!/usr/bin/env node
+
 import { readFile } from "node:fs/promises";
 import sade from "sade";
-import { genEmit } from "./commands/gen-emit.ts";
+import { genEmit } from "./gen-emit.ts";
 
 const pkg = JSON.parse(
 	await readFile(new URL("../package.json", import.meta.url), "utf-8"),

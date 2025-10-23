@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 test("app.bsky.actor.defs - profileViewBasic", () => {
 	const profileViewBasic = lx.object({

@@ -24,39 +24,17 @@ importers:
         specifier: 8.35.0
         version: 8.35.0(eslint@9.29.0(jiti@2.6.1))(typescript@5.8.3)
 
-  packages/cli:
+  packages/prototypey:
     dependencies:
-      prototypey:
-        specifier: workspace:*
-        version: link:../prototypey
+      '@atproto/lexicon':
+        specifier: ^0.5.1
+        version: 0.5.1
       sade:
         specifier: ^1.8.1
         version: 1.8.1
       tinyglobby:
         specifier: ^0.2.15
         version: 0.2.15
-    devDependencies:
-      '@types/node':
-        specifier: 24.0.4
-        version: 24.0.4
-      tsdown:
-        specifier: 0.12.7
-        version: 0.12.7(typescript@5.8.3)
-      typescript:
-        specifier: 5.8.3
-        version: 5.8.3
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@24.0.4)(esbuild@0.25.10)(jiti@2.6.1)(jsdom@25.0.1)
-
-  packages/prototypey:
-    dependencies:
-      '@atproto/lexicon':
-        specifier: ^0.5.1
-        version: 0.5.1
-      '@prototypey/cli':
-        specifier: workspace:*
-        version: link:../cli
     devDependencies:
       '@ark/attest':
         specifier: ^0.49.0

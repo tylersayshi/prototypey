@@ -9,7 +9,6 @@ export default tseslint.config(
 			"node_modules",
 			"pnpm-lock.yaml",
 			"**/setup-vitest.ts",
-			"**/cli.js",
 			"**/tests/**",
 		],
 	},

@@ -1,17 +1,14 @@
 import { spawn } from "node:child_process";
-import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+const cliPath = fileURLToPath(new URL("../main.ts", import.meta.url));
 
 export function runCLI(
 	args: string[] = [],
 	options?: { cwd?: string; env?: NodeJS.ProcessEnv },
 ): Promise<{ stdout: string; stderr: string; code: number }> {
 	return new Promise((resolve) => {
-		const cliPath = join(
-			dirname(fileURLToPath(import.meta.url)),
-			"../lib/index.js",
-		);
-		const child = spawn("node", [cliPath, ...args], {
+		const child = spawn("node", ["--experimental-strip-types", cliPath, ...args], {
 			cwd: options?.cwd ?? process.cwd(),
 			env: options?.env ?? process.env,
 		});

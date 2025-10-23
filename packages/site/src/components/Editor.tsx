@@ -47,9 +47,9 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 		});
 
 		void Promise.all([
-			import("prototypey/lib/type-utils.d.ts?raw"),
-			import("prototypey/lib/infer.d.ts?raw"),
-			import("prototypey/lib/lib.d.ts?raw"),
+			import("prototypey/lib/core/type-utils.d.ts?raw"),
+			import("prototypey/lib/core/infer.d.ts?raw"),
+			import("prototypey/lib/core/lib.d.ts?raw"),
 		]).then(([typeUtilsModule, inferModule, libModule]) => {
 			const stripImportsExports = (content: string) =>
 				content

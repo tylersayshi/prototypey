@@ -1,8 +1,9 @@
 import { expect, test, describe, beforeEach, afterEach } from "vitest";
 import { mkdir, writeFile, rm, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { genEmit } from "../../src/commands/gen-emit.ts";
+
 import { tmpdir } from "node:os";
+import { genEmit } from "../gen-emit.ts";
 
 describe("genEmit", () => {
 	let testDir: string;

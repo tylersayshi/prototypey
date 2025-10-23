@@ -2,7 +2,8 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
 	dts: true,
-	entry: ["src/index.ts"],
+	entry: ["core/main.ts", "cli/main.ts"],
+	clean: true,
 	outDir: "lib",
 	unbundle: true,
 });

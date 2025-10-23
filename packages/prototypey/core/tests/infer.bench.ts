@@ -1,5 +1,5 @@
 import { bench } from "@ark/attest";
-import { lx } from "../src/lib.ts";
+import { lx } from "../lib.ts";
 
 bench("infer with simple object", () => {
 	const schema = lx.lexicon("test.simple", {
