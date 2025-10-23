@@ -22,6 +22,7 @@
 		"tsc": "pnpm -r tsc"
 	},
 	"devDependencies": {
+		"@changesets/cli": "^2.29.7",
 		"@eslint/js": "9.29.0",
 		"eslint": "9.29.0",
 		"prettier": "3.6.1",
