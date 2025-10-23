@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 interface OutputPanelProps {
 	output: {
 		json: string;
-		typeInfo: string;
 		error: string;
 	};
 }
