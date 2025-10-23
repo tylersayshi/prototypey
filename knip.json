@@ -1,0 +1,20 @@
+{
+	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"workspaces": {
+		".": {
+			"entry": [],
+			"project": []
+		},
+		"packages/prototypey": {
+			"entry": ["**/*.test.ts", "**/*.bench.ts"],
+			"project": ["**/*.ts"]
+		},
+		"packages/site": {
+			"entry": ["src/main.tsx!", "tests/**/*.test.{ts,tsx}"],
+			"project": ["src/**/*.{ts,tsx}"]
+		}
+	},
+	"ignore": ["**/*.d.ts", "**/dist/**", "**/lib/**", "**/node_modules/**"],
+	"ignoreDependencies": [],
+	"ignoreExportsUsedInFile": true
+}
