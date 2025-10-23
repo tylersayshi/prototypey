@@ -8,10 +8,14 @@ export function runCLI(
 	options?: { cwd?: string; env?: NodeJS.ProcessEnv },
 ): Promise<{ stdout: string; stderr: string; code: number }> {
 	return new Promise((resolve) => {
-		const child = spawn("node", ["--experimental-strip-types", cliPath, ...args], {
-			cwd: options?.cwd ?? process.cwd(),
-			env: options?.env ?? process.env,
-		});
+		const child = spawn(
+			"node",
+			["--experimental-strip-types", cliPath, ...args],
+			{
+				cwd: options?.cwd ?? process.cwd(),
+				env: options?.env ?? process.env,
+			},
+		);
 
 		let stdout = "";
 		let stderr = "";

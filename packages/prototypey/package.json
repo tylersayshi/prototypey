@@ -29,7 +29,7 @@
 		"build": "tsdown",
 		"lint": "eslint .",
 		"test": "vitest run",
-		"test:bench": "node tests/infer.bench.ts",
+		"test:bench": "node core/tests/infer.bench.ts",
 		"test:bench:validation": "vitest bench --run tests/validation-baseline.bench.ts",
 		"test:update-snapshots": "vitest run -u",
 		"tsc": "tsc"
