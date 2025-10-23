@@ -18,13 +18,13 @@ Prototypey provides both a TypeScript library for authoring lexicons and a CLI f
 
 ```ts
 const lex = lx.lexicon("app.bsky.actor.profile", {
-	main: lx.record({
-		key: "self",
-		record: lx.object({
-			displayName: lx.string({ maxLength: 64, maxGraphemes: 64 }),
-			description: lx.string({ maxLength: 256, maxGraphemes: 256 }),
-		}),
-	}),
+  main: lx.record({
+    key: "self",
+    record: lx.object({
+      displayName: lx.string({ maxLength: 64, maxGraphemes: 64 }),
+      description: lx.string({ maxLength: 256, maxGraphemes: 256 }),
+    }),
+  }),
 });
 ```
 
@@ -32,29 +32,29 @@ const lex = lx.lexicon("app.bsky.actor.profile", {
 
 ```json
 {
-	"lexicon": 1,
-	"id": "app.bsky.actor.profile",
-	"defs": {
-		"main": {
-			"type": "record",
-			"key": "self",
-			"record": {
-				"type": "object",
-				"properties": {
-					"displayName": {
-						"type": "string",
-						"maxLength": 64,
-						"maxGraphemes": 64
-					},
-					"description": {
-						"type": "string",
-						"maxLength": 256,
-						"maxGraphemes": 256
-					}
-				}
-			}
-		}
-	}
+  "lexicon": 1,
+  "id": "app.bsky.actor.profile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "self",
+      "record": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "maxLength": 64,
+            "maxGraphemes": 64
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 256,
+            "maxGraphemes": 256
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -66,25 +66,25 @@ Prototypey provides runtime validation using [@atproto/lexicon](https://www.npmj
 
 ```ts
 const lex = lx.lexicon("app.bsky.actor.profile", {
-	main: lx.record({
-		key: "self",
-		record: lx.object({
-			displayName: lx.string({ maxLength: 64, maxGraphemes: 64 }),
-			description: lx.string({ maxLength: 256, maxGraphemes: 256 }),
-		}),
-	}),
+  main: lx.record({
+    key: "self",
+    record: lx.object({
+      displayName: lx.string({ maxLength: 64, maxGraphemes: 64 }),
+      description: lx.string({ maxLength: 256, maxGraphemes: 256 }),
+    }),
+  }),
 });
 
 // Validate data against the schema
 const result = lex.validate({
-	displayName: "Alice",
-	description: "Software engineer",
+  displayName: "Alice",
+  description: "Software engineer",
 });
 
 if (result.success) {
-	console.log("Valid data:", result.value);
+  console.log("Valid data:", result.value);
 } else {
-	console.error("Validation error:", result.error);
+  console.error("Validation error:", result.error);
 }
 ```
 
@@ -94,29 +94,29 @@ If your lexicon has multiple definitions, you can validate against a specific on
 
 ```ts
 const lex = lx.lexicon("app.bsky.feed.post", {
-	user: lx.object({
-		handle: lx.string({ required: true }),
-		displayName: lx.string(),
-	}),
-	main: lx.record({
-		key: "tid",
-		record: lx.object({
-			text: lx.string({ required: true }),
-			author: lx.ref("#user", { required: true }),
-		}),
-	}),
+  user: lx.object({
+    handle: lx.string({ required: true }),
+    displayName: lx.string(),
+  }),
+  main: lx.record({
+    key: "tid",
+    record: lx.object({
+      text: lx.string({ required: true }),
+      author: lx.ref("#user", { required: true }),
+    }),
+  }),
 });
 
 // Validate against the "user" definition
 const userResult = lex.validate(
-	{ handle: "alice.bsky.social", displayName: "Alice" },
-	"user",
+  { handle: "alice.bsky.social", displayName: "Alice" },
+  "user",
 );
 
 // Validate against "main" (default if not specified)
 const postResult = lex.validate({
-	text: "Hello world",
-	author: { handle: "bob.bsky.social" },
+  text: "Hello world",
+  author: { handle: "bob.bsky.social" },
 });
 ```
 
@@ -147,9 +147,9 @@ prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
 
 ```json
 {
-	"scripts": {
-		"lexicon:emit": "prototypey gen-emit ./schemas ./src/lexicons/**/*.ts"
-	}
+  "scripts": {
+    "lexicon:emit": "prototypey gen-emit ./schemas ./src/lexicons/**/*.ts"
+  }
 }
 ```
 
