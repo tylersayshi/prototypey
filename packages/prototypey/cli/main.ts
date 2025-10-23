@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 
-import { readFile } from "node:fs/promises";
 import sade from "sade";
 import { genEmit } from "./gen-emit.ts";
-
-const pkg = JSON.parse(
-	await readFile(new URL("../package.json", import.meta.url), "utf-8"),
-) as { version: string };
+import pkg from "../package.json" with { type: "json" };
 
 const prog = sade("prototypey");
 
