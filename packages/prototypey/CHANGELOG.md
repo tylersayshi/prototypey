@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.2.3
+
+### Patch Changes
+
+- 708fc60: fix loading of version in cli
+
 ## 0.2.2
 
 ### Patch Changes
