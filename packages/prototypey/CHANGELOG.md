@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.2.4
+
+### Patch Changes
+
+- 0b16bc3: use spaces for readme so npm doesn't format it weird
+
 ## 0.2.3
 
 ### Patch Changes
