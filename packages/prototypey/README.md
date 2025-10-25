@@ -174,12 +174,6 @@ npm run lexicon:emit
 
 - Library art! Please reach out if you'd be willing to contribute some drawings or anything!
 - Add CLI support for inferring and validating from json as the starting point
-- Please report bugs and feature requests!
-
-## Disclaimer:
-
-I'm considering how to use the json for validation (there will likely be some lazy-loading). For the cli,
-files may need to adopt a convention so it's easy to determine what is an `lx.lexicon` and then generate out it's json and export it as a validator that lazy loads json to validate. (these are just ideas right now, but I want to share where we are now :)
 
 Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense" 😂. Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
 
