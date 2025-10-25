@@ -173,9 +173,8 @@ npm run lexicon:emit
 **TODO/In Progress:**
 
 - Library art! Please reach out if you'd be willing to contribute some drawings or anything!
-- Runtime validation `assert*` api's with `@atproto/lexicon`
 - Add CLI support for inferring and validating from json as the starting point
-- The CLI needs more real world use and mileage. I expect bugs and weird behavior in this initial release (sorry).
+- Please report bugs and feature requests!
 
 ## Disclaimer:
 
