@@ -9,10 +9,6 @@
 		"url": "git+https://github.com/tylersayshi/prototypey.git"
 	},
 	"license": "MIT",
-	"author": {
-		"name": "tylersayshi",
-		"email": "hi@tylur.dev"
-	},
 	"scripts": {
 		"build": "pnpm -r build",
 		"format": "prettier . --list-different",
