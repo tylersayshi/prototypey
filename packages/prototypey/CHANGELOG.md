@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.2.5
+
+### Patch Changes
+
+- 15d5b7c: hide infer as ~infer
+
 ## 0.2.4
 
 ### Patch Changes
