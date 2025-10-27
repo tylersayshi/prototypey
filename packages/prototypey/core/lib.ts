@@ -334,7 +334,7 @@ interface SubscriptionOptions {
  */
 export interface LexiconSchema<T extends LexiconNamespace> {
 	json: T;
-	infer: Infer<{ json: T }>;
+	"~infer": Infer<{ json: T }>;
 	validate(
 		data: unknown,
 		def?: keyof T["defs"],
@@ -343,7 +343,7 @@ export interface LexiconSchema<T extends LexiconNamespace> {
 
 class Lexicon<T extends LexiconNamespace> implements LexiconSchema<T> {
 	public json: T;
-	public infer: Infer<{ json: T }> = null as unknown as Infer<{ json: T }>;
+	public "~infer": Infer<{ json: T }> = null as unknown as Infer<{ json: T }>;
 	private _validator: Lexicons;
 
 	constructor(json: T) {

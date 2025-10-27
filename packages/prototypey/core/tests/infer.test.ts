@@ -16,7 +16,7 @@ test("InferNS produces expected type shape", () => {
 	});
 
 	// Type snapshot - this captures how types appear on hover
-	attest(exampleLexicon.infer).type.toString.snap(`{
+	attest(exampleLexicon["~infer"]).type.toString.snap(`{
   $type: "com.example.post"
   tags?: string[] | undefined
   likes?: number | undefined
@@ -33,7 +33,7 @@ test("InferObject handles required fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap(`{
+	attest(schema["~infer"]).type.toString.snap(`{
   $type: "test"
   optional?: string | undefined
   required: string
@@ -47,7 +47,7 @@ test("InferObject handles nullable fields", () => {
 		}),
 	});
 
-	attest(schema.infer).type.toString.snap(
+	attest(schema["~infer"]).type.toString.snap(
 		'{ $type: "test"; nullable: string | null }',
 	);
 });
@@ -63,7 +63,7 @@ test("InferType handles string primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.string"
   simpleString?: string | undefined
 }`);
@@ -77,7 +77,7 @@ test("InferType handles integer primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.integer"
   count?: number | undefined
   age?: number | undefined
@@ -92,7 +92,7 @@ test("InferType handles boolean primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.boolean"
   isActive?: boolean | undefined
   hasAccess: boolean
@@ -106,7 +106,7 @@ test("InferType handles null primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.null"
   nullValue?: null | undefined
 }`);
@@ -119,7 +119,7 @@ test("InferType handles unknown primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(
+	attest(lexicon["~infer"]).type.toString.snap(
 		'{ $type: "test.unknown"; metadata?: unknown }',
 	);
 });
@@ -131,7 +131,7 @@ test("InferType handles bytes primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.bytes"
   data?: Uint8Array<ArrayBufferLike> | undefined
 }`);
@@ -144,7 +144,7 @@ test("InferType handles blob primitive", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(
+	attest(lexicon["~infer"]).type.toString.snap(
 		'{ $type: "test.blob"; image?: Blob | undefined }',
 	);
 });
@@ -160,7 +160,7 @@ test("InferToken handles basic token without enum", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.token"
   symbol?: string | undefined
 }`);
@@ -177,7 +177,7 @@ test("InferArray handles string arrays", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.array.string"
   tags?: string[] | undefined
 }`);
@@ -190,7 +190,7 @@ test("InferArray handles integer arrays", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.array.integer"
   scores?: number[] | undefined
 }`);
@@ -203,7 +203,7 @@ test("InferArray handles boolean arrays", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.array.boolean"
   flags?: boolean[] | undefined
 }`);
@@ -216,7 +216,7 @@ test("InferArray handles unknown arrays", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.array.unknown"
   items?: unknown[] | undefined
 }`);
@@ -236,7 +236,7 @@ test("InferObject handles mixed optional and required fields", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.mixed"
   age?: number | undefined
   email?: string | undefined
@@ -254,7 +254,7 @@ test("InferObject handles all optional fields", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.allOptional"
   field1?: string | undefined
   field2?: number | undefined
@@ -271,7 +271,7 @@ test("InferObject handles all required fields", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.allRequired"
   field1: string
   field2: number
@@ -290,7 +290,7 @@ test("InferObject handles nullable optional field", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nullableOptional"
   description?: string | null | undefined
 }`);
@@ -305,7 +305,7 @@ test("InferObject handles multiple nullable fields", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.multipleNullable"
   field1?: string | null | undefined
   field2?: number | null | undefined
@@ -320,7 +320,7 @@ test("InferObject handles nullable and required field", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nullableRequired"
   value: string | null
 }`);
@@ -336,7 +336,7 @@ test("InferObject handles mixed nullable, required, and optional", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.mixedNullable"
   optional?: string | undefined
   required: string
@@ -356,7 +356,7 @@ test("InferRef handles basic reference", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.ref"
   post?:
     | { [x: string]: unknown; $type: "com.example.post" }
@@ -371,7 +371,7 @@ test("InferRef handles required reference", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.refRequired"
   author?:
     | { [x: string]: unknown; $type: "com.example.user" }
@@ -386,7 +386,7 @@ test("InferRef handles nullable reference", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.refNullable"
   parent?:
     | { [x: string]: unknown; $type: "com.example.node" }
@@ -405,7 +405,7 @@ test("InferUnion handles basic union", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.union"
   content?:
     | { [x: string]: unknown; $type: "com.example.text" }
@@ -423,7 +423,7 @@ test("InferUnion handles required union", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.unionRequired"
   media:
     | { [x: string]: unknown; $type: "com.example.video" }
@@ -443,7 +443,7 @@ test("InferUnion handles union with many types", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.unionMultiple"
   attachment?:
     | { [x: string]: unknown; $type: "com.example.image" }
@@ -469,7 +469,7 @@ test("InferParams handles basic params", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.params"
   limit?: number | undefined
   offset?: number | undefined
@@ -484,7 +484,7 @@ test("InferParams handles required params", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.paramsRequired"
   limit?: number | undefined
   query: string
@@ -507,7 +507,7 @@ test("InferRecord handles record with object schema", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.record"
   published?: boolean | undefined
   content: string
@@ -529,7 +529,7 @@ test("InferObject handles nested objects", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
   user?: { name: string; email: string } | undefined
 }`);
@@ -548,7 +548,7 @@ test("InferObject handles deeply nested objects", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.deepNested"
   data?:
     | {
@@ -576,7 +576,7 @@ test("InferArray handles arrays of objects", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.arrayOfObjects"
   users?: { id: string; name: string }[] | undefined
 }`);
@@ -591,7 +591,7 @@ test("InferArray handles arrays of arrays", () => {
 		main: schema,
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nestedArrays"
   matrix?: number[][] | undefined
 }`);
@@ -604,7 +604,7 @@ test("InferArray handles arrays of refs", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.arrayOfRefs"
   followers?:
     | { [x: string]: unknown; $type: "com.example.user" }[]
@@ -635,7 +635,7 @@ test("InferObject handles complex nested structure", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.complex"
   tags?: string[] | undefined
   content?:
@@ -680,7 +680,7 @@ test("InferNS handles multiple defs in namespace", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap("never");
+	attest(lexicon["~infer"]).type.toString.snap("never");
 });
 
 test("InferNS handles namespace with record and object defs", () => {
@@ -698,7 +698,7 @@ test("InferNS handles namespace with record and object defs", () => {
 		}),
 	});
 
-	attest(lexicon.infer).type.toString.snap(`{
+	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "com.example.blog"
   title: string
   body: string
@@ -721,7 +721,7 @@ test("Local ref resolution: resolves refs to actual types", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   author?:
     | { name: string; email: string; $type: "#user" }
@@ -740,7 +740,7 @@ test("Local ref resolution: refs in arrays", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   users?: { name: string; $type: "#user" }[] | undefined
 }`);
@@ -755,7 +755,7 @@ test("Local ref resolution: refs in unions", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   embed?:
     | { content: string; $type: "#text" }
@@ -778,7 +778,7 @@ test("Local ref resolution: nested refs", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   author?:
     | {
@@ -804,7 +804,7 @@ test("Edge case: circular reference detection", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   parent?:
     | {
@@ -834,7 +834,7 @@ test("Edge case: circular reference between multiple types", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   users?:
     | {
@@ -861,7 +861,7 @@ test("Edge case: missing reference detection", () => {
 		}),
 	});
 
-	attest(ns.infer).type.toString.snap(`{
+	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   author?: "[Reference not found: #user]" | undefined
 }`);

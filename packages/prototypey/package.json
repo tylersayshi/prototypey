@@ -9,6 +9,7 @@
 	},
 	"homepage": "https://prototypey.org",
 	"license": "MIT",
+	"main": "./lib/core/main.js",
 	"author": {
 		"name": "tylersayshi",
 		"email": "hi@tylur.dev"
