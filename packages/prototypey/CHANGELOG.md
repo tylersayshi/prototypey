@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.2.6
+
+### Patch Changes
+
+- 6c5569b: only export intended items
+
 ## 0.2.5
 
 ### Patch Changes
