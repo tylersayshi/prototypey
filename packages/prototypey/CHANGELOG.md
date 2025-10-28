@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.0
+
+### Minor Changes
+
+- 91a8c84: generate prototypey lexicon utils from json definitions
+
 ## 0.2.6
 
 ### Patch Changes
