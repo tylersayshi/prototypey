@@ -611,3 +611,8 @@ export const lx = {
 		});
 	},
 };
+
+/** helper to pull lexicon from json directly */
+export function fromJSON<const Lex extends LexiconNamespace>(json: Lex) {
+	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, json.defs);
+}

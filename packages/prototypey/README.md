@@ -138,7 +138,34 @@ Extracts JSON schemas from TypeScript lexicon definitions.
 prototypey gen-emit ./lexicons ./src/lexicons/**/*.ts
 ```
 
-### Typical Workflow
+#### `gen-from-json` - Generate TypeScript from JSON schemas
+
+```bash
+prototypey gen-from-json <outdir> <sources...>
+```
+
+Generates TypeScript files from JSON lexicon schemas using the `fromJSON` helper. This is useful when you have existing lexicon JSON files and want to work with them in TypeScript with full type inference.
+
+**Example:**
+
+```bash
+prototypey gen-from-json ./src/lexicons ./lexicons/**/*.json
+```
+
+This will create TypeScript files that export typed lexicon objects:
+
+```ts
+// Generated file: src/lexicons/app.bsky.feed.post.ts
+import { fromJSON } from "prototypey";
+
+export const appBskyFeedPost = fromJSON({
+  // ... lexicon JSON
+});
+```
+
+### Typical Workflows
+
+#### TypeScript-first workflow
 
 1. Author lexicons in TypeScript using the library
 2. Emit JSON schemas with `gen-emit` for runtime validation
@@ -159,6 +186,27 @@ Then run:
 npm run lexicon:emit
 ```
 
+#### JSON-first workflow
+
+1. Start with JSON lexicon schemas (e.g., from atproto)
+2. Generate TypeScript with `gen-from-json` for type-safe access
+
+**Recommended:** Add as a script to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "lexicon:import": "prototypey gen-from-json ./src/lexicons ./lexicons/**/*.json"
+  }
+}
+```
+
+Then run:
+
+```bash
+npm run lexicon:import
+```
+
 ## State of the Project
 
 **Done:**
@@ -169,16 +217,10 @@ npm run lexicon:emit
 - Inferrance of valid type from full lexicon definition
   - the really cool part of this is that it fills in the refs from the defs all at the type level
 - `lx.lexicon(...).validate(data)` for validating data using `@atproto/lexicon` and your lexicon definitions
+- `fromJSON()` helper for creating lexicons directly from JSON objects with full type inference
 
-**TODO/In Progress:**
+Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense". Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
 
-- Library art! Please reach out if you'd be willing to contribute some drawings or anything!
-- Add CLI support for inferring and validating from json as the starting point
+**Call For Contribution:**
 
-Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense" 😂. Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
-
----
-
-> 💝 This package was templated with
-> [`create-typescript-app`](https://github.com/JoshuaKGoldberg/create-typescript-app)
-> using the [Bingo framework](https://create.bingo).
+- We need library art! Please reach out if you'd be willing to contribute some drawings or anything :)

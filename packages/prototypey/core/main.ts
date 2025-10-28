@@ -1,2 +1,2 @@
-export { lx } from "./lib.ts";
+export { lx, fromJSON } from "./lib.ts";
 export { type Infer } from "./infer.ts";
