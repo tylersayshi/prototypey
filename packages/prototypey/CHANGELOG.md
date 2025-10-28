@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.1
+
+### Patch Changes
+
+- d5d3143: update docs - we're featured!
+
 ## 0.3.0
 
 ### Minor Changes
