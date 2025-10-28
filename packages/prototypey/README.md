@@ -1,6 +1,6 @@
 # prototypey
 
-A (soon-to-be) fully-featured sdk for developing lexicons with typescript.
+A fully-featured sdk for developing lexicons with typescript.
 
 ## Installation
 

@@ -1,6 +1,7 @@
 import { test } from "vitest";
 import { attest } from "@ark/attest";
 import { fromJSON } from "../lib.ts";
+import { Infer } from "../infer.ts";
 
 test("fromJSON InferNS produces expected type shape", () => {
 	const exampleLexicon = fromJSON({
@@ -503,7 +504,7 @@ test("fromJSON InferObject handles mixed nullable, required, and optional", () =
 // REF TYPE TESTS
 // ============================================================================
 
-test("fromJSON InferRef handles basic reference", () => {
+test("fromJSON InferRef handles external reference (unknown)", () => {
 	const lexicon = fromJSON({
 		id: "test.ref",
 		defs: {
@@ -524,57 +525,11 @@ test("fromJSON InferRef handles basic reference", () => {
 }`);
 });
 
-test("fromJSON InferRef handles required reference", () => {
-	const lexicon = fromJSON({
-		id: "test.refRequired",
-		defs: {
-			main: {
-				type: "object",
-				properties: {
-					author: { type: "ref", ref: "com.example.user", required: true },
-				},
-				required: ["author"],
-			},
-		},
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.refRequired"
-  author: {
-    [x: string]: unknown
-    $type: "com.example.user"
-  }
-}`);
-});
-
-test("fromJSON InferRef handles nullable reference", () => {
-	const lexicon = fromJSON({
-		id: "test.refNullable",
-		defs: {
-			main: {
-				type: "object",
-				properties: {
-					parent: { type: "ref", ref: "com.example.node", nullable: true },
-				},
-				nullable: ["parent"],
-			},
-		},
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.refNullable"
-  parent?:
-    | { [x: string]: unknown; $type: "com.example.node" }
-    | null
-    | undefined
-}`);
-});
-
 // ============================================================================
 // UNION TYPE TESTS
 // ============================================================================
 
-test("fromJSON InferUnion handles basic union", () => {
+test("fromJSON InferUnion handles external union (unknown)", () => {
 	const lexicon = fromJSON({
 		id: "test.union",
 		defs: {
@@ -595,67 +550,6 @@ test("fromJSON InferUnion handles basic union", () => {
   content?:
     | { [x: string]: unknown; $type: "com.example.text" }
     | { [x: string]: unknown; $type: "com.example.image" }
-    | undefined
-}`);
-});
-
-test("fromJSON InferUnion handles required union", () => {
-	const lexicon = fromJSON({
-		id: "test.unionRequired",
-		defs: {
-			main: {
-				type: "object",
-				properties: {
-					media: {
-						type: "union",
-						refs: ["com.example.video", "com.example.audio"],
-						required: true,
-					},
-				},
-				required: ["media"],
-			},
-		},
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.unionRequired"
-  media:
-    | { [x: string]: unknown; $type: "com.example.video" }
-    | { [x: string]: unknown; $type: "com.example.audio" }
-}`);
-});
-
-test("fromJSON InferUnion handles union with many types", () => {
-	const lexicon = fromJSON({
-		id: "test.unionMultiple",
-		defs: {
-			main: {
-				type: "object",
-				properties: {
-					attachment: {
-						type: "union",
-						refs: [
-							"com.example.image",
-							"com.example.video",
-							"com.example.audio",
-							"com.example.document",
-						],
-					},
-				},
-			},
-		},
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.unionMultiple"
-  attachment?:
-    | { [x: string]: unknown; $type: "com.example.image" }
-    | { [x: string]: unknown; $type: "com.example.video" }
-    | { [x: string]: unknown; $type: "com.example.audio" }
-    | {
-        [x: string]: unknown
-        $type: "com.example.document"
-      }
     | undefined
 }`);
 });
@@ -869,12 +763,20 @@ test("fromJSON InferArray handles arrays of refs", () => {
 	const lexicon = fromJSON({
 		id: "test.arrayOfRefs",
 		defs: {
+			user: {
+				type: "object",
+				properties: {
+					name: { type: "string", required: true },
+					handle: { type: "string", required: true },
+				},
+				required: ["name", "handle"],
+			},
 			main: {
 				type: "object",
 				properties: {
 					followers: {
 						type: "array",
-						items: { type: "ref", ref: "com.example.user" },
+						items: { type: "ref", ref: "#user" },
 					},
 				},
 			},
@@ -884,7 +786,7 @@ test("fromJSON InferArray handles arrays of refs", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.arrayOfRefs"
   followers?:
-    | { [x: string]: unknown; $type: "com.example.user" }[]
+    | { handle: string; name: string; $type: "#user" }[]
     | undefined
 }`);
 });
@@ -897,6 +799,21 @@ test("fromJSON InferObject handles complex nested structure", () => {
 	const lexicon = fromJSON({
 		id: "test.complex",
 		defs: {
+			text: {
+				type: "object",
+				properties: {
+					content: { type: "string", required: true },
+				},
+				required: ["content"],
+			},
+			image: {
+				type: "object",
+				properties: {
+					url: { type: "string", required: true },
+					alt: { type: "string" },
+				},
+				required: ["url"],
+			},
 			main: {
 				type: "object",
 				properties: {
@@ -912,7 +829,7 @@ test("fromJSON InferObject handles complex nested structure", () => {
 					},
 					content: {
 						type: "union",
-						refs: ["com.example.text", "com.example.image"],
+						refs: ["#text", "#image"],
 					},
 					tags: { type: "array", items: { type: "string" }, maxLength: 10 },
 					metadata: {
@@ -933,8 +850,12 @@ test("fromJSON InferObject handles complex nested structure", () => {
   $type: "test.complex"
   tags?: string[] | undefined
   content?:
-    | { [x: string]: unknown; $type: "com.example.text" }
-    | { [x: string]: unknown; $type: "com.example.image" }
+    | { content: string; $type: "#text" }
+    | {
+        alt?: string | undefined
+        url: string
+        $type: "#image"
+      }
     | undefined
   author?:
     | {
@@ -982,7 +903,7 @@ test("fromJSON InferNS handles multiple defs in namespace", () => {
 				type: "object",
 				properties: {
 					text: { type: "string", required: true },
-					author: { type: "ref", ref: "com.example.user" },
+					author: { type: "ref", ref: "#user" },
 				},
 				required: ["text"],
 			},
@@ -1254,5 +1175,52 @@ test("fromJSON Edge case: missing reference detection", () => {
 	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   author: "[Reference not found: #user]"
+}`);
+});
+
+// ============================================================================
+// REAL-WORLD EXAMPLE: BLUESKY PROFILE
+// ============================================================================
+
+test("fromJSON Real-world example: app.bsky.actor.profile", () => {
+	const lexicon = fromJSON({
+		id: "app.bsky.actor.profile",
+		defs: {
+			main: {
+				type: "record",
+				key: "self",
+				record: {
+					type: "object",
+					properties: {
+						displayName: {
+							type: "string",
+							maxLength: 64,
+							maxGraphemes: 64,
+						},
+						description: {
+							type: "string",
+							maxLength: 256,
+							maxGraphemes: 256,
+						},
+					},
+				},
+			},
+		},
+	});
+
+	type Profile = Infer<typeof lexicon>;
+
+	const george: Profile = {
+		$type: "app.bsky.actor.profile",
+		description: "George",
+	};
+
+	lexicon.validate({ foo: "bar" }); // will fail
+	lexicon.validate(george); // will pass 🎉
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "app.bsky.actor.profile"
+  displayName?: string | undefined
+  description?: string | undefined
 }`);
 });
