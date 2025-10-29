@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.3
+
+### Patch Changes
+
+- e7a7497: documentation update
+
 ## 0.3.2
 
 ### Patch Changes
