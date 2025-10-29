@@ -20,7 +20,7 @@ jobs:
 
       - uses: ./.github/actions/taze-update
         with:
-          taze-flags: -rw
+          taze-input: -rw
           branch-prefix: update-deps
           pr-title: "update dependencies"
           pr-labels: dependencies
