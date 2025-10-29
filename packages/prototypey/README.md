@@ -217,6 +217,8 @@ Then run:
 npm run lexicon:import
 ```
 
+---
+
 Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense". Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
 
 **Call For Contribution:**
