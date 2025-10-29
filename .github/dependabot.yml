@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - directory: "/"
+    schedule:
+      interval: "weekly"
+
+  - directory: "/packages/prototypey"
+    schedule:
+      interval: "weekly"
+
+  - directory: "/packages/site"
+    schedule:
+      interval: "weekly"
