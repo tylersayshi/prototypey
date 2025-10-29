@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.2
+
+### Patch Changes
+
+- 6a6cae5: update deps
+
 ## 0.3.1
 
 ### Patch Changes
