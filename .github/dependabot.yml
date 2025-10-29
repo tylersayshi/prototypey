@@ -1,13 +1,16 @@
 version: 2
 updates:
-  - directory: "/"
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
 
-  - directory: "/packages/prototypey"
+  - package-ecosystem: "npm"
+    directory: "/packages/prototypey"
     schedule:
       interval: "weekly"
 
-  - directory: "/packages/site"
+  - package-ecosystem: "npm"
+    directory: "/packages/site"
     schedule:
       interval: "weekly"
