@@ -4,27 +4,27 @@ name: Taze Update
 
 inputs:
   taze-input:
-    description: 'Flags or args to pass to taze (default: -w)'
+    description: "Flags or args to pass to taze (default: -w --concurrency 3)"
     required: false
-    default: '-w'
+    default: "-w --concurrency 3"
   branch-prefix:
-    description: 'Prefix for the branch name (default: chore/update-deps)'
+    description: "Prefix for the branch name (default: chore/update-deps)"
     required: false
-    default: 'chore/update-deps'
+    default: "chore/update-deps"
   pr-title:
-    description: 'Title for the pull request'
+    description: "Title for the pull request"
     required: false
-    default: 'chore: update dependencies'
+    default: "chore: update dependencies"
   pr-labels:
-    description: 'Comma-separated labels to add to the PR'
+    description: "Comma-separated labels to add to the PR"
     required: false
-    default: 'dependencies'
+    default: "dependencies"
   github-token:
-    description: 'GitHub token for creating PRs'
+    description: "GitHub token for creating PRs"
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install taze
       run: pnpm add -g taze
