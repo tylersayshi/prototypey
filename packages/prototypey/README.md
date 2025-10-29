@@ -2,6 +2,16 @@
 
 A fully-featured sdk for developing lexicons with typescript.
 
+## Features
+
+- atproto spec lexicon authoring with in IDE docs & hints for each attribute (ts => json)
+- CLI to generate json from ts definitions
+- CLI to generate ts from json definitions
+- inference of usage type from full lexicon definition
+  - the really cool part of this is that it fills in the refs from the defs all at the type level
+- `lx.lexicon(...).validate(data)` for validating data using `@atproto/lexicon`
+- `fromJSON()` helper for creating lexicons directly from JSON objects with full type inference
+
 ## Installation
 
 ```bash
@@ -206,18 +216,6 @@ Then run:
 ```bash
 npm run lexicon:import
 ```
-
-## State of the Project
-
-**Done:**
-
-- Full atproto spec lexicon authoring with in IDE docs & hints for each attribute (ts => json)
-- CLI generates json from ts definitions
-- CLI generates ts from json definitions
-- Inferrance of valid type from full lexicon definition
-  - the really cool part of this is that it fills in the refs from the defs all at the type level
-- `lx.lexicon(...).validate(data)` for validating data using `@atproto/lexicon` and your lexicon definitions
-- `fromJSON()` helper for creating lexicons directly from JSON objects with full type inference
 
 Please give any and all feedback. I've not really written many lexicons much myself yet, so this project is at a point of "well I think this makes sense". Both the [issues page](https://github.com/tylersayshi/prototypey/issues) and [discussions](https://github.com/tylersayshi/prototypey/discussions) are open and ready for y'all 🙂.
 
