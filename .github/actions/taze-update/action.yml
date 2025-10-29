@@ -1,0 +1,69 @@
+description: Automatically update dependencies using taze and create a pull request
+
+name: Taze Update
+
+inputs:
+  taze-input:
+    description: Flags or args to pass to taze (default: -w)
+    required: false
+    default: -w
+  branch-prefix:
+    description: Prefix for the branch name (default: chore/update-deps)
+    required: false
+    default: chore/update-deps
+  pr-title:
+    description: Title for the pull request
+    required: false
+    default: 'chore: update dependencies'
+  pr-labels:
+    description: Comma-separated labels to add to the PR
+    required: false
+    default: dependencies
+  github-token:
+    description: GitHub token for creating PRs
+    required: true
+
+runs:
+  steps:
+    - name: Install taze
+      run: pnpm add -g taze
+      shell: bash
+
+    - name: Update dependencies
+      run: taze ${{ inputs.taze-input }}
+      shell: bash
+
+    - name: Create Pull Request
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        BRANCH_NAME="${{ inputs.branch-prefix }}-$(date +%m-%d)"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout -b "$BRANCH_NAME"
+        git add .
+        if git diff --staged --quiet; then
+          echo "No dependency updates available"
+          exit 0
+        fi
+        git commit -m "${{ inputs.pr-title }}"
+        git push origin "$BRANCH_NAME"
+
+        PR_LABELS="${{ inputs.pr-labels }}"
+        LABEL_ARGS=""
+        if [ -n "$PR_LABELS" ]; then
+          IFS=',' read -ra LABELS <<< "$PR_LABELS"
+          for label in "${LABELS[@]}"; do
+            LABEL_ARGS="$LABEL_ARGS --label $(echo $label | xargs)"
+          done
+        fi
+
+        gh pr create --title "${{ inputs.pr-title }}" --body "## Automated dependency updates
+
+        This PR was automatically generated using taze.
+
+        Updates were performed using \`taze ${{ inputs.taze-input }}\`.
+
+        Please review the changes carefully before merging." $LABEL_ARGS
+      shell: bash
+  using: composite
