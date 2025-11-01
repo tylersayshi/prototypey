@@ -27,7 +27,7 @@ runs:
   using: "composite"
   steps:
     - name: Install taze
-      run: pnpm add -g taze
+      run: pnpm add -g taze@19
       shell: bash
 
     - name: Update dependencies
