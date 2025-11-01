@@ -4,7 +4,7 @@ name: Taze Update
 
 inputs:
   taze-input:
-    description: "Flags or args to pass to taze (default: -w --concurrency 3)"
+    description: "Flags or args to pass to taze we recommend low concurrency with github runners (default: -w --concurrency 3)"
     required: false
     default: "-w --concurrency 3"
   branch-prefix:
