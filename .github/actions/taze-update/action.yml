@@ -31,7 +31,9 @@ runs:
       shell: bash
 
     - name: Update dependencies
-      run: taze ${{ inputs.taze-input }}
+      run: |
+        taze ${{ inputs.taze-input }}
+        pnpm install
       shell: bash
 
     - name: Create Pull Request
