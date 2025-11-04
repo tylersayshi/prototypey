@@ -10,6 +10,7 @@ jobs:
   update_dependencies:
     name: Update Dependencies
     runs-on: ubuntu-latest
+    environment: update
     permissions:
       contents: write
       pull-requests: write
@@ -24,4 +25,4 @@ jobs:
           branch-prefix: update-deps
           pr-title: "update dependencies"
           pr-labels: dependencies
-          github-token: ${{ github.token }}
+          github-token: ${{ secrets.PAT_TOKEN }}
