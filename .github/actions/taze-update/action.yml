@@ -6,7 +6,7 @@ inputs:
   taze-input:
     description: "Flags or args to pass to taze we recommend low concurrency with github runners (default: -w --concurrency 3)"
     required: false
-    default: "-w --concurrency 3"
+    default: "-w --concurrency 1"
   branch-prefix:
     description: "Prefix for the branch name (default: chore/update-deps)"
     required: false
@@ -33,7 +33,7 @@ runs:
     - name: Update dependencies
       run: |
         taze ${{ inputs.taze-input }}
-        pnpm install
+        pnpm install --no-frozen-lockfile
       shell: bash
 
     - name: Create Pull Request
