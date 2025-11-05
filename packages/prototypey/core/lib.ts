@@ -38,6 +38,8 @@ interface LexiconItemCommonOptions {
 	required?: boolean;
 	/** Indicates this field can be explicitly set to null */
 	nullable?: boolean;
+	/** Human-readable description */
+	description?: string;
 }
 
 /**
@@ -172,8 +174,11 @@ interface ArrayOptions extends LexiconItemCommonOptions {
  * @see https://atproto.com/specs/lexicon#record
  */
 interface RecordOptions {
-	/** Record key strategy: "self" for self-describing or "tid" for timestamp IDs */
-	key: "self" | "tid";
+	/**
+	 * Record key strategy: "self" for self-describing or "tid" for timestamp IDs
+	 * @see https://atproto.com/specs/record-key
+	 */
+	key: string;
 	/** Object schema defining the record structure */
 	record: { type: "object" };
 	/** Human-readable description */
