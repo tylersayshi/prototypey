@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.5
+
+### Patch Changes
+
+- abb4b31: updated docs
+
 ## 0.3.4
 
 ### Patch Changes
