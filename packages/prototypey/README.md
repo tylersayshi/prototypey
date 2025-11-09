@@ -2,6 +2,8 @@
 
 A fully-featured sdk for developing lexicons with typescript.
 
+Below this is the docs and features of the library. If you'd like the story for why prototypey exists and what it's good for: [that's published here](https://notes.tylur.dev/3m5a3do4eus2w)
+
 ## Features
 
 - atproto spec lexicon authoring with in IDE docs & hints for each attribute (ts => json)
