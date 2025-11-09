@@ -83,27 +83,11 @@ ${combinedTypes}
 
 	if (!isReady) {
 		return (
-			<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-				<div
-					style={{
-						padding: "0.75rem 1rem",
-						backgroundColor: "var(--color-bg-secondary)",
-						borderBottom: "1px solid var(--color-border)",
-						fontSize: "0.875rem",
-						fontWeight: "600",
-						color: "var(--color-text-secondary)",
-					}}
-				>
+			<div className="flex-1 flex flex-col">
+				<div className="py-3 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-500 dark:text-gray-400">
 					Input
 				</div>
-				<div
-					style={{
-						flex: 1,
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-					}}
-				>
+				<div className="flex-1 flex items-center justify-center">
 					Loading...
 				</div>
 			</div>
@@ -111,20 +95,11 @@ ${combinedTypes}
 	}
 
 	return (
-		<div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-			<div
-				style={{
-					padding: "0.75rem 1rem",
-					backgroundColor: "var(--color-bg-secondary)",
-					borderBottom: "1px solid var(--color-border)",
-					fontSize: "0.875rem",
-					fontWeight: "600",
-					color: "var(--color-text-secondary)",
-				}}
-			>
+		<div className="flex-1 flex flex-col">
+			<div className="py-3 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-500 dark:text-gray-400">
 				Input
 			</div>
-			<div style={{ flex: 1 }}>
+			<div className="flex-1">
 				<MonacoEditor
 					height="100%"
 					defaultLanguage="typescript"

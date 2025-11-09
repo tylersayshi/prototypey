@@ -112,52 +112,22 @@ export function Playground() {
 	return (
 		<>
 			{/* Desktop playground */}
-			<div
-				className="desktop-only"
-				style={{
-					flex: 1,
-					overflow: "hidden",
-				}}
-			>
-				<div
-					style={{
-						flex: 1,
-						display: "flex",
-						borderRight: "1px solid var(--color-border)",
-					}}
-				>
+			<div className="hidden md:flex flex-1 overflow-hidden">
+				<div className="flex-1 flex border-r border-gray-200 dark:border-gray-700">
 					<Editor
 						value={code}
 						onChange={handleCodeChange}
 						onReady={handleEditorReady}
 					/>
 				</div>
-				<div style={{ flex: 1, display: "flex" }}>
+				<div className="flex-1 flex">
 					<OutputPanel output={output} />
 				</div>
 			</div>
 
 			{/* Mobile static demo */}
-			<div
-				className="mobile-only"
-				style={{
-					flex: 1,
-					flexDirection: "column",
-					overflow: "auto",
-					padding: "1rem",
-				}}
-			>
-				<div
-					style={{
-						backgroundColor: "var(--color-bg-secondary)",
-						padding: "1rem",
-						borderRadius: "0.5rem",
-						marginBottom: "1rem",
-						textAlign: "center",
-						color: "var(--color-text-secondary)",
-						fontSize: "0.875rem",
-					}}
-				>
+			<div className="flex md:hidden flex-1 flex-col overflow-auto p-4">
+				<div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4 text-center text-gray-500 dark:text-gray-400 text-sm">
 					Playground available on desktop
 				</div>
 
@@ -190,32 +160,13 @@ function MobileStaticDemo({
 	const jsonWrappedLines = estimateWrappedLines(json, 50);
 
 	return (
-		<div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+		<div className="flex flex-col gap-4">
 			{/* You write section */}
-			<div style={{ display: "flex", flexDirection: "column" }}>
-				<div
-					style={{
-						padding: "0.75rem 1rem",
-						backgroundColor: "var(--color-bg-secondary)",
-						borderBottom: "1px solid var(--color-border)",
-						fontSize: "0.875rem",
-						fontWeight: "600",
-						color: "var(--color-text-secondary)",
-						borderTopLeftRadius: "0.5rem",
-						borderTopRightRadius: "0.5rem",
-					}}
-				>
+			<div className="flex flex-col">
+				<div className="py-3 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-500 dark:text-gray-400 rounded-t-lg">
 					You write
 				</div>
-				<div
-					style={{
-						border: "1px solid var(--color-border)",
-						borderTop: "none",
-						borderBottomLeftRadius: "0.5rem",
-						borderBottomRightRadius: "0.5rem",
-						overflow: "hidden",
-					}}
-				>
+				<div className="border border-gray-200 dark:border-gray-700 border-t-0 rounded-b-lg overflow-hidden">
 					<MonacoEditor
 						height={`${String(codeWrappedLines * 18 + 32)}px`}
 						defaultLanguage="typescript"
@@ -244,30 +195,11 @@ function MobileStaticDemo({
 			</div>
 
 			{/* JSON generated section */}
-			<div style={{ display: "flex", flexDirection: "column" }}>
-				<div
-					style={{
-						padding: "0.75rem 1rem",
-						backgroundColor: "var(--color-bg-secondary)",
-						borderBottom: "1px solid var(--color-border)",
-						fontSize: "0.875rem",
-						fontWeight: "600",
-						color: "var(--color-text-secondary)",
-						borderTopLeftRadius: "0.5rem",
-						borderTopRightRadius: "0.5rem",
-					}}
-				>
+			<div className="flex flex-col">
+				<div className="py-3 px-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-500 dark:text-gray-400 rounded-t-lg">
 					JSON generated
 				</div>
-				<div
-					style={{
-						border: "1px solid var(--color-border)",
-						borderTop: "none",
-						borderBottomLeftRadius: "0.5rem",
-						borderBottomRightRadius: "0.5rem",
-						overflow: "hidden",
-					}}
-				>
+				<div className="border border-gray-200 dark:border-gray-700 border-t-0 rounded-b-lg overflow-hidden">
 					<MonacoEditor
 						height={`${String(jsonWrappedLines * 18 + 32)}px`}
 						defaultLanguage="json"

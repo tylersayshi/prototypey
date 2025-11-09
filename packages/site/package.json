@@ -20,6 +20,7 @@
 		"react-dom": "^19.2.0"
 	},
 	"devDependencies": {
+		"@tailwindcss/vite": "^4.1.17",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.0",
 		"@testing-library/user-event": "^14.6.1",
@@ -29,6 +30,7 @@
 		"babel-plugin-react-compiler": "^1.0.0",
 		"eslint-plugin-react-compiler": "19.1.0-rc.2",
 		"jsdom": "^25.0.1",
+		"tailwindcss": "^4.1.17",
 		"typescript": "5.8.3",
 		"vite": "^6.4.1",
 		"vitest": "^3.2.4"
