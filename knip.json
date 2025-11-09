@@ -15,6 +15,6 @@
 		}
 	},
 	"ignore": ["**/*.d.ts", "**/dist/**", "**/lib/**", "**/node_modules/**"],
-	"ignoreDependencies": [],
+	"ignoreDependencies": ["tailwindcss"],
 	"ignoreExportsUsedInFile": true
 }
