@@ -43,8 +43,8 @@
 	"devDependencies": {
 		"@ark/attest": "^0.49.0",
 		"@types/node": "24.0.4",
-		"tsdown": "0.12.7",
-		"typescript": "5.8.3",
+		"tsdown": "^0.15.0",
+		"typescript": "5.9.3",
 		"vitest": "^3.2.4"
 	},
 	"engines": {

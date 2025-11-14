@@ -33,28 +33,28 @@ type LexiconType =
  * Common options available for lexicon items.
  * @see https://atproto.com/specs/lexicon#string-formats
  */
-interface LexiconItemCommonOptions {
+type LexiconItemCommonOptions = {
 	/** Indicates this field must be provided */
 	required?: boolean;
 	/** Indicates this field can be explicitly set to null */
 	nullable?: boolean;
 	/** Human-readable description */
 	description?: string;
-}
+};
 
 /**
  * Base interface for all lexicon items.
  * @see https://atproto.com/specs/lexicon#overview-of-types
  */
-interface LexiconItem extends LexiconItemCommonOptions {
+type LexiconItem = LexiconItemCommonOptions & {
 	type: LexiconType;
-}
+};
 
 /**
  * Definition in a lexicon namespace.
  * @see https://atproto.com/specs/lexicon#lexicon-document
  */
-interface Def {
+type Def = {
 	type: LexiconType;
 }
 
@@ -62,18 +62,18 @@ interface Def {
  * Lexicon namespace document structure.
  * @see https://atproto.com/specs/lexicon#lexicon-document
  */
-interface LexiconNamespace {
+type LexiconNamespace = {
 	/** Namespaced identifier (NSID) for this lexicon */
 	id: string;
 	/** Named definitions within this namespace */
 	defs: Record<string, Def>;
-}
+};
 
 /**
  * String type options.
  * @see https://atproto.com/specs/lexicon#string
  */
-interface StringOptions extends LexiconItemCommonOptions {
+type StringOptions = LexiconItemCommonOptions & {
 	/**
 	 * Semantic string format constraint.
 	 * @see https://atproto.com/specs/lexicon#string-formats
@@ -106,24 +106,24 @@ interface StringOptions extends LexiconItemCommonOptions {
 	default?: string;
 	/** Fixed, unchangeable value */
 	const?: string;
-}
+};
 
 /**
  * Boolean type options.
  * @see https://atproto.com/specs/lexicon#boolean
  */
-interface BooleanOptions extends LexiconItemCommonOptions {
+type BooleanOptions = LexiconItemCommonOptions & {
 	/** Default value if not provided */
 	default?: boolean;
 	/** Fixed, unchangeable value */
 	const?: boolean;
-}
+};
 
 /**
  * Integer type options.
  * @see https://atproto.com/specs/lexicon#integer
  */
-interface IntegerOptions extends LexiconItemCommonOptions {
+type IntegerOptions = LexiconItemCommonOptions & {
 	/** Minimum allowed value (inclusive) */
 	minimum?: number;
 	/** Maximum allowed value (inclusive) */
@@ -134,46 +134,46 @@ interface IntegerOptions extends LexiconItemCommonOptions {
 	default?: number;
 	/** Fixed, unchangeable value */
 	const?: number;
-}
+};
 
 /**
  * Bytes type options for arbitrary byte arrays.
  * @see https://atproto.com/specs/lexicon#bytes
  */
-interface BytesOptions extends LexiconItemCommonOptions {
+type BytesOptions = LexiconItemCommonOptions & {
 	/** Minimum byte array length */
 	minLength?: number;
 	/** Maximum byte array length */
 	maxLength?: number;
-}
+};
 
 /**
  * Blob type options for binary data with MIME types.
  * @see https://atproto.com/specs/lexicon#blob
  */
-interface BlobOptions extends LexiconItemCommonOptions {
+type BlobOptions = LexiconItemCommonOptions & {
 	/** Allowed MIME types (e.g., ["image/png", "image/jpeg"]) */
 	accept?: string[];
 	/** Maximum blob size in bytes */
 	maxSize?: number;
-}
+};
 
 /**
  * Array type options.
  * @see https://atproto.com/specs/lexicon#array
  */
-interface ArrayOptions extends LexiconItemCommonOptions {
+type ArrayOptions = LexiconItemCommonOptions & {
 	/** Minimum array length */
 	minLength?: number;
 	/** Maximum array length */
 	maxLength?: number;
-}
+};
 
 /**
  * Record type options for repository records.
  * @see https://atproto.com/specs/lexicon#record
  */
-interface RecordOptions {
+type RecordOptions = {
 	/**
 	 * Record key strategy: "self" for self-describing or "tid" for timestamp IDs
 	 * @see https://atproto.com/specs/record-key
@@ -183,16 +183,16 @@ interface RecordOptions {
 	record: { type: "object" };
 	/** Human-readable description */
 	description?: string;
-}
+};
 
 /**
  * Union type options for multiple possible types.
  * @see https://atproto.com/specs/lexicon#union
  */
-interface UnionOptions extends LexiconItemCommonOptions {
+type UnionOptions = LexiconItemCommonOptions & {
 	/** If true, only listed refs are allowed; if false, additional types may be added */
 	closed?: boolean;
-}
+};
 
 /**
  * Map of property names to their lexicon item definitions.
@@ -256,31 +256,31 @@ type ParamsResult<T extends ParamsProperties> = {
  * HTTP request or response body schema.
  * @see https://atproto.com/specs/lexicon#http-endpoints
  */
-interface BodySchema {
+type BodySchema = {
 	/** MIME type encoding (typically "application/json") */
 	encoding: "application/json" | (string & {});
 	/** Human-readable description */
 	description?: string;
 	/** Object schema defining the body structure */
 	schema?: ObjectResult<ObjectProperties>;
-}
+};
 
 /**
  * Error definition for HTTP endpoints.
  * @see https://atproto.com/specs/lexicon#http-endpoints
  */
-interface ErrorDef {
+type ErrorDef = {
 	/** Error name/code */
 	name: string;
 	/** Human-readable error description */
 	description?: string;
-}
+};
 
 /**
  * Query endpoint options (HTTP GET).
  * @see https://atproto.com/specs/lexicon#query
  */
-interface QueryOptions {
+type QueryOptions = {
 	/** Human-readable description */
 	description?: string;
 	/** Query string parameters */
@@ -289,13 +289,13 @@ interface QueryOptions {
 	output?: BodySchema;
 	/** Possible error responses */
 	errors?: ErrorDef[];
-}
+};
 
 /**
  * Procedure endpoint options (HTTP POST).
  * @see https://atproto.com/specs/lexicon#procedure
  */
-interface ProcedureOptions {
+type ProcedureOptions = {
 	/** Human-readable description */
 	description?: string;
 	/** Query string parameters */
@@ -306,24 +306,24 @@ interface ProcedureOptions {
 	output?: BodySchema;
 	/** Possible error responses */
 	errors?: ErrorDef[];
-}
+};
 
 /**
  * WebSocket message schema for subscriptions.
  * @see https://atproto.com/specs/lexicon#subscription
  */
-interface MessageSchema {
+type MessageSchema = {
 	/** Human-readable description */
 	description?: string;
 	/** Union of possible message types */
 	schema: { type: "union"; refs: readonly string[] };
-}
+};
 
 /**
  * Subscription endpoint options (WebSocket).
  * @see https://atproto.com/specs/lexicon#subscription
  */
-interface SubscriptionOptions {
+type SubscriptionOptions = {
 	/** Human-readable description */
 	description?: string;
 	/** Query string parameters */
@@ -332,12 +332,12 @@ interface SubscriptionOptions {
 	message?: MessageSchema;
 	/** Possible error responses */
 	errors?: ErrorDef[];
-}
+};
 
 /**
  * Public interface for Lexicon to avoid exposing private implementation details
  */
-export interface LexiconSchema<T extends LexiconNamespace> {
+export type LexiconSchema<T extends LexiconNamespace> = {
 	json: T;
 	"~infer": Infer<{ json: T }>;
 	validate(
