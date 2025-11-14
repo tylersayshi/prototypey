@@ -56,7 +56,7 @@ type LexiconItem = LexiconItemCommonOptions & {
  */
 type Def = {
 	type: LexiconType;
-}
+};
 
 /**
  * Lexicon namespace document structure.
@@ -344,7 +344,7 @@ export type LexiconSchema<T extends LexiconNamespace> = {
 		data: unknown,
 		def?: keyof T["defs"],
 	): ValidationResult<Infer<{ json: T }>>;
-}
+};
 
 class Lexicon<T extends LexiconNamespace> implements LexiconSchema<T> {
 	public json: T;
