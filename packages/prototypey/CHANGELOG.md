@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.6
+
+### Patch Changes
+
+- 2b55317: fix exported type bug
+
 ## 0.3.5
 
 ### Patch Changes
