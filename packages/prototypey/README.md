@@ -225,4 +225,4 @@ Please give any and all feedback. I've not really written many lexicons much mys
 
 **Call For Contribution:**
 
-- We need library art! Please reach out if you'd be willing to contribute some drawings or anything :)
+We need library art! Please reach out if you'd be willing to contribute some drawings or anything :)
