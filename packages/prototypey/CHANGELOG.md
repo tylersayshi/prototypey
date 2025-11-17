@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.7
+
+### Patch Changes
+
+- e75de54: update docs
+
 ## 0.3.6
 
 ### Patch Changes
