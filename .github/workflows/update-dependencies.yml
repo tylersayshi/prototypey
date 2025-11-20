@@ -19,7 +19,7 @@ jobs:
 
       - uses: ./.github/actions/prepare
 
-      - uses: ./.github/actions/taze-update
+      - uses: tylersayshi/taze-update-action@v1
         with:
           taze-input: -rw --concurrency 1
           branch-prefix: update-deps
