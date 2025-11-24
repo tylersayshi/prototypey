@@ -70,8 +70,8 @@ importers:
         specifier: 0.52.0
         version: 0.52.0
       nuqs:
-        specifier: ^2.8.0
-        version: 2.8.0(react@19.2.0)
+        specifier: ^2.8.1
+        version: 2.8.1(react@19.2.0)
       prototypey:
         specifier: workspace:*
         version: link:../prototypey
@@ -2032,8 +2032,8 @@ packages:
   node-releases@2.0.25:
     resolution: {integrity: sha512-4auku8B/vw5psvTiiN9j1dAOsXvMoGqJuKJcR+dTdqiXEK20mMTk1UEo3HS16LeGQsVG6+qKTPM9u/qQ2LqATA==}
 
-  nuqs@2.8.0:
-    resolution: {integrity: sha512-JnVUUNR5hRtt8ZX131KmiGL6IlbyqgXKifL3oYYuDcJ+Kb8fT+WiaMPY7HmfgrECl0FeQBf7H59KfIfbq2DNdw==}
+  nuqs@2.8.1:
+    resolution: {integrity: sha512-kIw8UW5KXXfVla6B9h0EKzSH/YDpee6lojniQoMyul8wq9brwV0kElE2Jzg4NSCLBo7n2E3wc1J3o7IyPYVlqQ==}
     peerDependencies:
       '@remix-run/react': '>=2'
       '@tanstack/react-router': ^1
@@ -4641,7 +4641,7 @@ snapshots:
 
   node-releases@2.0.25: {}
 
-  nuqs@2.8.0(react@19.2.0):
+  nuqs@2.8.1(react@19.2.0):
     dependencies:
       '@standard-schema/spec': 1.0.0
       react: 19.2.0
