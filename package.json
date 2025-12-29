@@ -22,11 +22,11 @@
 		"@changesets/cli": "^2.29.8",
 		"@eslint/js": "9.29.0",
 		"eslint": "9.29.0",
-		"knip": "^5.76.3",
+		"knip": "^5.78.0",
 		"prettier": "3.6.1",
 		"typescript-eslint": "8.35.0"
 	},
-	"packageManager": "pnpm@10.26.1",
+	"packageManager": "pnpm@10.26.2",
 	"engines": {
 		"node": ">=20.19.0"
 	},
