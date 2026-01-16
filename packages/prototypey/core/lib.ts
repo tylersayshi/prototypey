@@ -205,6 +205,15 @@ type ObjectProperties = Record<
 	}
 >;
 
+/**
+ * Object-level options (not property-level).
+ * @see https://atproto.com/specs/lexicon#object
+ */
+type ObjectOptions = {
+	/** Human-readable description of the object */
+	description?: string;
+};
+
 type RequiredKeys<T> = {
 	[K in keyof T]: T[K] extends { required: true } ? K : never;
 }[keyof T];
@@ -217,7 +226,7 @@ type NullableKeys<T> = {
  * Resulting object schema with required and nullable fields extracted.
  * @see https://atproto.com/specs/lexicon#object
  */
-type ObjectResult<T extends ObjectProperties> = {
+type ObjectResult<T extends ObjectProperties, O extends ObjectOptions = {}> = {
 	type: "object";
 	/** Property definitions */
 	properties: {
@@ -230,7 +239,8 @@ type ObjectResult<T extends ObjectProperties> = {
 	: { required: UnionToTuple<RequiredKeys<T>> }) &
 	([NullableKeys<T>] extends [never]
 		? {}
-		: { nullable: UnionToTuple<NullableKeys<T>> });
+		: { nullable: UnionToTuple<NullableKeys<T>> }) &
+	O;
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -529,16 +539,20 @@ export const lx = {
 	 * Creates an object type with defined properties.
 	 * @see https://atproto.com/specs/lexicon#object
 	 */
-	object<T extends ObjectProperties>(options: T): ObjectResult<T> {
-		const required = Object.keys(options).filter(
-			(key) => "required" in options[key] && options[key].required,
+	object<T extends ObjectProperties, O extends ObjectOptions>(
+		properties: T,
+		options?: O,
+	): ObjectResult<T, O> {
+		const required = Object.keys(properties).filter(
+			(key) => "required" in properties[key] && properties[key].required,
 		);
-		const nullable = Object.keys(options).filter(
-			(key) => "nullable" in options[key] && options[key].nullable,
+		const nullable = Object.keys(properties).filter(
+			(key) => "nullable" in properties[key] && properties[key].nullable,
 		);
 		const result: Record<string, unknown> = {
 			type: "object",
-			properties: options,
+			properties,
+			...options,
 		};
 		if (required.length > 0) {
 			result.required = required;
@@ -546,7 +560,7 @@ export const lx = {
 		if (nullable.length > 0) {
 			result.nullable = nullable;
 		}
-		return result as ObjectResult<T>;
+		return result as ObjectResult<T, O>;
 	},
 	/**
 	 * Creates a params type for query string parameters.

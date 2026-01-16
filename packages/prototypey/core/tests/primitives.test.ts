@@ -183,6 +183,79 @@ test("lx.array() with required", () => {
 	});
 });
 
+test("lx.object() basic", () => {
+	const result = lx.object({
+		name: lx.string(),
+	});
+	expect(result).toEqual({
+		type: "object",
+		properties: {
+			name: { type: "string" },
+		},
+	});
+});
+
+test("lx.object() with description", () => {
+	const result = lx.object(
+		{
+			enabled: lx.boolean({
+				default: true,
+				description: "Whether this feature is enabled.",
+			}),
+		},
+		{
+			description: "Configuration options for the feature.",
+		},
+	);
+	expect(result).toEqual({
+		type: "object",
+		description: "Configuration options for the feature.",
+		properties: {
+			enabled: {
+				type: "boolean",
+				default: true,
+				description: "Whether this feature is enabled.",
+			},
+		},
+	});
+});
+
+test("lx.object() with required and description", () => {
+	const result = lx.object(
+		{
+			id: lx.string({ required: true }),
+			name: lx.string(),
+		},
+		{ description: "User profile object" },
+	);
+	expect(result).toEqual({
+		type: "object",
+		description: "User profile object",
+		properties: {
+			id: { type: "string", required: true },
+			name: { type: "string" },
+		},
+		required: ["id"],
+	});
+});
+
+test("lx.object() with nullable and description", () => {
+	const result = lx.object(
+		{
+			bio: lx.string({ nullable: true }),
+		},
+		{ description: "Optional profile fields" },
+	);
+	expect(result).toEqual({
+		type: "object",
+		description: "Optional profile fields",
+		properties: {
+			bio: { type: "string", nullable: true },
+		},
+		nullable: ["bio"],
+	});
+});
+
 test("lx.token() with interaction event", () => {
 	const result = lx.token(
 		"Request that less content like the given feed item be shown in the feed",

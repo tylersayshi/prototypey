@@ -1220,7 +1220,7 @@ test("fromJSON Real-world example: app.bsky.actor.profile", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "app.bsky.actor.profile"
-  displayName?: string | undefined
   description?: string | undefined
+  displayName?: string | undefined
 }`);
 });
