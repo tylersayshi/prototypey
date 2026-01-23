@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.8
+
+### Patch Changes
+
+- 7a19f90: releast changes from dep updates and #66
+
 ## 0.3.7
 
 ### Patch Changes
