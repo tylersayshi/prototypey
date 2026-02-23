@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.3.9
+
+### Patch Changes
+
+- 64d0fe4: update dependencies
+
 ## 0.3.8
 
 ### Patch Changes
