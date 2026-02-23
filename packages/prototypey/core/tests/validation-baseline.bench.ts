@@ -6,7 +6,7 @@ import { lx } from "../lib.ts";
 
 describe("baseline: lexicon instantiation", () => {
 	bench("simple lexicon instantiation", () => {
-		lx.lexicon("test.simple", {
+		lx.lexicon("test.ns.simple", {
 			main: lx.object({
 				id: lx.string({ required: true }),
 				name: lx.string({ required: true }),
@@ -24,7 +24,7 @@ describe("baseline: Lexicons class", () => {
 		const lexicons = new Lexicons();
 		lexicons.add({
 			lexicon: 1,
-			id: "test.simple",
+			id: "test.ns.simple",
 			defs: {
 				main: {
 					type: "object",
@@ -43,7 +43,7 @@ describe("baseline: Lexicons class", () => {
 		for (let i = 0; i < 10; i++) {
 			lexicons.add({
 				lexicon: 1,
-				id: `test.schema${i}`,
+				id: `test.ns.schema${i}`,
 				defs: {
 					main: {
 						type: "object",
@@ -63,7 +63,7 @@ describe("baseline: Lexicons class", () => {
 		for (let i = 0; i < 100; i++) {
 			lexicons.add({
 				lexicon: 1,
-				id: `test.schema${i}`,
+				id: `test.ns.schema${i}`,
 				defs: {
 					main: {
 						type: "object",
@@ -84,7 +84,7 @@ describe("baseline: validation", () => {
 		const lexicons = new Lexicons([
 			{
 				lexicon: 1,
-				id: "test.simple",
+				id: "test.ns.simple",
 				defs: {
 					main: {
 						type: "object",
@@ -97,7 +97,7 @@ describe("baseline: validation", () => {
 				},
 			},
 		]);
-		lexicons.validate("test.simple#main", {
+		lexicons.validate("test.ns.simple#main", {
 			id: "123",
 			name: "test",
 		});
@@ -107,7 +107,7 @@ describe("baseline: validation", () => {
 		const lexicons = new Lexicons([
 			{
 				lexicon: 1,
-				id: "test.complex",
+				id: "test.ns.complex",
 				defs: {
 					user: {
 						type: "object",
@@ -145,7 +145,7 @@ describe("baseline: validation", () => {
 				},
 			},
 		]);
-		lexicons.validate("test.complex#main", {
+		lexicons.validate("test.ns.complex#main", {
 			author: { handle: "alice.bsky.social", displayName: "Alice" },
 			replies: [
 				{
@@ -162,7 +162,7 @@ describe("baseline: validation", () => {
 		const lexicons = new Lexicons([
 			{
 				lexicon: 1,
-				id: "test.simple",
+				id: "test.ns.simple",
 				defs: {
 					main: {
 						type: "object",
@@ -176,7 +176,7 @@ describe("baseline: validation", () => {
 			},
 		]);
 		for (let i = 0; i < 1000; i++) {
-			lexicons.validate("test.simple#main", {
+			lexicons.validate("test.ns.simple#main", {
 				id: `${i}`,
 				name: `test${i}`,
 			});
