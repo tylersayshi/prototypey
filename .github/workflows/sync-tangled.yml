@@ -39,6 +39,6 @@ jobs:
           git config --global user.name "Prototypey Bot"
           git config --global user.email "bot@prototypey.org"
 
-          git remote add tangled git@tangled.sh:tylur.dev/prototypey
+          git remote add tangled git@tangled.org:tylur.dev/prototypey
           git push -f --all tangled
           git push -f --tags tangled
