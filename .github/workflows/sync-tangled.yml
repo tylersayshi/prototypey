@@ -29,8 +29,8 @@ jobs:
           echo "$TANGLED_SSH_PRIVATE_KEY" > ~/.ssh/tangled_key
           chmod 600 ~/.ssh/tangled_key
 
-          # Configure SSH to use the key for tangled.sh
-          echo "Host tangled.sh
+          # Configure SSH to use the key for tangled.org
+          echo "Host tangled.org
             IdentityFile ~/.ssh/tangled_key" >> ~/.ssh/config
 
           chmod 600 ~/.ssh/config
@@ -39,6 +39,6 @@ jobs:
           git config --global user.name "Prototypey Bot"
           git config --global user.email "bot@prototypey.org"
 
-          git remote add tangled git@tangled.org:tylur.dev/prototypey
+          git remote add tangled git@tangled.org:did:plc:4gt3dbmp4pydjiemob4konzm/prototypey
           git push -f --all tangled
           git push -f --tags tangled
