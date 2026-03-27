@@ -74,7 +74,7 @@ you could also access the json definition with `lex.json()`.
 
 ### Runtime Validation
 
-Prototypey provides runtime validation using [@atproto/lexicon](https://www.npmjs.com/package/@atproto/lexicon):
+Prototypey provides runtime validation using [@atproto/lexicon](https://npmx.dev/package/@atproto/lexicon):
 
 ```ts
 const lex = lx.lexicon("app.bsky.actor.profile", {

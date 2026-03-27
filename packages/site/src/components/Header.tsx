@@ -67,7 +67,7 @@ export function Header() {
 								label="docs"
 							/>
 							<HeaderLink
-								href="https://www.npmjs.com/package/prototypey"
+								href="https://npmx.dev/package/prototypey"
 								icon={
 									<svg
 										width="20"
