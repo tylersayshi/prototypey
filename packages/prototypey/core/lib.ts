@@ -27,7 +27,9 @@ type LexiconType =
 	| "record"
 	| "query"
 	| "procedure"
-	| "subscription";
+	| "subscription"
+	// Permission types
+	| "permission-set";
 
 /**
  * Common options available for lexicon items.
@@ -345,6 +347,153 @@ type SubscriptionOptions = {
 };
 
 /**
+ * A lexicon schema object or a plain NSID string, used to reference
+ * collections or endpoints in permission definitions.
+ */
+type NsidResolvable = string | { json: { id: string } };
+
+function resolveNsid(ref: NsidResolvable): string {
+	return typeof ref === "string" ? ref : ref.json.id;
+}
+
+/**
+ * Options for a repo-resource permission.
+ * @see https://atproto.com/specs/permission#repo
+ */
+type RepoPermissionOptions = {
+	/** Collections this permission applies to (lexicon schemas or NSID strings) */
+	collection: NsidResolvable[];
+	/** Allowed actions on the collections */
+	action?: readonly ("create" | "update" | "delete")[];
+};
+
+/**
+ * Options for an RPC-resource permission.
+ * @see https://atproto.com/specs/permission#rpc
+ */
+type RpcPermissionOptions = {
+	/** API endpoints this permission applies to (lexicon schemas or NSID strings) */
+	lxm?: NsidResolvable[];
+	/** DID of the target service */
+	aud?: string;
+	/** Whether to inherit the audience from a parent include permission */
+	inheritAud?: boolean;
+};
+
+/**
+ * Options for a blob-resource permission.
+ * @see https://atproto.com/specs/permission#blob
+ */
+type BlobPermissionOptions = {
+	/** Accepted MIME types or patterns (e.g. "image/*") */
+	accept: string[];
+};
+
+/**
+ * Options for an account-resource permission.
+ * @see https://atproto.com/specs/permission#account
+ */
+type AccountPermissionOptions = {
+	/** Account attribute: "email" or "repo" */
+	attr: "email" | "repo";
+	/** Allowed action on the attribute */
+	action?: "read" | "manage";
+};
+
+/**
+ * Options for an identity-resource permission.
+ * @see https://atproto.com/specs/permission#identity
+ */
+type IdentityPermissionOptions = {
+	/** Identity attribute: "handle" or "*" for all */
+	attr: "handle" | "*";
+};
+
+/**
+ * Permission granting access to records in specified collections.
+ * @see https://atproto.com/specs/permission#repo
+ */
+type RepoPermissionEntry = {
+	type: "permission";
+	resource: "repo";
+	collection: string[];
+	action?: readonly ("create" | "update" | "delete")[];
+};
+
+/**
+ * Permission granting access to call API endpoints on a specified service.
+ * @see https://atproto.com/specs/permission#rpc
+ */
+type RpcPermissionEntry = {
+	type: "permission";
+	resource: "rpc";
+	lxm?: string[];
+	aud?: string;
+	inheritAud?: boolean;
+};
+
+/**
+ * Permission granting access to upload blobs with specified MIME types.
+ * @see https://atproto.com/specs/permission#blob
+ */
+type BlobPermissionEntry = {
+	type: "permission";
+	resource: "blob";
+	accept: string[];
+};
+
+/**
+ * Permission granting access to account-level attributes; read/update the associated email address, or replacing the entire repo (with a CAR file).
+ * @see https://atproto.com/specs/permission#account
+ */
+type AccountPermissionEntry = {
+	type: "permission";
+	resource: "account";
+	attr: "email" | "repo";
+	action?: "read" | "manage";
+};
+
+/**
+ * Permission granting access to identity attributes like handle management.
+ * @see https://atproto.com/specs/permission#identity
+ */
+type IdentityPermissionEntry = {
+	type: "permission";
+	resource: "identity";
+	attr: "handle" | "*";
+};
+
+/**
+ * Union of all permission entry types.
+ * @see https://atproto.com/specs/permission
+ */
+type PermissionEntry =
+	| RepoPermissionEntry
+	| RpcPermissionEntry
+	| BlobPermissionEntry
+	| AccountPermissionEntry
+	| IdentityPermissionEntry;
+
+/**
+ * Options for a permission-set definition.
+ * @see https://atproto.com/specs/permission
+ */
+type PermissionSetOptions = {
+	/** Human-readable title */
+	title: string;
+	/** Internationalized title translations */
+	"title:lang"?: Record<string, string>;
+	/** Human-readable detail/description of what this permission set grants */
+	detail: string;
+	/** Internationalized detail translations */
+	"detail:lang"?: Record<string, string>;
+	/** List of permissions in this set */
+	permissions: PermissionEntry[];
+	/** Human-readable description */
+	description?: string;
+};
+
+/**
  * Public interface for Lexicon to avoid exposing private implementation details
  */
 export type LexiconSchema<T extends LexiconNamespace> = {
@@ -614,6 +763,87 @@ export const lx = {
 			type: "subscription",
 			...options,
 		} as T & { type: "subscription" };
+	},
+	/**
+	 * Creates a repo-resource permission entry.
+	 * @see https://atproto.com/specs/permission#repo
+	 */
+	repoPermission(options: RepoPermissionOptions): RepoPermissionEntry {
+		return {
+			type: "permission",
+			resource: "repo",
+			collection: options.collection.map(resolveNsid),
+			...(options.action ? { action: options.action } : {}),
+		};
+	},
+	/**
+	 * Creates an RPC-resource permission entry.
+	 * @see https://atproto.com/specs/permission#rpc
+	 */
+	rpcPermission(options: RpcPermissionOptions): RpcPermissionEntry {
+		return {
+			type: "permission",
+			resource: "rpc",
+			...(options.lxm ? { lxm: options.lxm.map(resolveNsid) } : {}),
+			...(options.aud !== undefined ? { aud: options.aud } : {}),
+			...(options.inheritAud !== undefined
+				? { inheritAud: options.inheritAud }
+				: {}),
+		};
+	},
+	/**
+	 * Creates a blob-resource permission entry.
+	 * @see https://atproto.com/specs/permission#blob
+	 */
+	blobPermission(options: BlobPermissionOptions): BlobPermissionEntry {
+		return {
+			type: "permission",
+			resource: "blob",
+			accept: options.accept,
+		};
+	},
+	/**
+	 * Creates an account-resource permission entry.
+	 * @see https://atproto.com/specs/permission#account
+	 */
+	accountPermission(options: AccountPermissionOptions): AccountPermissionEntry {
+		return {
+			type: "permission",
+			resource: "account",
+			attr: options.attr,
+			...(options.action !== undefined ? { action: options.action } : {}),
+		};
+	},
+	/**
+	 * Creates an identity-resource permission entry.
+	 * @see https://atproto.com/specs/permission#identity
+	 */
+	identityPermission(
+		options: IdentityPermissionOptions,
+	): IdentityPermissionEntry {
+		return {
+			type: "permission",
+			resource: "identity",
+			attr: options.attr,
+		};
+	},
+	/**
+	 * Creates a permission-set definition.
+	 * @see https://atproto.com/specs/permission#permission-sets
+	 */
+	permissionSet(options: PermissionSetOptions) {
+		return {
+			type: "permission-set" as const,
+			key: "literal:self" as const,
+			title: options.title,
+			...(options["title:lang"] ? { "title:lang": options["title:lang"] } : {}),
+			detail: options.detail,
+			...(options["detail:lang"]
+				? { "detail:lang": options["detail:lang"] }
+				: {}),
+			permissions: options.permissions,
+			...(options.description ? { description: options.description } : {}),
+		};
 	},
 	/**
 	 * Creates a lexicon schema document.

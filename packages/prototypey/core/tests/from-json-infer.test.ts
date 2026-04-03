@@ -350,8 +350,8 @@ test("fromJSON InferObject handles mixed optional and required fields", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.mixed"
-  age?: number | undefined
   email?: string | undefined
+  age?: number | undefined
   id: string
   name: string
 }`);
@@ -659,7 +659,7 @@ test("fromJSON InferObject handles nested objects", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
-  user?: { name: string; email: string } | undefined
+  user?: { email: string; name: string } | undefined
 }`);
 });
 
@@ -976,7 +976,7 @@ test("fromJSON Local ref resolution: resolves refs to actual types", () => {
 	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   content: string
-  author: { name: string; email: string; $type: "#user" }
+  author: { email: string; name: string; $type: "#user" }
 }`);
 });
 
