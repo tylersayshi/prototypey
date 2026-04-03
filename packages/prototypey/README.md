@@ -13,6 +13,7 @@ Below this is the docs and features of the library. If you'd like the story for 
   - the really cool part of this is that it fills in the refs from the defs all at the type level
 - `lx.lexicon(...).validate(data)` for validating data using `@atproto/lexicon`
 - `fromJSON()` helper for creating lexicons directly from JSON objects with full type inference
+- permission-set lexicon support with builders for all resource types (repo, rpc, blob, account, identity)
 
 ## Installation
 
@@ -71,6 +72,30 @@ const lex = lx.lexicon("app.bsky.actor.profile", {
 ```
 
 you could also access the json definition with `lex.json()`.
+
+### Permission Sets
+
+You can define [permission-set lexicons](https://atproto.com/specs/permission), crucial for implementing OAuth in your app, using `lx.permissionSet()` and the permission entry builders.
+
+Collections and endpoints accept both lexicon schema objects and plain NSID strings:
+
+```ts
+const authCore = lx.lexicon("com.example.authCore", {
+  main: lx.permissionSet({
+    title: "MyApp: Core functionality",
+    detail: "The core functionality for MyApp",
+    permissions: [
+      lx.repoPermission({
+        collection: [myRecord, "com.example.otherRecord"],
+        action: ["create", "update"],
+      }),
+      lx.blobPermission({
+        accept: ["image/*"],
+      }),
+    ],
+  }),
+});
+```
 
 ### Runtime Validation
 
