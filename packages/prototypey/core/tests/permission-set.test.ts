@@ -176,16 +176,14 @@ test("permission-set with identity permission", () => {
 test("permission-set with i18n fields", () => {
 	const permSet = lx.lexicon("com.example.i18nPerms", {
 		main: lx.permissionSet({
-			title: "My App: Core",
-			"title:lang": {
+			title: lx.langString("My App: Core", {
 				es: "Mi App: Núcleo",
 				fr: "Mon App: Noyau",
-			},
-			detail: "Core functionality",
-			"detail:lang": {
+			}),
+			detail: lx.langString("Core functionality", {
 				es: "Funcionalidad principal",
 				fr: "Fonctionnalité principale",
-			},
+			}),
 			permissions: [
 				lx.repoPermission({
 					collection: ["com.example.post"],

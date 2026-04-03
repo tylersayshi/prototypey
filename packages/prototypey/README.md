@@ -82,7 +82,11 @@ Collections and endpoints accept both lexicon schema objects and plain NSID stri
 ```ts
 const authCore = lx.lexicon("com.example.authCore", {
   main: lx.permissionSet({
-    title: "MyApp: Core functionality",
+    // Offer translations with langString
+    title: lx.langString("MyApp: Core functionality", {
+      "es": "MyApp: Funciones centrales",
+    }),
+    // A string provides no translations
     detail: "The core functionality for MyApp",
     permissions: [
       lx.repoPermission({

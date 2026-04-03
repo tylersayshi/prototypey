@@ -357,6 +357,26 @@ function resolveNsid(ref: NsidResolvable): string {
 }
 
 /**
+ * A translatable string with optional language variants.
+ * Used particularly permission-sets.
+ */
+type LangString = {
+	default: string;
+	lang: Record<string, string>;
+};
+
+/** A plain string or a translatable string with language variants. */
+type Translatable = string | LangString;
+
+function resolveTranslatable(value: Translatable): {
+	value: string;
+	lang?: Record<string, string>;
+} {
+	if (typeof value === "string") return { value };
+	return { value: value.default, lang: value.lang };
+}
+
+/**
  * Options for a repo-resource permission.
  * @see https://atproto.com/specs/permission#repo
  */
@@ -479,14 +499,10 @@ type PermissionEntry =
  * @see https://atproto.com/specs/permission
  */
 type PermissionSetOptions = {
-	/** Human-readable title */
-	title: string;
-	/** Internationalized title translations */
-	"title:lang"?: Record<string, string>;
-	/** Human-readable detail/description of what this permission set grants */
-	detail: string;
-	/** Internationalized detail translations */
-	"detail:lang"?: Record<string, string>;
+	/** Human-readable title, optionally translatable via lx.langString() */
+	title: Translatable;
+	/** Human-readable detail, optionally translatable via lx.langString() */
+	detail: Translatable;
 	/** List of permissions in this set */
 	permissions: PermissionEntry[];
 	/** Human-readable description */
@@ -828,19 +844,26 @@ export const lx = {
 		};
 	},
 	/**
+	 * Creates a translatable string with language variants.
+	 * @see https://atproto.com/specs/permission
+	 */
+	langString(defaultValue: string, lang: Record<string, string>): LangString {
+		return { default: defaultValue, lang };
+	},
+	/**
 	 * Creates a permission-set definition.
 	 * @see https://atproto.com/specs/permission#permission-sets
 	 */
 	permissionSet(options: PermissionSetOptions) {
+		const title = resolveTranslatable(options.title);
+		const detail = resolveTranslatable(options.detail);
 		return {
 			type: "permission-set" as const,
 			key: "literal:self" as const,
-			title: options.title,
-			...(options["title:lang"] ? { "title:lang": options["title:lang"] } : {}),
-			detail: options.detail,
-			...(options["detail:lang"]
-				? { "detail:lang": options["detail:lang"] }
-				: {}),
+			title: title.value,
+			...(title.lang ? { "title:lang": title.lang } : {}),
+			detail: detail.value,
+			...(detail.lang ? { "detail:lang": detail.lang } : {}),
 			permissions: options.permissions,
 			...(options.description ? { description: options.description } : {}),
 		};
