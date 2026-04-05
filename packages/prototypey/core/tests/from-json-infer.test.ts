@@ -628,8 +628,8 @@ test("fromJSON InferRecord handles record with object schema", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.record"
   published?: boolean | undefined
-  title: string
   content: string
+  title: string
 }`);
 });
 
@@ -1146,8 +1146,8 @@ test("fromJSON Edge case: circular reference between multiple types", () => {
     | {
         posts?:
           | {
+							author: "[Circular reference detected: #user]"
               title: string
-              author: "[Circular reference detected: #user]"
               $type: "#post"
             }[]
           | undefined
