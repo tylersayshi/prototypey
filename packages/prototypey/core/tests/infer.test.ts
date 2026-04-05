@@ -510,8 +510,8 @@ test("InferRecord handles record with object schema", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.record"
   published?: boolean | undefined
+	content: string
   title: string
-  content: string
 }`);
 });
 
