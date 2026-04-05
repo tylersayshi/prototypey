@@ -1146,7 +1146,7 @@ test("fromJSON Edge case: circular reference between multiple types", () => {
     | {
         posts?:
           | {
-							author: "[Circular reference detected: #user]"
+              author: "[Circular reference detected: #user]"
               title: string
               $type: "#post"
             }[]
