@@ -238,8 +238,8 @@ test("InferObject handles mixed optional and required fields", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.mixed"
-  email?: string | undefined
   age?: number | undefined
+  email?: string | undefined
   id: string
   name: string
 }`);
@@ -510,8 +510,8 @@ test("InferRecord handles record with object schema", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.record"
   published?: boolean | undefined
-  content: string
   title: string
+  content: string
 }`);
 });
 
@@ -531,7 +531,7 @@ test("InferObject handles nested objects", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
-  user?: { email: string; name: string } | undefined
+  user?: { name: string; email: string } | undefined
 }`);
 });
 
@@ -724,7 +724,7 @@ test("Local ref resolution: resolves refs to actual types", () => {
 	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   author?:
-    | { email: string; name: string; $type: "#user" }
+    | { name: string; email: string; $type: "#user" }
     | undefined
   content: string
 }`);
