@@ -1224,3 +1224,143 @@ test("fromJSON Real-world example: app.bsky.actor.profile", () => {
   displayName?: string | undefined
 }`);
 });
+
+// ============================================================================
+// PERMISSION SET TESTS
+// ============================================================================
+
+test("fromJSON InferPermissionSet handles basic permission set", () => {
+	const lexicon = fromJSON({
+		id: "com.example.authCore",
+		defs: {
+			main: {
+				type: "permission-set",
+				key: "literal:self",
+				title: "Core functionality",
+				detail: "Grants core access",
+				permissions: [
+					{
+						type: "permission",
+						resource: "repo",
+						collection: ["com.example.post"],
+						action: ["create", "update"],
+					},
+				],
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.authCore"
+  title: "Core functionality"
+  detail: "Grants core access"
+  permissions: {
+    type: "permission"
+    resource: "repo"
+    collection: string[]
+    action: ("create" | "update")[]
+  }[]
+}`);
+});
+
+test("fromJSON InferPermissionSet handles multiple permission types", () => {
+	const lexicon = fromJSON({
+		id: "com.example.fullPerms",
+		defs: {
+			main: {
+				type: "permission-set",
+				key: "literal:self",
+				title: "Full permissions",
+				detail: "All permission types",
+				permissions: [
+					{
+						type: "permission",
+						resource: "repo",
+						collection: ["com.example.post"],
+						action: ["create"],
+					},
+					{
+						type: "permission",
+						resource: "rpc",
+						lxm: ["com.example.doThing"],
+						aud: "did:web:example.com",
+					},
+					{
+						type: "permission",
+						resource: "blob",
+						accept: ["image/*"],
+					},
+					{
+						type: "permission",
+						resource: "account",
+						attr: "email",
+						action: "read",
+					},
+					{
+						type: "permission",
+						resource: "identity",
+						attr: "handle",
+					},
+				],
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.fullPerms"
+  title: "Full permissions"
+  detail: "All permission types"
+  permissions: (
+    | {
+        type: "permission"
+        resource: "blob"
+        accept: string[]
+      }
+    | {
+        type: "permission"
+        resource: "repo"
+        collection: string[]
+        action: "create"[]
+      }
+    | {
+        type: "permission"
+        resource: "rpc"
+        lxm: "com.example.doThing"[]
+        aud: "did:web:example.com"
+      }
+    | {
+        type: "permission"
+        resource: "account"
+        attr: "email"
+        action: "read"
+      }
+    | {
+        type: "permission"
+        resource: "identity"
+        attr: "handle"
+      }
+  )[]
+}`);
+});
+
+test("fromJSON InferPermissionSet handles empty permissions", () => {
+	const lexicon = fromJSON({
+		id: "com.example.empty",
+		defs: {
+			main: {
+				type: "permission-set",
+				key: "literal:self",
+				title: "Empty",
+				detail: "No permissions",
+				permissions: [],
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.empty"
+  title: "Empty"
+  detail: "No permissions"
+  permissions: never[]
+}`);
+});
