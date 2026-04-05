@@ -381,9 +381,9 @@ function resolveTranslatable(value: Translatable): {
  * @see https://atproto.com/specs/permission#repo
  */
 type RepoPermissionOptions = {
-	/** Collections this permission applies to (lexicon schemas or NSID strings) */
+	/** NSID of record types (lexicon schemas or NSID strings). Wildcard (*) grants access to all records. Partial wildcards are not supported. Wildcards are not supported in permissions within a permission set */
 	collection: NsidResolvable[];
-	/** Allowed actions on the collections */
+	/** defines the set of record operations allowed. If not defined, all operations are allowed */
 	action?: readonly ("create" | "update" | "delete")[];
 };
 
@@ -392,11 +392,11 @@ type RepoPermissionOptions = {
  * @see https://atproto.com/specs/permission#rpc
  */
 type RpcPermissionOptions = {
-	/** API endpoints this permission applies to (lexicon schemas or NSID strings) */
-	lxm?: NsidResolvable[];
-	/** DID of the target service */
+	/** NSID of API endpoints (lexicon schemas or NSID strings). Wildcard (*) gives access to all endpoints. Partial wildcards are not supported. Wildcards are not supported in permissions within a permission set */
+	lxm: NsidResolvable[];
+	/** audience of API requests, as a DID service reference: DID followed by required service type fragment (e.g. did:web:api.example.com#srvtype). Supports wildcard (*), though aud and lxm cannot both be wildcard. DID references are not allowed in permission set context. Always required in granular string representation; contingent on `inheritAud` in permission sets */
 	aud?: string;
-	/** Whether to inherit the audience from a parent include permission */
+	/** only used inside permission sets. If true, an `aud` value will be inherited from the `include:` invocation, and the `aud` field is not required on the permission */
 	inheritAud?: boolean;
 };
 
@@ -405,7 +405,7 @@ type RpcPermissionOptions = {
  * @see https://atproto.com/specs/permission#blob
  */
 type BlobPermissionOptions = {
-	/** Accepted MIME types or patterns (e.g. "image/*") */
+	/** MIME types or partial MIME type glob patterns. Same syntax as the `accept` field in the `blob` lexicon type */
 	accept: string[];
 };
 
@@ -414,9 +414,9 @@ type BlobPermissionOptions = {
  * @see https://atproto.com/specs/permission#account
  */
 type AccountPermissionOptions = {
-	/** Account attribute: "email" or "repo" */
+	/** a component of account configuration. Wildcard is not supported. "email": account email address — `read` makes email and verification status visible, `manage` includes `read` and allows changing the email. "repo": ability to update entire public repository using a CAR file — `manage` allows importing CAR files (e.g. during account migration), `read` does nothing */
 	attr: "email" | "repo";
-	/** Allowed action on the attribute */
+	/** degree of control. If not specified, default is `read` */
 	action?: "read" | "manage";
 };
 
@@ -425,63 +425,30 @@ type AccountPermissionOptions = {
  * @see https://atproto.com/specs/permission#identity
  */
 type IdentityPermissionOptions = {
-	/** Identity attribute: "handle" or "*" for all */
+	/** an aspect or component of identity. Wildcard (*) indicates full control of DID document and handle. "handle": ability to update handle, including registration in the DID document and any domain names controlled by the PDS */
 	attr: "handle" | "*";
 };
 
-/**
- * Permission granting access to records in specified collections.
- * @see https://atproto.com/specs/permission#repo
- */
-type RepoPermissionEntry = {
+/** Resolves an Options type into a permission entry, converting NsidResolvable fields to strings */
+type PermissionEntryOf<Resource extends string, Opts> = {
 	type: "permission";
-	resource: "repo";
-	collection: string[];
-	action?: readonly ("create" | "update" | "delete")[];
+	resource: Resource;
+} & {
+	[K in keyof Opts]: Opts[K] extends readonly NsidResolvable[]
+		? string[]
+		: Opts[K];
 };
 
-/**
- * Permission granting access to call API endpoints on a specified service.
- * @see https://atproto.com/specs/permission#rpc
- */
-type RpcPermissionEntry = {
-	type: "permission";
-	resource: "rpc";
-	lxm?: string[];
-	aud?: string;
-	inheritAud?: boolean;
-};
-
-/**
- * Permission granting access to upload blobs with specified MIME types.
- * @see https://atproto.com/specs/permission#blob
- */
-type BlobPermissionEntry = {
-	type: "permission";
-	resource: "blob";
-	accept: string[];
-};
-
-/**
- * Permission granting access to account-level attributes; read/update the associated email address, or replacing the entire repo (with a CAR file).
- * @see https://atproto.com/specs/permission#account
- */
-type AccountPermissionEntry = {
-	type: "permission";
-	resource: "account";
-	attr: "email" | "repo";
-	action?: "read" | "manage";
-};
-
-/**
- * Permission granting access to identity attributes like handle management.
- * @see https://atproto.com/specs/permission#identity
- */
-type IdentityPermissionEntry = {
-	type: "permission";
-	resource: "identity";
-	attr: "handle" | "*";
-};
+/** @see https://atproto.com/specs/permission#repo */
+type RepoPermissionEntry = PermissionEntryOf<"repo", RepoPermissionOptions>;
+/** @see https://atproto.com/specs/permission#rpc */
+type RpcPermissionEntry = PermissionEntryOf<"rpc", RpcPermissionOptions>;
+/** @see https://atproto.com/specs/permission#blob */
+type BlobPermissionEntry = PermissionEntryOf<"blob", BlobPermissionOptions>;
+/** @see https://atproto.com/specs/permission#account */
+type AccountPermissionEntry = PermissionEntryOf<"account", AccountPermissionOptions>;
+/** @see https://atproto.com/specs/permission#identity */
+type IdentityPermissionEntry = PermissionEntryOf<"identity", IdentityPermissionOptions>;
 
 /**
  * Union of all permission entry types.
@@ -800,7 +767,7 @@ export const lx = {
 		return {
 			type: "permission",
 			resource: "rpc",
-			...(options.lxm ? { lxm: options.lxm.map(resolveNsid) } : {}),
+			lxm: options.lxm.map(resolveNsid),
 			...(options.aud !== undefined ? { aud: options.aud } : {}),
 			...(options.inheritAud !== undefined
 				? { inheritAud: options.inheritAud }
