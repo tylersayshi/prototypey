@@ -350,8 +350,8 @@ test("fromJSON InferObject handles mixed optional and required fields", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.mixed"
-  email?: string | undefined
   age?: number | undefined
+  email?: string | undefined
   id: string
   name: string
 }`);
@@ -628,8 +628,8 @@ test("fromJSON InferRecord handles record with object schema", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.record"
   published?: boolean | undefined
-  content: string
   title: string
+  content: string
 }`);
 });
 
@@ -659,7 +659,7 @@ test("fromJSON InferObject handles nested objects", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
-  user?: { email: string; name: string } | undefined
+  user?: { name: string; email: string } | undefined
 }`);
 });
 
@@ -976,7 +976,7 @@ test("fromJSON Local ref resolution: resolves refs to actual types", () => {
 	attest(ns["~infer"]).type.toString.snap(`{
   $type: "test"
   content: string
-  author: { email: string; name: string; $type: "#user" }
+  author: { name: string; email: string; $type: "#user" }
 }`);
 });
 
@@ -1146,8 +1146,8 @@ test("fromJSON Edge case: circular reference between multiple types", () => {
     | {
         posts?:
           | {
-              author: "[Circular reference detected: #user]"
               title: string
+              author: "[Circular reference detected: #user]"
               $type: "#post"
             }[]
           | undefined
