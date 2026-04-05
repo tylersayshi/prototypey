@@ -9,29 +9,31 @@ type InferType<T> = T extends { type: "record" }
 			? InferArray<T>
 			: T extends { type: "params" }
 				? InferParams<T>
-				: T extends { type: "union" }
-					? InferUnion<T>
-					: T extends { type: "token" }
-						? InferToken<T>
-						: T extends { type: "ref" }
-							? InferRef<T>
-							: T extends { type: "unknown" }
-								? unknown
-								: T extends { type: "null" }
-									? null
-									: T extends { type: "boolean" }
-										? boolean
-										: T extends { type: "integer" }
-											? number
-											: T extends { type: "string" }
-												? string
-												: T extends { type: "bytes" }
-													? Uint8Array
-													: T extends { type: "cid-link" }
-														? string
-														: T extends { type: "blob" }
-															? Blob
-															: never;
+				: T extends { type: "permission-set" }
+					? InferPermissionSet<T>
+					: T extends { type: "union" }
+						? InferUnion<T>
+						: T extends { type: "token" }
+							? InferToken<T>
+							: T extends { type: "ref" }
+								? InferRef<T>
+								: T extends { type: "unknown" }
+									? unknown
+									: T extends { type: "null" }
+										? null
+										: T extends { type: "boolean" }
+											? boolean
+											: T extends { type: "integer" }
+												? number
+												: T extends { type: "string" }
+													? string
+													: T extends { type: "bytes" }
+														? Uint8Array
+														: T extends { type: "cid-link" }
+															? string
+															: T extends { type: "blob" }
+																? Blob
+																: never;
 
 type InferToken<T> = T extends { enum: readonly (infer U)[] } ? U : string;
 
@@ -85,6 +87,53 @@ type InferRef<T> = T extends { ref: infer R }
 	: unknown;
 
 type InferParams<T> = InferObject<T>;
+
+type InferPermissionEntry<T> = T extends { resource: "repo" }
+	? Prettify<
+			{ type: "permission"; resource: "repo"; collection: string[] } & (T extends
+				{ action: infer A }
+				? { action: A }
+				: {})
+		>
+	: T extends { resource: "rpc" }
+		? Prettify<
+				{ type: "permission"; resource: "rpc" } & (T extends { lxm: infer L }
+					? { lxm: L }
+					: {}) &
+					(T extends { aud: infer A } ? { aud: A } : {}) &
+					(T extends { inheritAud: infer I } ? { inheritAud: I } : {})
+			>
+		: T extends { resource: "blob" }
+			? { type: "permission"; resource: "blob"; accept: string[] }
+			: T extends { resource: "account" }
+				? Prettify<
+						{
+							type: "permission";
+							resource: "account";
+							attr: T extends { attr: infer A } ? A : string;
+						} & (T extends { action: infer Act } ? { action: Act } : {})
+					>
+				: T extends { resource: "identity" }
+					? {
+							type: "permission";
+							resource: "identity";
+							attr: T extends { attr: infer A } ? A : string;
+						}
+					: { type: "permission"; resource: string };
+
+type InferPermissions<T> = T extends readonly [infer Head, ...infer Tail]
+	? [InferPermissionEntry<Head>, ...InferPermissions<Tail>]
+	: T extends readonly (infer Item)[]
+		? InferPermissionEntry<Item>[]
+		: never;
+
+type InferPermissionSet<T> = Prettify<
+	{
+		title: T extends { title: infer V } ? V : string;
+		detail: T extends { detail: infer V } ? V : string;
+		permissions: T extends { permissions: infer P } ? InferPermissions<P> : [];
+	} & (T extends { description: infer D } ? { description: D } : {})
+>;
 
 type InferRecord<T> = T extends { record: infer R }
 	? R extends { type: "object" }

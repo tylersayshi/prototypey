@@ -866,3 +866,192 @@ test("Edge case: missing reference detection", () => {
   author?: "[Reference not found: #user]" | undefined
 }`);
 });
+
+// ============================================================================
+// PERMISSION SET TESTS
+// ============================================================================
+
+test("InferPermissionSet handles basic permission set with repo permissions", () => {
+	const lexicon = lx.lexicon("com.example.authCore", {
+		main: lx.permissionSet({
+			title: "Core functionality",
+			detail: "Grants core access",
+			permissions: [
+				lx.repoPermission({
+					collection: ["com.example.post"],
+					action: ["create", "update"],
+				}),
+			],
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.authCore"
+  title: string
+  detail: string
+  permissions: (
+    | {
+        type: "permission"
+        resource: "blob"
+        accept: string[]
+      }
+    | {
+        type: "permission"
+        resource: "repo"
+        collection: string[]
+      }
+    | { type: "permission"; resource: "rpc"; lxm: string[] }
+    | {
+        type: "permission"
+        resource: "account"
+        attr: "repo" | "email"
+      }
+    | {
+        type: "permission"
+        resource: "identity"
+        attr: "handle" | "*"
+      }
+  )[]
+}`);
+});
+
+test("InferPermissionSet handles multiple permission types", () => {
+	const lexicon = lx.lexicon("com.example.fullPerms", {
+		main: lx.permissionSet({
+			title: "Full permissions",
+			detail: "All permission types",
+			permissions: [
+				lx.repoPermission({
+					collection: ["com.example.post"],
+					action: ["create"],
+				}),
+				lx.rpcPermission({
+					lxm: ["com.example.doThing"],
+					aud: "did:web:example.com",
+				}),
+				lx.blobPermission({
+					accept: ["image/*"],
+				}),
+				lx.accountPermission({
+					attr: "email",
+					action: "read",
+				}),
+				lx.identityPermission({
+					attr: "handle",
+				}),
+			],
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.fullPerms"
+  title: string
+  detail: string
+  permissions: (
+    | {
+        type: "permission"
+        resource: "blob"
+        accept: string[]
+      }
+    | {
+        type: "permission"
+        resource: "repo"
+        collection: string[]
+      }
+    | { type: "permission"; resource: "rpc"; lxm: string[] }
+    | {
+        type: "permission"
+        resource: "account"
+        attr: "repo" | "email"
+      }
+    | {
+        type: "permission"
+        resource: "identity"
+        attr: "handle" | "*"
+      }
+  )[]
+}`);
+});
+
+test("InferPermissionSet handles permission set with description", () => {
+	const lexicon = lx.lexicon("com.example.withDesc", {
+		main: lx.permissionSet({
+			title: "With description",
+			detail: "Has a description field",
+			description: "A human-readable description",
+			permissions: [
+				lx.repoPermission({
+					collection: ["com.example.post"],
+				}),
+			],
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.withDesc"
+  title: string
+  detail: string
+  permissions: (
+    | {
+        type: "permission"
+        resource: "blob"
+        accept: string[]
+      }
+    | {
+        type: "permission"
+        resource: "repo"
+        collection: string[]
+      }
+    | { type: "permission"; resource: "rpc"; lxm: string[] }
+    | {
+        type: "permission"
+        resource: "account"
+        attr: "repo" | "email"
+      }
+    | {
+        type: "permission"
+        resource: "identity"
+        attr: "handle" | "*"
+      }
+  )[]
+}`);
+});
+
+test("InferPermissionSet handles empty permissions array", () => {
+	const lexicon = lx.lexicon("com.example.empty", {
+		main: lx.permissionSet({
+			title: "Empty",
+			detail: "No permissions",
+			permissions: [],
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.empty"
+  title: string
+  detail: string
+  permissions: (
+    | {
+        type: "permission"
+        resource: "blob"
+        accept: string[]
+      }
+    | {
+        type: "permission"
+        resource: "repo"
+        collection: string[]
+      }
+    | { type: "permission"; resource: "rpc"; lxm: string[] }
+    | {
+        type: "permission"
+        resource: "account"
+        attr: "repo" | "email"
+      }
+    | {
+        type: "permission"
+        resource: "identity"
+        attr: "handle" | "*"
+      }
+  )[]
+}`);
+});
