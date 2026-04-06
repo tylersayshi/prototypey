@@ -326,3 +326,117 @@ bench("fromJSON infer with app.bsky.feed.defs lexicon", () => {
 	});
 	return schema["~infer"];
 }).types([513, "instantiations"]);
+
+bench("infer with simple permission set", () => {
+	const schema = lx.lexicon("com.example.authCore", {
+		main: lx.permissionSet({
+			title: "Core functionality",
+			detail: "Grants core access",
+			permissions: [
+				lx.repoPermission({
+					collection: ["com.example.post"],
+					action: ["create", "update"],
+				}),
+			],
+		}),
+	});
+	return schema["~infer"];
+}).types([271, "instantiations"]);
+
+bench("infer with complex permission set", () => {
+	const schema = lx.lexicon("com.example.fullPerms", {
+		main: lx.permissionSet({
+			title: "Full permissions",
+			detail: "All permission types",
+			permissions: [
+				lx.repoPermission({
+					collection: ["com.example.post", "com.example.like"],
+					action: ["create", "update", "delete"],
+				}),
+				lx.rpcPermission({
+					lxm: ["com.example.doThing"],
+					aud: "did:web:example.com",
+				}),
+				lx.blobPermission({
+					accept: ["image/*", "video/mp4"],
+				}),
+				lx.accountPermission({
+					attr: "email",
+					action: "read",
+				}),
+				lx.identityPermission({
+					attr: "handle",
+				}),
+			],
+		}),
+	});
+	return schema["~infer"];
+}).types([277, "instantiations"]);
+
+bench("fromJSON infer with simple permission set", () => {
+	const schema = fromJSON({
+		id: "com.example.authCore",
+		defs: {
+			main: {
+				type: "permission-set",
+				key: "literal:self",
+				title: "Core functionality",
+				detail: "Grants core access",
+				permissions: [
+					{
+						type: "permission",
+						resource: "repo",
+						collection: ["com.example.post"],
+						action: ["create", "update"],
+					},
+				],
+			},
+		},
+	});
+	return schema["~infer"];
+}).types([288, "instantiations"]);
+
+bench("fromJSON infer with complex permission set", () => {
+	const schema = fromJSON({
+		id: "com.example.fullPerms",
+		defs: {
+			main: {
+				type: "permission-set",
+				key: "literal:self",
+				title: "Full permissions",
+				detail: "All permission types",
+				permissions: [
+					{
+						type: "permission",
+						resource: "repo",
+						collection: ["com.example.post", "com.example.like"],
+						action: ["create", "update", "delete"],
+					},
+					{
+						type: "permission",
+						resource: "rpc",
+						lxm: ["com.example.doThing"],
+						aud: "did:web:example.com",
+					},
+					{
+						type: "permission",
+						resource: "blob",
+						accept: ["image/*", "video/mp4"],
+					},
+					{
+						type: "permission",
+						resource: "account",
+						attr: "email",
+						action: "read",
+					},
+					{
+						type: "permission",
+						resource: "identity",
+						attr: "handle",
+					},
+				],
+			},
+		},
+	});
+	return schema["~infer"];
+}).types([336, "instantiations"]);
