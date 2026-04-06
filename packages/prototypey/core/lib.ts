@@ -524,6 +524,41 @@ class Lexicon<T extends LexiconNamespace> implements LexiconSchema<T> {
 }
 
 /**
+ * Extracts property-level `required` / `nullable` boolean flags into the
+ * parent-level arrays that the lexicon spec requires. Non-boolean values
+ * (e.g. already hoisted `required: [...]` arrays from a nested `lx.object`)
+ * are left on the property untouched.
+ */
+function extractRequiredNullable<T extends Record<string, unknown>>(
+	properties: T,
+): { required: string[]; nullable: string[]; cleaned: T } {
+	const required: string[] = [];
+	const nullable: string[] = [];
+	const cleaned: Record<string, unknown> = {};
+	for (const [key, prop] of Object.entries(properties)) {
+		const {
+			required: r,
+			nullable: n,
+			...rest
+		} = prop as {
+			required?: unknown;
+			nullable?: unknown;
+		} & Record<string, unknown>;
+
+		if (typeof r === "boolean") {
+			if (r) required.push(key);
+		} else if (r !== undefined) rest.required = r;
+
+		if (typeof n === "boolean") {
+			if (n) nullable.push(key);
+		} else if (n !== undefined) rest.nullable = n;
+
+		cleaned[key] = rest;
+	}
+	return { required, nullable, cleaned: cleaned as T };
+}
+
+/**
  * Main API for creating lexicon schemas.
  * @see https://atproto.com/specs/lexicon
  */
@@ -681,24 +716,14 @@ export const lx = {
 		properties: T,
 		options?: O,
 	): ObjectResult<T, O> {
-		const required = Object.keys(properties).filter(
-			(key) => "required" in properties[key] && properties[key].required,
-		);
-		const nullable = Object.keys(properties).filter(
-			(key) => "nullable" in properties[key] && properties[key].nullable,
-		);
-		const result: Record<string, unknown> = {
+		const { required, nullable, cleaned } = extractRequiredNullable(properties);
+		return {
 			type: "object",
-			properties,
+			properties: cleaned,
 			...options,
-		};
-		if (required.length > 0) {
-			result.required = required;
-		}
-		if (nullable.length > 0) {
-			result.nullable = nullable;
-		}
-		return result as ObjectResult<T, O>;
+			...(required.length && { required }),
+			...(nullable.length && { nullable }),
+		} as unknown as ObjectResult<T, O>;
 	},
 	/**
 	 * Creates a params type for query string parameters.
@@ -707,17 +732,13 @@ export const lx = {
 	params<Properties extends ParamsProperties>(
 		properties: Properties,
 	): ParamsResult<Properties> {
-		const required = Object.keys(properties).filter(
-			(key) => properties[key].required,
-		);
-		const result: Record<string, unknown> = {
+		const { required, nullable, cleaned } = extractRequiredNullable(properties);
+		return {
 			type: "params",
-			properties,
-		};
-		if (required.length > 0) {
-			result.required = required;
-		}
-		return result as ParamsResult<Properties>;
+			properties: cleaned,
+			...(required.length && { required }),
+			...(nullable.length && { nullable }),
+		} as unknown as ParamsResult<Properties>;
 	},
 	/**
 	 * Creates a query endpoint definition (HTTP GET).
