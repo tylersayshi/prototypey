@@ -1,5 +1,5 @@
 ---
-"prototypey": major
+"prototypey": minor
 ---
 
 **BREAKING:** `gen-emit` now writes schemas into a nested directory structure based on each lexicon's NSID (e.g. `com/atproto/repo/strongRef.json` instead of `com.atproto.repo.strongRef.json`). The previous flat dot-separated layout has been removed.
