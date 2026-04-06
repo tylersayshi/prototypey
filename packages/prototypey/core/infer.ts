@@ -90,10 +90,11 @@ type InferParams<T> = InferObject<T>;
 
 type InferPermissionEntry<T> = T extends { resource: "repo" }
 	? Prettify<
-			{ type: "permission"; resource: "repo"; collection: string[] } & (T extends
-				{ action: infer A }
-				? { action: A }
-				: {})
+			{
+				type: "permission";
+				resource: "repo";
+				collection: string[];
+			} & (T extends { action: infer A } ? { action: A } : {})
 		>
 	: T extends { resource: "rpc" }
 		? Prettify<

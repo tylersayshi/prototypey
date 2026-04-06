@@ -84,7 +84,7 @@ const authCore = lx.lexicon("com.example.authCore", {
   main: lx.permissionSet({
     // Offer translations with langString
     title: lx.langString("MyApp: Core functionality", {
-      "es": "MyApp: Funciones centrales",
+      es: "MyApp: Funciones centrales",
     }),
     // A string provides no translations
     detail: "The core functionality for MyApp",

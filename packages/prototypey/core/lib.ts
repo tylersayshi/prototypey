@@ -446,9 +446,15 @@ type RpcPermissionEntry = PermissionEntryOf<"rpc", RpcPermissionOptions>;
 /** @see https://atproto.com/specs/permission#blob */
 type BlobPermissionEntry = PermissionEntryOf<"blob", BlobPermissionOptions>;
 /** @see https://atproto.com/specs/permission#account */
-type AccountPermissionEntry = PermissionEntryOf<"account", AccountPermissionOptions>;
+type AccountPermissionEntry = PermissionEntryOf<
+	"account",
+	AccountPermissionOptions
+>;
 /** @see https://atproto.com/specs/permission#identity */
-type IdentityPermissionEntry = PermissionEntryOf<"identity", IdentityPermissionOptions>;
+type IdentityPermissionEntry = PermissionEntryOf<
+	"identity",
+	IdentityPermissionOptions
+>;
 
 /**
  * Union of all permission entry types.
