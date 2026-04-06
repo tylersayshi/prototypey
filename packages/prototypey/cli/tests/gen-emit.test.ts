@@ -46,7 +46,7 @@ export const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 		await genEmit(outDir, lexiconFile);
 
 		// Read the emitted JSON file
-		const outputFile = join(outDir, "app.bsky.actor.profile.json");
+		const outputFile = join(outDir, "app", "bsky", "actor", "profile.json");
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 
@@ -111,10 +111,13 @@ export const post = lx.lexicon("app.bsky.feed.post", {
 
 		// Verify both files were created
 		const profileJson = JSON.parse(
-			await readFile(join(outDir, "app.bsky.actor.profile.json"), "utf-8"),
+			await readFile(
+				join(outDir, "app", "bsky", "actor", "profile.json"),
+				"utf-8",
+			),
 		);
 		const postJson = JSON.parse(
-			await readFile(join(outDir, "app.bsky.feed.post.json"), "utf-8"),
+			await readFile(join(outDir, "app", "bsky", "feed", "post.json"), "utf-8"),
 		);
 
 		expect(profileJson.id).toBe("app.bsky.actor.profile");
@@ -151,11 +154,11 @@ export const schema = lx.lexicon("app.bsky.feed.post", {
 
 		// Verify both files were created
 		const profileExists = await readFile(
-			join(outDir, "app.bsky.actor.profile.json"),
+			join(outDir, "app", "bsky", "actor", "profile.json"),
 			"utf-8",
 		);
 		const postExists = await readFile(
-			join(outDir, "app.bsky.feed.post.json"),
+			join(outDir, "app", "bsky", "feed", "post.json"),
 			"utf-8",
 		);
 
@@ -192,7 +195,7 @@ export const searchPosts = lx.lexicon("app.bsky.feed.searchPosts", {
 
 		await genEmit(outDir, lexiconFile);
 
-		const outputFile = join(outDir, "app.bsky.feed.searchPosts.json");
+		const outputFile = join(outDir, "app", "bsky", "feed", "searchPosts.json");
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 
@@ -264,7 +267,13 @@ export const createPost = lx.lexicon("com.atproto.repo.createRecord", {
 
 		await genEmit(outDir, lexiconFile);
 
-		const outputFile = join(outDir, "com.atproto.repo.createRecord.json");
+		const outputFile = join(
+			outDir,
+			"com",
+			"atproto",
+			"repo",
+			"createRecord.json",
+		);
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 
@@ -338,7 +347,13 @@ export const subscribeRepos = lx.lexicon("com.atproto.sync.subscribeRepos", {
 
 		await genEmit(outDir, lexiconFile);
 
-		const outputFile = join(outDir, "com.atproto.sync.subscribeRepos.json");
+		const outputFile = join(
+			outDir,
+			"com",
+			"atproto",
+			"sync",
+			"subscribeRepos.json",
+		);
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 
@@ -416,7 +431,7 @@ export const feedDefs = lx.lexicon("app.bsky.feed.defs", {
 
 		await genEmit(outDir, lexiconFile);
 
-		const outputFile = join(outDir, "app.bsky.feed.defs.json");
+		const outputFile = join(outDir, "app", "bsky", "feed", "defs.json");
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 
@@ -478,7 +493,7 @@ export const imagePost = lx.lexicon("app.example.imagePost", {
 
 		await genEmit(outDir, lexiconFile);
 
-		const outputFile = join(outDir, "app.example.imagePost.json");
+		const outputFile = join(outDir, "app", "example", "imagePost.json");
 		const content = await readFile(outputFile, "utf-8");
 		const json = JSON.parse(content);
 

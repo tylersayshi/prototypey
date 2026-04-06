@@ -414,11 +414,17 @@ export const postSchema = lx.lexicon("app.bsky.feed.post", {
 		await genEmit(intermediateDir, tsFile);
 
 		// Step 2: gen-from-json to create TypeScript from JSON
-		const jsonFile = join(intermediateDir, "app.bsky.feed.post.json");
+		const jsonFile = join(
+			intermediateDir,
+			"app",
+			"bsky",
+			"feed",
+			"post.json",
+		);
 		await genFromJSON(outDir, jsonFile);
 
 		// Verify the output exists
-		const outputFile = join(outDir, "app.bsky.feed.post.ts");
+		const outputFile = join(outDir, "post.ts");
 		const content = await readFile(outputFile, "utf-8");
 
 		expect(content).toContain("appBskyFeedPost");

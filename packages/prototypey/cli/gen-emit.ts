@@ -1,6 +1,6 @@
 import { glob } from "tinyglobby";
 import { mkdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 interface LexiconNamespace {
@@ -84,7 +84,11 @@ async function processSourceFile(
 		// Emit JSON for each lexicon
 		for (const lexicon of lexicons) {
 			const { id } = lexicon.json;
-			const outputPath = join(outdir, `${id}.json`);
+			const relativePath = `${id.split(".").join("/")}.json`;
+			const outputPath = join(outdir, relativePath);
+
+			// Ensure the nested parent directory exists
+			await mkdir(dirname(outputPath), { recursive: true });
 
 			// Write the JSON file
 			await writeFile(
@@ -93,7 +97,7 @@ async function processSourceFile(
 				"utf-8",
 			);
 
-			console.log(`  ✓ ${id} -> ${id}.json`);
+			console.log(`  ✓ ${id} -> ${relativePath}`);
 		}
 	} catch (error) {
 		console.error(`  ✗ Error processing ${sourcePath}:`, error);
