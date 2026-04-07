@@ -78,6 +78,67 @@ export const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 		});
 	});
 
+	test("emits JSON from a required object containing a required string", async () => {
+		const lexiconFile = join(testDir, "simple.ts");
+		await writeFile(
+			lexiconFile,
+			`
+import { lx } from "prototypey";
+
+export const schema = lx.lexicon("app.example.simple", {
+	main: lx.record({
+		key: "self",
+		record: lx.object({
+			data: {
+				...lx.object({
+					name: lx.string({ required: true }),
+				}),
+				required: true,
+			},
+		}),
+	}),
+});
+`,
+		);
+
+		await genEmit(outDir, lexiconFile);
+
+		const outputFile = join(outDir, "app", "example", "simple.json");
+		const json = JSON.parse(await readFile(outputFile, "utf-8"));
+
+		expect(json).toMatchInlineSnapshot(`
+			{
+			  "defs": {
+			    "main": {
+			      "key": "self",
+			      "record": {
+			        "properties": {
+			          "data": {
+			            "properties": {
+			              "name": {
+			                "type": "string",
+			              },
+			            },
+			            "required": [
+			              "name"
+			            ],
+			            "type": "object",
+			          },
+			        },
+			        "required": [
+			          "data",
+			        ],
+			        "type": "object",
+			      },
+			      "type": "record",
+			    },
+			  },
+			  "id": "app.example.simple",
+			  "lexicon": 1,
+			}
+		`);
+	});
+
 	test("emits JSON from multiple lexicon exports in one file", async () => {
 		// Create a test file with multiple exports
 		const lexiconFile = join(testDir, "multiple.ts");
