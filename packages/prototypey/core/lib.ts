@@ -214,6 +214,10 @@ type ObjectProperties = Record<
 type ObjectOptions = {
 	/** Human-readable description of the object */
 	description?: string;
+	/** indicates which properties are required */
+	required?: boolean;
+	/** indicates which properties can have null as a value */
+	nullable?: boolean;
 };
 
 type RequiredKeys<T> = {
@@ -524,6 +528,18 @@ class Lexicon<T extends LexiconNamespace> implements LexiconSchema<T> {
 }
 
 /**
+ * Markers for `lx.object(...)` results created with `{ required: true }` or
+ * `{ nullable: true }` as an object-level option. These live as non-enumerable
+ * Symbol-keyed properties on the object itself, so the marker carries through
+ * construction into the parent's `extractRequiredNullable` call without
+ * polluting the serialized JSON (Symbol keys are invisible to `JSON.stringify`)
+ * or colliding with the object's own `required: [...]` / `nullable: [...]`
+ * arrays (which track *its children's* required-ness).
+ */
+const REQUIRED = Symbol("lx.required");
+const NULLABLE = Symbol("lx.nullable");
+
+/**
  * Extracts property-level `required` / `nullable` boolean flags into the
  * parent-level arrays that the lexicon spec requires. Non-boolean values
  * (e.g. already hoisted `required: [...]` arrays from a nested `lx.object`)
@@ -552,6 +568,16 @@ function extractRequiredNullable<T extends Record<string, unknown>>(
 		if (typeof n === "boolean") {
 			if (n) nullable.push(key);
 		} else if (n !== undefined) rest.nullable = n;
+
+		// A nested `lx.object({...}, { required: true })` can't carry its
+		// required-ness as `required: true` on itself, because that slot is
+		// already occupied by the spec-mandated `required: [...]` array for
+		// its own children. The marker lives as a Symbol-keyed property
+		// instead (see REQUIRED/NULLABLE above).
+		if (typeof prop === "object" && prop !== null) {
+			if ((prop as Record<symbol, unknown>)[REQUIRED]) required.push(key);
+			if ((prop as Record<symbol, unknown>)[NULLABLE]) nullable.push(key);
+		}
 
 		cleaned[key] = rest;
 	}
@@ -717,13 +743,29 @@ export const lx = {
 		options?: O,
 	): ObjectResult<T, O> {
 		const { required, nullable, cleaned } = extractRequiredNullable(properties);
-		return {
+		// `required` / `nullable` on ObjectOptions mark this object as
+		// required/nullable *in its parent*, not on itself. Pull them out of
+		// the emitted JSON and stamp the result with a Symbol-keyed marker so
+		// the parent's extractRequiredNullable can hoist it.
+		const {
+			required: selfRequired,
+			nullable: selfNullable,
+			...restOptions
+		} = options ?? ({} as O);
+		const result = {
 			type: "object",
 			properties: cleaned,
-			...options,
+			...restOptions,
 			...(required.length && { required }),
 			...(nullable.length && { nullable }),
 		} as unknown as ObjectResult<T, O>;
+		if (selfRequired) {
+			Object.defineProperty(result, REQUIRED, { value: true });
+		}
+		if (selfNullable) {
+			Object.defineProperty(result, NULLABLE, { value: true });
+		}
+		return result;
 	},
 	/**
 	 * Creates a params type for query string parameters.

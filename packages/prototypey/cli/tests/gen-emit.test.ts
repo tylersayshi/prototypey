@@ -89,12 +89,9 @@ export const schema = lx.lexicon("app.example.simple", {
 	main: lx.record({
 		key: "self",
 		record: lx.object({
-			data: {
-				...lx.object({
-					name: lx.string({ required: true }),
-				}),
-				required: true,
-			},
+			obj: lx.object({
+				str: lx.string({ required: true }),
+			}, { required: true }),
 		}),
 	}),
 });
@@ -113,20 +110,20 @@ export const schema = lx.lexicon("app.example.simple", {
 			      "key": "self",
 			      "record": {
 			        "properties": {
-			          "data": {
+			          "obj": {
 			            "properties": {
-			              "name": {
+			              "str": {
 			                "type": "string",
 			              },
 			            },
 			            "required": [
-			              "name"
+			              "str",
 			            ],
 			            "type": "object",
 			          },
 			        },
 			        "required": [
-			          "data",
+			          "obj",
 			        ],
 			        "type": "object",
 			      },
