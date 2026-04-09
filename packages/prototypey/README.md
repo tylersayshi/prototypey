@@ -18,7 +18,7 @@ Below this is the docs and features of the library. If you'd like the story for 
 ## Installation
 
 ```bash
-npm install prototypey
+pnpm install prototypey
 ```
 
 ## Usage
