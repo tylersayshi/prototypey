@@ -582,10 +582,7 @@ test("InferObject handles required nested object", () => {
 test("InferObject handles nullable nested object", () => {
 	const lexicon = lx.lexicon("test.nullableNested", {
 		main: lx.object({
-			meta: lx.object(
-				{ tag: lx.string() },
-				{ nullable: true },
-			),
+			meta: lx.object({ tag: lx.string() }, { nullable: true }),
 		}),
 	});
 

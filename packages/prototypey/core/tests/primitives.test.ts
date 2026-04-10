@@ -258,10 +258,7 @@ test("lx.object() with nullable and description", () => {
 
 test("lx.object() with required option marks object as required in parent", () => {
 	const result = lx.object({
-		foo: lx.object(
-			{ bar: lx.string({ required: true }) },
-			{ required: true },
-		),
+		foo: lx.object({ bar: lx.string({ required: true }) }, { required: true }),
 	});
 	expect(result).toEqual({
 		type: "object",
