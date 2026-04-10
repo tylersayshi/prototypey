@@ -256,6 +256,67 @@ test("lx.object() with nullable and description", () => {
 	});
 });
 
+test("lx.object() with required option marks object as required in parent", () => {
+	const result = lx.object({
+		foo: lx.object(
+			{ bar: lx.string({ required: true }) },
+			{ required: true },
+		),
+	});
+	expect(result).toEqual({
+		type: "object",
+		required: ["foo"],
+		properties: {
+			foo: {
+				type: "object",
+				required: ["bar"],
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
+	});
+});
+
+test("lx.object() with nullable option marks object as nullable in parent", () => {
+	const result = lx.object({
+		foo: lx.object({ bar: lx.string() }, { nullable: true }),
+	});
+	expect(result).toEqual({
+		type: "object",
+		nullable: ["foo"],
+		properties: {
+			foo: {
+				type: "object",
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
+	});
+});
+
+test("lx.object() nested with own required fields is not falsely required in parent", () => {
+	const result = lx.object({
+		foo: lx.object({
+			bar: lx.string({ required: true }),
+		}),
+	});
+	// foo should NOT appear in parent's required array
+	expect(result).toEqual({
+		type: "object",
+		properties: {
+			foo: {
+				type: "object",
+				required: ["bar"],
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
+	});
+});
+
 test("lx.token() with interaction event", () => {
 	const result = lx.token(
 		"Request that less content like the given feed item be shown in the feed",

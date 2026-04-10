@@ -4,6 +4,10 @@ import type { UnionToTuple } from "./type-utils.ts";
 import type { LexiconDoc, ValidationResult } from "@atproto/lexicon";
 import { Lexicons } from "@atproto/lexicon";
 
+/** Runtime markers for property-level required/nullable on objects (avoids collision with array form) */
+const PROP_REQUIRED = Symbol("required");
+const PROP_NULLABLE = Symbol("nullable");
+
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
 	// Concrete types
@@ -214,14 +218,22 @@ type ObjectProperties = Record<
 type ObjectOptions = {
 	/** Human-readable description of the object */
 	description?: string;
+	/** Indicates this object is a required property when nested in a parent object */
+	required?: boolean;
+	/** Indicates this object can be explicitly set to null when nested in a parent object */
+	nullable?: boolean;
 };
 
 type RequiredKeys<T> = {
-	[K in keyof T]: T[K] extends { required: true } ? K : never;
+	[K in keyof T]: T[K] extends { required: true } | { _required: true }
+		? K
+		: never;
 }[keyof T];
 
 type NullableKeys<T> = {
-	[K in keyof T]: T[K] extends { nullable: true } ? K : never;
+	[K in keyof T]: T[K] extends { nullable: true } | { _nullable: true }
+		? K
+		: never;
 }[keyof T];
 
 /**
@@ -233,7 +245,7 @@ type ObjectResult<T extends ObjectProperties, O extends ObjectOptions = {}> = {
 	/** Property definitions */
 	properties: {
 		[K in keyof T]: T[K] extends { type: "object" }
-			? T[K]
+			? Omit<T[K], "_required" | "_nullable">
 			: Omit<T[K], "required" | "nullable">;
 	};
 } & ([RequiredKeys<T>] extends [never]
@@ -242,7 +254,9 @@ type ObjectResult<T extends ObjectProperties, O extends ObjectOptions = {}> = {
 	([NullableKeys<T>] extends [never]
 		? {}
 		: { nullable: UnionToTuple<NullableKeys<T>> }) &
-	O;
+	(O extends { required: true } ? { _required: true } : {}) &
+	(O extends { nullable: true } ? { _nullable: true } : {}) &
+	Omit<O, "required" | "nullable">;
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -681,25 +695,39 @@ export const lx = {
 		properties: T,
 		options?: O,
 	): ObjectResult<T, O> {
-		const required = Object.keys(properties).filter(
-			(key) => "required" in properties[key] && properties[key].required,
-		);
-		const nullable = Object.keys(properties).filter(
-			(key) => "nullable" in properties[key] && properties[key].nullable,
-		);
-		// Strip internal-only boolean flags (required, nullable) from properties,
-		// but preserve array forms which are spec-compliant (e.g. nested objects)
+		const {
+			required: propRequired,
+			nullable: propNullable,
+			...objectOptions
+		} = (options ?? {}) as ObjectOptions;
+		const required = Object.keys(properties).filter((key) => {
+			const prop = properties[key] as Record<string | symbol, unknown>;
+			return (
+				(typeof prop.required === "boolean" && prop.required) ||
+				prop[PROP_REQUIRED] === true
+			);
+		});
+		const nullable = Object.keys(properties).filter((key) => {
+			const prop = properties[key] as Record<string | symbol, unknown>;
+			return (
+				(typeof prop.nullable === "boolean" && prop.nullable) ||
+				prop[PROP_NULLABLE] === true
+			);
+		});
+		// Strip internal-only flags from properties
 		const cleanedProperties: Record<string, unknown> = {};
 		for (const [key, value] of Object.entries(properties)) {
-			const prop = { ...(value as Record<string, unknown>) };
+			const prop = { ...(value as Record<string | symbol, unknown>) };
 			if (typeof prop.required === "boolean") delete prop.required;
 			if (typeof prop.nullable === "boolean") delete prop.nullable;
+			if (PROP_REQUIRED in prop) delete prop[PROP_REQUIRED];
+			if (PROP_NULLABLE in prop) delete prop[PROP_NULLABLE];
 			cleanedProperties[key] = prop;
 		}
-		const result: Record<string, unknown> = {
+		const result: Record<string | symbol, unknown> = {
 			type: "object",
 			properties: cleanedProperties,
-			...options,
+			...objectOptions,
 		};
 		if (required.length > 0) {
 			result.required = required;
@@ -707,6 +735,8 @@ export const lx = {
 		if (nullable.length > 0) {
 			result.nullable = nullable;
 		}
+		if (propRequired) result[PROP_REQUIRED] = true;
+		if (propNullable) result[PROP_NULLABLE] = true;
 		return result as ObjectResult<T, O>;
 	},
 	/**

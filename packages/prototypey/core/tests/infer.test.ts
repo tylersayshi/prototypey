@@ -560,6 +560,57 @@ test("InferObject handles deeply nested objects", () => {
 }`);
 });
 
+test("InferObject handles required nested object", () => {
+	const lexicon = lx.lexicon("test.requiredNested", {
+		main: lx.object({
+			user: lx.object(
+				{
+					name: lx.string({ required: true }),
+					email: lx.string(),
+				},
+				{ required: true },
+			),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.requiredNested"
+  user: { email?: string | undefined; name: string }
+}`);
+});
+
+test("InferObject handles nullable nested object", () => {
+	const lexicon = lx.lexicon("test.nullableNested", {
+		main: lx.object({
+			meta: lx.object(
+				{ tag: lx.string() },
+				{ nullable: true },
+			),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.nullableNested"
+  meta?: { tag?: string | undefined } | null | undefined
+}`);
+});
+
+test("InferObject handles required+nullable nested object", () => {
+	const lexicon = lx.lexicon("test.requiredNullableNested", {
+		main: lx.object({
+			data: lx.object(
+				{ value: lx.string() },
+				{ required: true, nullable: true },
+			),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.requiredNullableNested"
+  data: { value?: string | undefined } | null
+}`);
+});
+
 // ============================================================================
 // NESTED ARRAYS TESTS
 // ============================================================================
