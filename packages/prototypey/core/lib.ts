@@ -720,7 +720,9 @@ export const lx = {
 			const prop = { ...(value as Record<string | symbol, unknown>) };
 			if (typeof prop.required === "boolean") delete prop.required;
 			if (typeof prop.nullable === "boolean") delete prop.nullable;
+			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 			if (PROP_REQUIRED in prop) delete prop[PROP_REQUIRED];
+			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 			if (PROP_NULLABLE in prop) delete prop[PROP_NULLABLE];
 			cleanedProperties[key] = prop;
 		}
