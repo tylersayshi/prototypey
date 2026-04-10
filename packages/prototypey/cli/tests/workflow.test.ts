@@ -39,11 +39,10 @@ describe("CLI End-to-End Workflow", () => {
 							record: {
 								type: "object",
 								properties: {
-									text: { type: "string", maxLength: 300, required: true },
+									text: { type: "string", maxLength: 300 },
 									createdAt: {
 										type: "string",
 										format: "datetime",
-										required: true,
 									},
 								},
 							},
@@ -68,7 +67,7 @@ describe("CLI End-to-End Workflow", () => {
 							parameters: {
 								type: "params",
 								properties: {
-									q: { type: "string", required: true },
+									q: { type: "string" },
 									limit: {
 										type: "integer",
 										minimum: 1,
@@ -86,7 +85,6 @@ describe("CLI End-to-End Workflow", () => {
 										posts: {
 											type: "array",
 											items: { type: "ref", ref: "app.test.post#main" },
-											required: true,
 										},
 									},
 									required: ["posts"],

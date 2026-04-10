@@ -209,7 +209,7 @@ export const searchPosts = lx.lexicon("app.bsky.feed.searchPosts", {
 					parameters: {
 						type: "params",
 						properties: {
-							q: { type: "string", required: true },
+							q: { type: "string" },
 							limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
 							cursor: { type: "string" },
 						},
@@ -224,7 +224,6 @@ export const searchPosts = lx.lexicon("app.bsky.feed.searchPosts", {
 								posts: {
 									type: "array",
 									items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
-									required: true,
 								},
 							},
 							required: ["posts"],
@@ -289,9 +288,9 @@ export const createPost = lx.lexicon("com.atproto.repo.createRecord", {
 						schema: {
 							type: "object",
 							properties: {
-								repo: { type: "string", required: true },
-								collection: { type: "string", required: true },
-								record: { type: "unknown", required: true },
+								repo: { type: "string" },
+								collection: { type: "string" },
+								record: { type: "unknown" },
 							},
 							required: ["repo", "collection", "record"],
 						},
@@ -301,8 +300,8 @@ export const createPost = lx.lexicon("com.atproto.repo.createRecord", {
 						schema: {
 							type: "object",
 							properties: {
-								uri: { type: "string", required: true },
-								cid: { type: "string", required: true },
+								uri: { type: "string" },
+								cid: { type: "string" },
 							},
 							required: ["uri", "cid"],
 						},
@@ -380,24 +379,24 @@ export const subscribeRepos = lx.lexicon("com.atproto.sync.subscribeRepos", {
 				commit: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						rebase: { type: "boolean", required: true },
+						seq: { type: "integer" },
+						rebase: { type: "boolean" },
 					},
 					required: ["seq", "rebase"],
 				},
 				identity: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						did: { type: "string", format: "did", required: true },
+						seq: { type: "integer" },
+						did: { type: "string", format: "did" },
 					},
 					required: ["seq", "did"],
 				},
 				account: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						active: { type: "boolean", required: true },
+						seq: { type: "integer" },
+						active: { type: "boolean" },
 					},
 					required: ["seq", "active"],
 				},
@@ -442,12 +441,11 @@ export const feedDefs = lx.lexicon("app.bsky.feed.defs", {
 				postView: {
 					type: "object",
 					properties: {
-						uri: { type: "string", format: "at-uri", required: true },
-						cid: { type: "string", format: "cid", required: true },
+						uri: { type: "string", format: "at-uri" },
+						cid: { type: "string", format: "cid" },
 						author: {
 							type: "ref",
 							ref: "app.bsky.actor.defs#profileViewBasic",
-							required: true,
 						},
 						embed: {
 							type: "union",
@@ -511,9 +509,8 @@ export const imagePost = lx.lexicon("app.example.imagePost", {
 								type: "string",
 								maxLength: 300,
 								maxGraphemes: 300,
-								required: true,
 							},
-							createdAt: { type: "string", format: "datetime", required: true },
+							createdAt: { type: "string", format: "datetime" },
 							images: {
 								type: "array",
 								items: {

@@ -170,7 +170,7 @@ describe("genFromJSON", () => {
 					parameters: {
 						type: "params",
 						properties: {
-							q: { type: "string", required: true },
+							q: { type: "string" },
 							limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
 							cursor: { type: "string" },
 						},
@@ -185,7 +185,6 @@ describe("genFromJSON", () => {
 								posts: {
 									type: "array",
 									items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
-									required: true,
 								},
 							},
 							required: ["posts"],
@@ -220,9 +219,9 @@ describe("genFromJSON", () => {
 						schema: {
 							type: "object",
 							properties: {
-								repo: { type: "string", required: true },
-								collection: { type: "string", required: true },
-								record: { type: "unknown", required: true },
+								repo: { type: "string" },
+								collection: { type: "string" },
+								record: { type: "unknown" },
 							},
 							required: ["repo", "collection", "record"],
 						},
@@ -232,8 +231,8 @@ describe("genFromJSON", () => {
 						schema: {
 							type: "object",
 							properties: {
-								uri: { type: "string", required: true },
-								cid: { type: "string", required: true },
+								uri: { type: "string" },
+								cid: { type: "string" },
 							},
 							required: ["uri", "cid"],
 						},
@@ -277,24 +276,24 @@ describe("genFromJSON", () => {
 				commit: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						rebase: { type: "boolean", required: true },
+						seq: { type: "integer" },
+						rebase: { type: "boolean" },
 					},
 					required: ["seq", "rebase"],
 				},
 				identity: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						did: { type: "string", format: "did", required: true },
+						seq: { type: "integer" },
+						did: { type: "string", format: "did" },
 					},
 					required: ["seq", "did"],
 				},
 				account: {
 					type: "object",
 					properties: {
-						seq: { type: "integer", required: true },
-						active: { type: "boolean", required: true },
+						seq: { type: "integer" },
+						active: { type: "boolean" },
 					},
 					required: ["seq", "active"],
 				},
@@ -323,12 +322,11 @@ describe("genFromJSON", () => {
 				postView: {
 					type: "object",
 					properties: {
-						uri: { type: "string", format: "at-uri", required: true },
-						cid: { type: "string", format: "cid", required: true },
+						uri: { type: "string", format: "at-uri" },
+						cid: { type: "string", format: "cid" },
 						author: {
 							type: "ref",
 							ref: "app.bsky.actor.defs#profileViewBasic",
-							required: true,
 						},
 						embed: {
 							type: "union",

@@ -19,8 +19,8 @@ test("app.bsky.actor.defs - profileViewBasic", () => {
 	expect(profileViewBasic).toEqual({
 		type: "object",
 		properties: {
-			did: { type: "string", required: true, format: "did" },
-			handle: { type: "string", required: true, format: "handle" },
+			did: { type: "string", format: "did" },
+			handle: { type: "string", format: "handle" },
 			displayName: { type: "string", maxGraphemes: 64, maxLength: 640 },
 			pronouns: { type: "string" },
 			avatar: { type: "string", format: "uri" },
@@ -58,8 +58,8 @@ test("app.bsky.actor.defs - profileView", () => {
 	expect(profileView).toEqual({
 		type: "object",
 		properties: {
-			did: { type: "string", required: true, format: "did" },
-			handle: { type: "string", required: true, format: "handle" },
+			did: { type: "string", format: "did" },
+			handle: { type: "string", format: "handle" },
 			displayName: { type: "string", maxGraphemes: 64, maxLength: 640 },
 			pronouns: { type: "string" },
 			description: { type: "string", maxGraphemes: 256, maxLength: 2560 },
@@ -106,8 +106,8 @@ test("app.bsky.actor.defs - profileViewDetailed", () => {
 	expect(profileViewDetailed).toEqual({
 		type: "object",
 		properties: {
-			did: { type: "string", required: true, format: "did" },
-			handle: { type: "string", required: true, format: "handle" },
+			did: { type: "string", format: "did" },
+			handle: { type: "string", format: "handle" },
 			displayName: { type: "string", maxGraphemes: 64, maxLength: 640 },
 			description: { type: "string", maxGraphemes: 256, maxLength: 2560 },
 			pronouns: { type: "string" },
@@ -176,7 +176,6 @@ test("app.bsky.actor.defs - profileAssociatedChat", () => {
 		properties: {
 			allowIncoming: {
 				type: "string",
-				required: true,
 				knownValues: ["all", "none", "following"],
 			},
 		},
@@ -197,7 +196,6 @@ test("app.bsky.actor.defs - profileAssociatedActivitySubscription", () => {
 		properties: {
 			allowSubscriptions: {
 				type: "string",
-				required: true,
 				knownValues: ["followers", "mutuals", "none"],
 			},
 		},
@@ -252,11 +250,10 @@ test("app.bsky.actor.defs - knownFollowers", () => {
 	expect(knownFollowers).toEqual({
 		type: "object",
 		properties: {
-			count: { type: "integer", required: true },
+			count: { type: "integer" },
 			followers: {
 				type: "array",
 				items: { type: "ref", ref: "#profileViewBasic" },
-				required: true,
 				minLength: 0,
 				maxLength: 5,
 			},
@@ -284,16 +281,13 @@ test("app.bsky.actor.defs - verificationState", () => {
 			verifications: {
 				type: "array",
 				items: { type: "ref", ref: "#verificationView" },
-				required: true,
 			},
 			verifiedStatus: {
 				type: "string",
-				required: true,
 				knownValues: ["valid", "invalid", "none"],
 			},
 			trustedVerifierStatus: {
 				type: "string",
-				required: true,
 				knownValues: ["valid", "invalid", "none"],
 			},
 		},
@@ -312,10 +306,10 @@ test("app.bsky.actor.defs - verificationView", () => {
 	expect(verificationView).toEqual({
 		type: "object",
 		properties: {
-			issuer: { type: "string", required: true, format: "did" },
-			uri: { type: "string", required: true, format: "at-uri" },
-			isValid: { type: "boolean", required: true },
-			createdAt: { type: "string", required: true, format: "datetime" },
+			issuer: { type: "string", format: "did" },
+			uri: { type: "string", format: "at-uri" },
+			isValid: { type: "boolean" },
+			createdAt: { type: "string", format: "datetime" },
 		},
 		required: ["issuer", "uri", "isValid", "createdAt"],
 	});
@@ -373,7 +367,7 @@ test("app.bsky.actor.defs - adultContentPref", () => {
 	expect(adultContentPref).toEqual({
 		type: "object",
 		properties: {
-			enabled: { type: "boolean", required: true, default: false },
+			enabled: { type: "boolean", default: false },
 		},
 		required: ["enabled"],
 	});
@@ -393,10 +387,9 @@ test("app.bsky.actor.defs - contentLabelPref", () => {
 		type: "object",
 		properties: {
 			labelerDid: { type: "string", format: "did" },
-			label: { type: "string", required: true },
+			label: { type: "string" },
 			visibility: {
 				type: "string",
-				required: true,
 				knownValues: ["ignore", "show", "warn", "hide"],
 			},
 		},
@@ -418,14 +411,13 @@ test("app.bsky.actor.defs - savedFeed", () => {
 	expect(savedFeed).toEqual({
 		type: "object",
 		properties: {
-			id: { type: "string", required: true },
+			id: { type: "string" },
 			type: {
 				type: "string",
-				required: true,
 				knownValues: ["feed", "list", "timeline"],
 			},
-			value: { type: "string", required: true },
-			pinned: { type: "boolean", required: true },
+			value: { type: "string" },
+			pinned: { type: "boolean" },
 		},
 		required: ["id", "type", "value", "pinned"],
 	});
@@ -444,7 +436,6 @@ test("app.bsky.actor.defs - savedFeedsPrefV2", () => {
 			items: {
 				type: "array",
 				items: { type: "ref", ref: "app.bsky.actor.defs#savedFeed" },
-				required: true,
 			},
 		},
 		required: ["items"],
@@ -464,12 +455,10 @@ test("app.bsky.actor.defs - savedFeedsPref", () => {
 			pinned: {
 				type: "array",
 				items: { type: "string", format: "at-uri" },
-				required: true,
 			},
 			saved: {
 				type: "array",
 				items: { type: "string", format: "at-uri" },
-				required: true,
 			},
 			timelineIndex: { type: "integer" },
 		},
@@ -503,7 +492,7 @@ test("app.bsky.actor.defs - feedViewPref", () => {
 	expect(feedViewPref).toEqual({
 		type: "object",
 		properties: {
-			feed: { type: "string", required: true },
+			feed: { type: "string" },
 			hideReplies: { type: "boolean" },
 			hideRepliesByUnfollowed: { type: "boolean", default: true },
 			hideRepliesByLikeCount: { type: "integer" },
@@ -548,7 +537,6 @@ test("app.bsky.actor.defs - interestsPref", () => {
 			tags: {
 				type: "array",
 				items: { type: "string", maxLength: 640, maxGraphemes: 64 },
-				required: true,
 				maxLength: 100,
 			},
 		},
@@ -591,14 +579,12 @@ test("app.bsky.actor.defs - mutedWord", () => {
 			id: { type: "string" },
 			value: {
 				type: "string",
-				required: true,
 				maxLength: 10000,
 				maxGraphemes: 1000,
 			},
 			targets: {
 				type: "array",
 				items: { type: "ref", ref: "app.bsky.actor.defs#mutedWordTarget" },
-				required: true,
 			},
 			actorTarget: {
 				type: "string",
@@ -624,7 +610,6 @@ test("app.bsky.actor.defs - mutedWordsPref", () => {
 			items: {
 				type: "array",
 				items: { type: "ref", ref: "app.bsky.actor.defs#mutedWord" },
-				required: true,
 			},
 		},
 		required: ["items"],
@@ -642,7 +627,6 @@ test("app.bsky.actor.defs - hiddenPostsPref", () => {
 			items: {
 				type: "array",
 				items: { type: "string", format: "at-uri" },
-				required: true,
 			},
 		},
 		required: ["items"],
@@ -660,7 +644,6 @@ test("app.bsky.actor.defs - labelersPref", () => {
 			labelers: {
 				type: "array",
 				items: { type: "ref", ref: "#labelerPrefItem" },
-				required: true,
 			},
 		},
 		required: ["labelers"],
@@ -675,7 +658,7 @@ test("app.bsky.actor.defs - labelerPrefItem", () => {
 	expect(labelerPrefItem).toEqual({
 		type: "object",
 		properties: {
-			did: { type: "string", required: true, format: "did" },
+			did: { type: "string", format: "did" },
 		},
 		required: ["did"],
 	});
@@ -714,7 +697,7 @@ test("app.bsky.actor.defs - bskyAppProgressGuide", () => {
 	expect(bskyAppProgressGuide).toEqual({
 		type: "object",
 		properties: {
-			guide: { type: "string", required: true, maxLength: 100 },
+			guide: { type: "string", maxLength: 100 },
 		},
 		required: ["guide"],
 	});
@@ -731,8 +714,8 @@ test("app.bsky.actor.defs - nux", () => {
 	expect(nux).toEqual({
 		type: "object",
 		properties: {
-			id: { type: "string", required: true, maxLength: 100 },
-			completed: { type: "boolean", required: true, default: false },
+			id: { type: "string", maxLength: 100 },
+			completed: { type: "boolean", default: false },
 			data: { type: "string", maxLength: 3000, maxGraphemes: 300 },
 			expiresAt: { type: "string", format: "datetime" },
 		},
@@ -815,10 +798,9 @@ test("app.bsky.actor.defs - statusView", () => {
 		properties: {
 			status: {
 				type: "string",
-				required: true,
 				knownValues: ["app.bsky.actor.status#live"],
 			},
-			record: { type: "unknown", required: true },
+			record: { type: "unknown" },
 			embed: {
 				type: "union",
 				refs: ["app.bsky.embed.external#view"],

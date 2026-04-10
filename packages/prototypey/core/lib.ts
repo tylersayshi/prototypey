@@ -687,9 +687,18 @@ export const lx = {
 		const nullable = Object.keys(properties).filter(
 			(key) => "nullable" in properties[key] && properties[key].nullable,
 		);
+		// Strip internal-only boolean flags (required, nullable) from properties,
+		// but preserve array forms which are spec-compliant (e.g. nested objects)
+		const cleanedProperties: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(properties)) {
+			const prop = { ...(value as Record<string, unknown>) };
+			if (typeof prop.required === "boolean") delete prop.required;
+			if (typeof prop.nullable === "boolean") delete prop.nullable;
+			cleanedProperties[key] = prop;
+		}
 		const result: Record<string, unknown> = {
 			type: "object",
-			properties,
+			properties: cleanedProperties,
 			...options,
 		};
 		if (required.length > 0) {
@@ -710,9 +719,15 @@ export const lx = {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
+		// Strip internal-only flags (required) from properties
+		const cleanedProperties: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(properties)) {
+			const { required: _r, ...rest } = value as Record<string, unknown>;
+			cleanedProperties[key] = rest;
+		}
 		const result: Record<string, unknown> = {
 			type: "params",
-			properties,
+			properties: cleanedProperties,
 		};
 		if (required.length > 0) {
 			result.required = required;
@@ -857,7 +872,37 @@ export const lx = {
 	},
 };
 
+/**
+ * Recursively strips internal-only flags (required, nullable) from
+ * individual properties in object/params nodes, matching what lx.object()
+ * and lx.params() produce.
+ */
+function stripPropertyFlags(
+	node: Record<string, unknown>,
+): Record<string, unknown> {
+	for (const [key, value] of Object.entries(node)) {
+		if (value && typeof value === "object" && !Array.isArray(value)) {
+			node[key] = stripPropertyFlags(value as Record<string, unknown>);
+		}
+	}
+	if (
+		(node.type === "object" || node.type === "params") &&
+		node.properties &&
+		typeof node.properties === "object"
+	) {
+		const props = node.properties as Record<string, Record<string, unknown>>;
+		for (const prop of Object.values(props)) {
+			delete prop.required;
+			delete prop.nullable;
+		}
+	}
+	return node;
+}
+
 /** helper to pull lexicon from json directly */
 export function fromJSON<const Lex extends LexiconNamespace>(json: Lex) {
-	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, json.defs);
+	const defs = stripPropertyFlags(
+		structuredClone(json.defs) as Record<string, unknown>,
+	) as Lex["defs"];
+	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, defs);
 }
