@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.5.1
+
+### Patch Changes
+
+- 8d82291: allows for marking objects nullable & required. Removes the erroneous emit of required and nullable as fields
+
 ## 0.5.0
 
 ### Minor Changes
