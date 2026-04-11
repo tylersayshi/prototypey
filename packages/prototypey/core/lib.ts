@@ -4,6 +4,10 @@ import type { UnionToTuple } from "./type-utils.ts";
 import type { LexiconDoc, ValidationResult } from "@atproto/lexicon";
 import { Lexicons } from "@atproto/lexicon";
 
+/** Runtime markers for property-level required/nullable on objects (avoids collision with array form) */
+const PROP_REQUIRED = Symbol("required");
+const PROP_NULLABLE = Symbol("nullable");
+
 /** @see https://atproto.com/specs/lexicon#overview-of-types */
 type LexiconType =
 	// Concrete types
@@ -214,14 +218,22 @@ type ObjectProperties = Record<
 type ObjectOptions = {
 	/** Human-readable description of the object */
 	description?: string;
+	/** Indicates this object is a required property when nested in a parent object */
+	required?: boolean;
+	/** Indicates this object can be explicitly set to null when nested in a parent object */
+	nullable?: boolean;
 };
 
 type RequiredKeys<T> = {
-	[K in keyof T]: T[K] extends { required: true } ? K : never;
+	[K in keyof T]: T[K] extends { required: true } | { _required: true }
+		? K
+		: never;
 }[keyof T];
 
 type NullableKeys<T> = {
-	[K in keyof T]: T[K] extends { nullable: true } ? K : never;
+	[K in keyof T]: T[K] extends { nullable: true } | { _nullable: true }
+		? K
+		: never;
 }[keyof T];
 
 /**
@@ -233,7 +245,7 @@ type ObjectResult<T extends ObjectProperties, O extends ObjectOptions = {}> = {
 	/** Property definitions */
 	properties: {
 		[K in keyof T]: T[K] extends { type: "object" }
-			? T[K]
+			? Omit<T[K], "_required" | "_nullable">
 			: Omit<T[K], "required" | "nullable">;
 	};
 } & ([RequiredKeys<T>] extends [never]
@@ -242,7 +254,9 @@ type ObjectResult<T extends ObjectProperties, O extends ObjectOptions = {}> = {
 	([NullableKeys<T>] extends [never]
 		? {}
 		: { nullable: UnionToTuple<NullableKeys<T>> }) &
-	O;
+	(O extends { required: true } ? { _required: true } : {}) &
+	(O extends { nullable: true } ? { _nullable: true } : {}) &
+	Omit<O, "required" | "nullable">;
 
 /**
  * Map of parameter names to their lexicon item definitions.
@@ -681,16 +695,41 @@ export const lx = {
 		properties: T,
 		options?: O,
 	): ObjectResult<T, O> {
-		const required = Object.keys(properties).filter(
-			(key) => "required" in properties[key] && properties[key].required,
-		);
-		const nullable = Object.keys(properties).filter(
-			(key) => "nullable" in properties[key] && properties[key].nullable,
-		);
-		const result: Record<string, unknown> = {
+		const {
+			required: propRequired,
+			nullable: propNullable,
+			...objectOptions
+		} = (options ?? {}) as ObjectOptions;
+		const required = Object.keys(properties).filter((key) => {
+			const prop = properties[key] as Record<string | symbol, unknown>;
+			return (
+				(typeof prop.required === "boolean" && prop.required) ||
+				prop[PROP_REQUIRED] === true
+			);
+		});
+		const nullable = Object.keys(properties).filter((key) => {
+			const prop = properties[key] as Record<string | symbol, unknown>;
+			return (
+				(typeof prop.nullable === "boolean" && prop.nullable) ||
+				prop[PROP_NULLABLE] === true
+			);
+		});
+		// Strip internal-only flags from properties
+		const cleanedProperties: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(properties)) {
+			const prop = { ...(value as Record<string | symbol, unknown>) };
+			if (typeof prop.required === "boolean") delete prop.required;
+			if (typeof prop.nullable === "boolean") delete prop.nullable;
+			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+			if (PROP_REQUIRED in prop) delete prop[PROP_REQUIRED];
+			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+			if (PROP_NULLABLE in prop) delete prop[PROP_NULLABLE];
+			cleanedProperties[key] = prop;
+		}
+		const result: Record<string | symbol, unknown> = {
 			type: "object",
-			properties,
-			...options,
+			properties: cleanedProperties,
+			...objectOptions,
 		};
 		if (required.length > 0) {
 			result.required = required;
@@ -698,6 +737,8 @@ export const lx = {
 		if (nullable.length > 0) {
 			result.nullable = nullable;
 		}
+		if (propRequired) result[PROP_REQUIRED] = true;
+		if (propNullable) result[PROP_NULLABLE] = true;
 		return result as ObjectResult<T, O>;
 	},
 	/**
@@ -710,9 +751,15 @@ export const lx = {
 		const required = Object.keys(properties).filter(
 			(key) => properties[key].required,
 		);
+		// Strip internal-only flags (required) from properties
+		const cleanedProperties: Record<string, unknown> = {};
+		for (const [key, value] of Object.entries(properties)) {
+			const { required: _r, ...rest } = value as Record<string, unknown>;
+			cleanedProperties[key] = rest;
+		}
 		const result: Record<string, unknown> = {
 			type: "params",
-			properties,
+			properties: cleanedProperties,
 		};
 		if (required.length > 0) {
 			result.required = required;
@@ -857,7 +904,37 @@ export const lx = {
 	},
 };
 
+/**
+ * Recursively strips internal-only flags (required, nullable) from
+ * individual properties in object/params nodes, matching what lx.object()
+ * and lx.params() produce.
+ */
+function stripPropertyFlags(
+	node: Record<string, unknown>,
+): Record<string, unknown> {
+	for (const [key, value] of Object.entries(node)) {
+		if (value && typeof value === "object" && !Array.isArray(value)) {
+			node[key] = stripPropertyFlags(value as Record<string, unknown>);
+		}
+	}
+	if (
+		(node.type === "object" || node.type === "params") &&
+		node.properties &&
+		typeof node.properties === "object"
+	) {
+		const props = node.properties as Record<string, Record<string, unknown>>;
+		for (const prop of Object.values(props)) {
+			delete prop.required;
+			delete prop.nullable;
+		}
+	}
+	return node;
+}
+
 /** helper to pull lexicon from json directly */
 export function fromJSON<const Lex extends LexiconNamespace>(json: Lex) {
-	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, json.defs);
+	const defs = stripPropertyFlags(
+		structuredClone(json.defs) as Record<string, unknown>,
+	) as Lex["defs"];
+	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, defs);
 }

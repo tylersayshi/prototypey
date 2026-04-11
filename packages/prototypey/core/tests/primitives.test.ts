@@ -232,7 +232,7 @@ test("lx.object() with required and description", () => {
 		type: "object",
 		description: "User profile object",
 		properties: {
-			id: { type: "string", required: true },
+			id: { type: "string" },
 			name: { type: "string" },
 		},
 		required: ["id"],
@@ -250,9 +250,67 @@ test("lx.object() with nullable and description", () => {
 		type: "object",
 		description: "Optional profile fields",
 		properties: {
-			bio: { type: "string", nullable: true },
+			bio: { type: "string" },
 		},
 		nullable: ["bio"],
+	});
+});
+
+test("lx.object() with required option marks object as required in parent", () => {
+	const result = lx.object({
+		foo: lx.object({ bar: lx.string({ required: true }) }, { required: true }),
+	});
+	expect(result).toEqual({
+		type: "object",
+		required: ["foo"],
+		properties: {
+			foo: {
+				type: "object",
+				required: ["bar"],
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
+	});
+});
+
+test("lx.object() with nullable option marks object as nullable in parent", () => {
+	const result = lx.object({
+		foo: lx.object({ bar: lx.string() }, { nullable: true }),
+	});
+	expect(result).toEqual({
+		type: "object",
+		nullable: ["foo"],
+		properties: {
+			foo: {
+				type: "object",
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
+	});
+});
+
+test("lx.object() nested with own required fields is not falsely required in parent", () => {
+	const result = lx.object({
+		foo: lx.object({
+			bar: lx.string({ required: true }),
+		}),
+	});
+	// foo should NOT appear in parent's required array
+	expect(result).toEqual({
+		type: "object",
+		properties: {
+			foo: {
+				type: "object",
+				required: ["bar"],
+				properties: {
+					bar: { type: "string" },
+				},
+			},
+		},
 	});
 });
 
@@ -397,7 +455,7 @@ test("lx.params() with required properties", () => {
 	expect(result).toEqual({
 		type: "params",
 		properties: {
-			q: { type: "string", required: true },
+			q: { type: "string" },
 			limit: { type: "integer" },
 		},
 		required: ["q"],
@@ -443,7 +501,7 @@ test("lx.params() real-world example from searchActors", () => {
 	expect(result).toEqual({
 		type: "params",
 		properties: {
-			q: { type: "string", required: true },
+			q: { type: "string" },
 			limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
 			cursor: { type: "string" },
 		},
@@ -473,7 +531,7 @@ test("lx.query() with parameters", () => {
 		parameters: {
 			type: "params",
 			properties: {
-				q: { type: "string", required: true },
+				q: { type: "string" },
 				limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
 			},
 			required: ["q"],
@@ -503,7 +561,6 @@ test("lx.query() with output", () => {
 					posts: {
 						type: "array",
 						items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
-						required: true,
 					},
 					cursor: { type: "string" },
 				},
@@ -550,7 +607,7 @@ test("lx.query() real-world example: searchPosts", () => {
 		parameters: {
 			type: "params",
 			properties: {
-				q: { type: "string", required: true },
+				q: { type: "string" },
 				sort: { type: "string", enum: ["top", "latest"], default: "latest" },
 				limit: { type: "integer", minimum: 1, maximum: 100, default: 25 },
 				cursor: { type: "string" },
@@ -567,7 +624,6 @@ test("lx.query() real-world example: searchPosts", () => {
 					posts: {
 						type: "array",
 						items: { type: "ref", ref: "app.bsky.feed.defs#postView" },
-						required: true,
 					},
 				},
 				required: ["posts"],
@@ -624,7 +680,7 @@ test("lx.procedure() with input", () => {
 			schema: {
 				type: "object",
 				properties: {
-					text: { type: "string", required: true, maxGraphemes: 300 },
+					text: { type: "string", maxGraphemes: 300 },
 					createdAt: { type: "string", format: "datetime" },
 				},
 				required: ["text"],
@@ -650,8 +706,8 @@ test("lx.procedure() with output", () => {
 			schema: {
 				type: "object",
 				properties: {
-					uri: { type: "string", required: true },
-					cid: { type: "string", required: true },
+					uri: { type: "string" },
+					cid: { type: "string" },
 				},
 				required: ["uri", "cid"],
 			},
@@ -704,9 +760,9 @@ test("lx.procedure() real-world example: createPost", () => {
 			schema: {
 				type: "object",
 				properties: {
-					repo: { type: "string", required: true },
-					collection: { type: "string", required: true },
-					record: { type: "unknown", required: true },
+					repo: { type: "string" },
+					collection: { type: "string" },
+					record: { type: "unknown" },
 					validate: { type: "boolean", default: true },
 				},
 				required: ["repo", "collection", "record"],
@@ -717,8 +773,8 @@ test("lx.procedure() real-world example: createPost", () => {
 			schema: {
 				type: "object",
 				properties: {
-					uri: { type: "string", required: true },
-					cid: { type: "string", required: true },
+					uri: { type: "string" },
+					cid: { type: "string" },
 				},
 				required: ["uri", "cid"],
 			},

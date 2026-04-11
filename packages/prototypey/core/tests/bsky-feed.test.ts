@@ -28,14 +28,13 @@ test("app.bsky.feed.defs - postView", () => {
 	expect(postView).toEqual({
 		type: "object",
 		properties: {
-			uri: { type: "string", required: true, format: "at-uri" },
-			cid: { type: "string", required: true, format: "cid" },
+			uri: { type: "string", format: "at-uri" },
+			cid: { type: "string", format: "cid" },
 			author: {
 				type: "ref",
 				ref: "app.bsky.actor.defs#profileViewBasic",
-				required: true,
 			},
-			record: { type: "unknown", required: true },
+			record: { type: "unknown" },
 			embed: {
 				type: "union",
 				refs: [
@@ -51,7 +50,7 @@ test("app.bsky.feed.defs - postView", () => {
 			repostCount: { type: "integer" },
 			likeCount: { type: "integer" },
 			quoteCount: { type: "integer" },
-			indexedAt: { type: "string", required: true, format: "datetime" },
+			indexedAt: { type: "string", format: "datetime" },
 			viewer: { type: "ref", ref: "#viewerState" },
 			labels: {
 				type: "array",
@@ -113,7 +112,7 @@ test("app.bsky.feed.defs - feedViewPost", () => {
 	expect(feedViewPost).toEqual({
 		type: "object",
 		properties: {
-			post: { type: "ref", ref: "#postView", required: true },
+			post: { type: "ref", ref: "#postView" },
 			reply: { type: "ref", ref: "#replyRef" },
 			reason: {
 				type: "union",
@@ -143,12 +142,10 @@ test("app.bsky.feed.defs - replyRef", () => {
 			root: {
 				type: "union",
 				refs: ["#postView", "#notFoundPost", "#blockedPost"],
-				required: true,
 			},
 			parent: {
 				type: "union",
 				refs: ["#postView", "#notFoundPost", "#blockedPost"],
-				required: true,
 			},
 			grandparentAuthor: {
 				type: "ref",
@@ -173,11 +170,10 @@ test("app.bsky.feed.defs - reasonRepost", () => {
 			by: {
 				type: "ref",
 				ref: "app.bsky.actor.defs#profileViewBasic",
-				required: true,
 			},
 			uri: { type: "string", format: "at-uri" },
 			cid: { type: "string", format: "cid" },
-			indexedAt: { type: "string", required: true, format: "datetime" },
+			indexedAt: { type: "string", format: "datetime" },
 		},
 		required: ["by", "indexedAt"],
 	});
@@ -205,7 +201,7 @@ test("app.bsky.feed.defs - threadViewPost", () => {
 	expect(threadViewPost).toEqual({
 		type: "object",
 		properties: {
-			post: { type: "ref", ref: "#postView", required: true },
+			post: { type: "ref", ref: "#postView" },
 			parent: {
 				type: "union",
 				refs: ["#threadViewPost", "#notFoundPost", "#blockedPost"],
@@ -232,8 +228,8 @@ test("app.bsky.feed.defs - notFoundPost", () => {
 	expect(notFoundPost).toEqual({
 		type: "object",
 		properties: {
-			uri: { type: "string", required: true, format: "at-uri" },
-			notFound: { type: "boolean", required: true, const: true },
+			uri: { type: "string", format: "at-uri" },
+			notFound: { type: "boolean", const: true },
 		},
 		required: ["uri", "notFound"],
 	});
@@ -249,9 +245,9 @@ test("app.bsky.feed.defs - blockedPost", () => {
 	expect(blockedPost).toEqual({
 		type: "object",
 		properties: {
-			uri: { type: "string", required: true, format: "at-uri" },
-			blocked: { type: "boolean", required: true, const: true },
-			author: { type: "ref", ref: "#blockedAuthor", required: true },
+			uri: { type: "string", format: "at-uri" },
+			blocked: { type: "boolean", const: true },
+			author: { type: "ref", ref: "#blockedAuthor" },
 		},
 		required: ["uri", "blocked", "author"],
 	});
@@ -266,7 +262,7 @@ test("app.bsky.feed.defs - blockedAuthor", () => {
 	expect(blockedAuthor).toEqual({
 		type: "object",
 		properties: {
-			did: { type: "string", required: true, format: "did" },
+			did: { type: "string", format: "did" },
 			viewer: { type: "ref", ref: "app.bsky.actor.defs#viewerState" },
 		},
 		required: ["did"],
@@ -299,15 +295,14 @@ test("app.bsky.feed.defs - generatorView", () => {
 	expect(generatorView).toEqual({
 		type: "object",
 		properties: {
-			uri: { type: "string", required: true, format: "at-uri" },
-			cid: { type: "string", required: true, format: "cid" },
-			did: { type: "string", required: true, format: "did" },
+			uri: { type: "string", format: "at-uri" },
+			cid: { type: "string", format: "cid" },
+			did: { type: "string", format: "did" },
 			creator: {
 				type: "ref",
 				ref: "app.bsky.actor.defs#profileView",
-				required: true,
 			},
-			displayName: { type: "string", required: true },
+			displayName: { type: "string" },
 			description: { type: "string", maxGraphemes: 300, maxLength: 3000 },
 			descriptionFacets: {
 				type: "array",
@@ -328,7 +323,7 @@ test("app.bsky.feed.defs - generatorView", () => {
 					"app.bsky.feed.defs#contentModeVideo",
 				],
 			},
-			indexedAt: { type: "string", required: true, format: "datetime" },
+			indexedAt: { type: "string", format: "datetime" },
 		},
 		required: ["uri", "cid", "did", "creator", "displayName", "indexedAt"],
 	});
@@ -357,7 +352,7 @@ test("app.bsky.feed.defs - skeletonFeedPost", () => {
 	expect(skeletonFeedPost).toEqual({
 		type: "object",
 		properties: {
-			post: { type: "string", required: true, format: "at-uri" },
+			post: { type: "string", format: "at-uri" },
 			reason: {
 				type: "union",
 				refs: ["#skeletonReasonRepost", "#skeletonReasonPin"],
@@ -376,7 +371,7 @@ test("app.bsky.feed.defs - skeletonReasonRepost", () => {
 	expect(skeletonReasonRepost).toEqual({
 		type: "object",
 		properties: {
-			repost: { type: "string", required: true, format: "at-uri" },
+			repost: { type: "string", format: "at-uri" },
 		},
 		required: ["repost"],
 	});
