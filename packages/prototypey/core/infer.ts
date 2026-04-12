@@ -26,7 +26,15 @@ type InferType<T> = T extends { type: "record" }
 											: T extends { type: "integer" }
 												? number
 												: T extends { type: "string" }
-													? string
+													? T extends {
+															enum: readonly (infer E extends string)[];
+														}
+														? E
+														: T extends {
+																	knownValues: readonly (infer K extends string)[];
+																}
+															? K | (string & {})
+															: string
 													: T extends { type: "bytes" }
 														? Uint8Array
 														: T extends { type: "cid-link" }
