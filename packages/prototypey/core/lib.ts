@@ -578,7 +578,7 @@ export const lx = {
 	 * Creates a string type with optional format, length, and value constraints.
 	 * @see https://atproto.com/specs/lexicon#string
 	 */
-	string<T extends StringOptions>(options?: T): T & { type: "string" } {
+	string<const T extends StringOptions>(options?: T): T & { type: "string" } {
 		return {
 			type: "string",
 			...options,
