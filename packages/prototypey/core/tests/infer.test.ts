@@ -69,6 +69,109 @@ test("InferType handles string primitive", () => {
 }`);
 });
 
+test("InferType handles string with enum constraint", () => {
+	const lexicon = lx.lexicon("test.stringEnum", {
+		main: lx.object({
+			status: lx.string({ enum: ["active", "inactive", "pending"] }),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.stringEnum"
+  status?: "active" | "inactive" | "pending" | undefined
+}`);
+});
+
+test("InferType handles string with knownValues hint", () => {
+	const lexicon = lx.lexicon("test.stringKnownValues", {
+		main: lx.object({
+			lang: lx.string({
+				knownValues: ["en", "fr", "de"],
+			}),
+		}),
+	});
+
+	// attest expands all of `strings` methods here, which we need
+	// because atproto's `knownValues` are an open set.
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.stringKnownValues"
+  lang?:
+    | "en"
+    | "fr"
+    | "de"
+    | {
+        readonly [x: number]: string
+        toString: () => string
+        charAt: {}
+        charCodeAt: {}
+        concat: {}
+        indexOf: {}
+        lastIndexOf: {}
+        localeCompare: {}
+        match: {}
+        replace: {}
+        search: {}
+        slice: {}
+        split: {}
+        substring: {}
+        toLowerCase: () => string
+        toLocaleLowerCase: {}
+        toUpperCase: () => string
+        toLocaleUpperCase: {}
+        trim: () => string
+        readonly length: number
+        substr: {}
+        valueOf: () => string
+        codePointAt: {}
+        includes: {}
+        endsWith: {}
+        normalize: {}
+        repeat: {}
+        startsWith: {}
+        anchor: {}
+        big: () => string
+        blink: () => string
+        bold: () => string
+        fixed: () => string
+        fontcolor: {}
+        fontsize: {}
+        italics: () => string
+        link: {}
+        small: () => string
+        strike: () => string
+        sub: () => string
+        sup: () => string
+        padStart: {}
+        padEnd: {}
+        trimEnd: () => string
+        trimStart: () => string
+        trimLeft: () => string
+        trimRight: () => string
+        matchAll: {}
+        replaceAll: {}
+        at: {}
+        [Symbol.iterator]: () => StringIterator<string>
+      }
+    | undefined
+}`);
+});
+
+test("InferType handles required string with enum", () => {
+	const lexicon = lx.lexicon("test.requiredEnum", {
+		main: lx.object({
+			role: lx.string({
+				required: true,
+				enum: ["admin", "user", "guest"],
+			}),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "test.requiredEnum"
+  role: "user" | "admin" | "guest"
+}`);
+});
+
 test("InferType handles integer primitive", () => {
 	const lexicon = lx.lexicon("test.integer", {
 		main: lx.object({
