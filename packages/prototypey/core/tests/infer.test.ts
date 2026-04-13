@@ -534,8 +534,8 @@ test("InferObject throws for nested objects", () => {
 });
 
 test("nested object type error message", () => {
-	// @ts-expect-error - nested objects are intentionally invalid
 	attest(() =>
+		// @ts-expect-error - nested objects are intentionally invalid
 		lx.object({ user: lx.object({ name: lx.string() }) }),
 	).type.errors.snap(
 		'Type \'ObjectResult<{ name: LexiconItemCommonOptions & { format?: "at-identifier" | "at-uri" | "cid" | "datetime" | "did" | "handle" | "nsid" | "tid" | "record-key" | "uri" | "language" | undefined; maxLength?: number | undefined; minLength?: number | undefined; maxGraphemes?: number | undefined; minGraphemes?: number | undefined; knownValues?: string[] | undefined; enum?: string[] | undefined; default?: string | undefined; const?: string | undefined; } & { type: "string"; }; }, ObjectOptions>\' is not assignable to type \'"❌ Nested objects are not supported. Use lx.ref() instead."\'.',

@@ -10,7 +10,7 @@ bench("infer with simple object", () => {
 		}),
 	});
 	return schema["~infer"];
-}).types([803, "instantiations"]);
+}).types([1044, "instantiations"]);
 
 bench("infer with complex nested structure", () => {
 	const schema = lx.lexicon("test.complex", {
@@ -33,7 +33,7 @@ bench("infer with complex nested structure", () => {
 		}),
 	});
 	return schema["~infer"];
-}).types([1110, "instantiations"]);
+}).types([1819, "instantiations"]);
 
 bench("infer with circular reference", () => {
 	const ns = lx.lexicon("test", {
@@ -50,7 +50,7 @@ bench("infer with circular reference", () => {
 		}),
 	});
 	return ns["~infer"];
-}).types([781, "instantiations"]);
+}).types([1148, "instantiations"]);
 
 bench("infer with app.bsky.feed.defs lexicon", () => {
 	const schema = lx.lexicon("app.bsky.feed.defs", {
@@ -117,7 +117,7 @@ bench("infer with app.bsky.feed.defs lexicon", () => {
 		interactionShare: lx.token("User shared the feed item"),
 	});
 	return schema["~infer"];
-}).types([1437, "instantiations"]);
+}).types([2592, "instantiations"]);
 
 bench("infer with required/nullable refs to objects", () => {
 	const schema = lx.lexicon("test.nestedFlags", {
@@ -138,7 +138,7 @@ bench("infer with required/nullable refs to objects", () => {
 		}),
 	});
 	return schema["~infer"];
-}).types([1334, "instantiations"]);
+}).types([1350, "instantiations"]);
 
 bench("fromJSON infer with simple object", () => {
 	const schema = fromJSON({
@@ -155,7 +155,7 @@ bench("fromJSON infer with simple object", () => {
 		},
 	});
 	return schema["~infer"];
-}).types([504, "instantiations"]);
+}).types([512, "instantiations"]);
 
 bench("fromJSON infer with complex nested structure", () => {
 	const schema = fromJSON({
@@ -198,7 +198,7 @@ bench("fromJSON infer with complex nested structure", () => {
 		},
 	});
 	return schema["~infer"];
-}).types([565, "instantiations"]);
+}).types([573, "instantiations"]);
 
 bench("fromJSON infer with circular reference", () => {
 	const ns = fromJSON({
@@ -229,7 +229,7 @@ bench("fromJSON infer with circular reference", () => {
 		},
 	});
 	return ns["~infer"];
-}).types([477, "instantiations"]);
+}).types([485, "instantiations"]);
 
 bench("fromJSON infer with app.bsky.feed.defs lexicon", () => {
 	const schema = fromJSON({
@@ -346,7 +346,7 @@ bench("fromJSON infer with app.bsky.feed.defs lexicon", () => {
 		},
 	});
 	return schema["~infer"];
-}).types([579, "instantiations"]);
+}).types([587, "instantiations"]);
 
 bench("infer with simple permission set", () => {
 	const schema = lx.lexicon("com.example.authCore", {
@@ -362,7 +362,7 @@ bench("infer with simple permission set", () => {
 		}),
 	});
 	return schema["~infer"];
-}).types([312, "instantiations"]);
+}).types([320, "instantiations"]);
 
 bench("infer with complex permission set", () => {
 	const schema = lx.lexicon("com.example.fullPerms", {
@@ -392,7 +392,7 @@ bench("infer with complex permission set", () => {
 		}),
 	});
 	return schema["~infer"];
-}).types([318, "instantiations"]);
+}).types([326, "instantiations"]);
 
 bench("fromJSON infer with simple permission set", () => {
 	const schema = fromJSON({
@@ -415,7 +415,7 @@ bench("fromJSON infer with simple permission set", () => {
 		},
 	});
 	return schema["~infer"];
-}).types([329, "instantiations"]);
+}).types([337, "instantiations"]);
 
 bench("fromJSON infer with complex permission set", () => {
 	const schema = fromJSON({
@@ -460,4 +460,4 @@ bench("fromJSON infer with complex permission set", () => {
 		},
 	});
 	return schema["~infer"];
-}).types([377, "instantiations"]);
+}).types([385, "instantiations"]);
