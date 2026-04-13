@@ -71,17 +71,19 @@ type InferObject<
 		? {
 				-readonly [K in Normal]?: InferPropertyType<P[K & keyof P]>;
 			} & {
-				-readonly [K in Exclude<Required, NullableAndRequired>]-?: InferPropertyType<
-					P[K & keyof P]
-				>;
+				-readonly [K in Exclude<
+					Required,
+					NullableAndRequired
+				>]-?: InferPropertyType<P[K & keyof P]>;
 			} & {
-				-readonly [K in Exclude<Nullable, NullableAndRequired>]?: InferPropertyType<
+				-readonly [K in Exclude<
+					Nullable,
+					NullableAndRequired
+				>]?: InferPropertyType<P[K & keyof P]> | null;
+			} & {
+				-readonly [K in NullableAndRequired]: InferPropertyType<
 					P[K & keyof P]
 				> | null;
-			} & {
-				-readonly [K in NullableAndRequired]:
-					| InferPropertyType<P[K & keyof P]>
-					| null;
 			}
 		: {}
 >;

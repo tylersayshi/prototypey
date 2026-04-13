@@ -260,7 +260,10 @@ test("lx.object() throws when nesting an object inside another object", () => {
 	expect(() =>
 		lx.object({
 			// @ts-expect-error - nested objects are intentionally invalid
-			foo: lx.object({ bar: lx.string({ required: true }) }, { required: true }),
+			foo: lx.object(
+				{ bar: lx.string({ required: true }) },
+				{ required: true },
+			),
 		}),
 	).toThrow(
 		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
