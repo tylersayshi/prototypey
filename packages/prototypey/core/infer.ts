@@ -31,8 +31,9 @@ type InferType<T> = T extends { type: "record" }
 														}
 														? E
 														: T extends {
-																	knownValues: readonly (infer K extends string)[];
-																}
+																	knownValues: readonly (infer K extends
+																		string)[];
+															  }
 															? K | (string & {})
 															: string
 													: T extends { type: "bytes" }
