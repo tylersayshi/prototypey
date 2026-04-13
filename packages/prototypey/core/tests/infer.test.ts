@@ -1,4 +1,4 @@
-import { test } from "vitest";
+import { test, expect } from "vitest";
 import { attest } from "@ark/attest";
 import { lx } from "../lib.ts";
 
@@ -519,92 +519,45 @@ test("InferRecord handles record with object schema", () => {
 // NESTED OBJECTS TESTS
 // ============================================================================
 
-test("InferObject handles nested objects", () => {
-	const lexicon = lx.lexicon("test.nested", {
-		main: lx.object({
+test("InferObject throws for nested objects", () => {
+	expect(() =>
+		lx.object({
+			// @ts-expect-error - nested objects are intentionally invalid
 			user: lx.object({
 				name: lx.string({ required: true }),
 				email: lx.string({ required: true }),
 			}),
 		}),
+	).toThrow(
+		'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+	);
+});
+
+test("nested object type error message", () => {
+	// @ts-expect-error - nested objects are intentionally invalid
+	attest(() =>
+		lx.object({ user: lx.object({ name: lx.string() }) }),
+	).type.errors.snap(
+		'Type \'ObjectResult<{ name: LexiconItemCommonOptions & { format?: "at-identifier" | "at-uri" | "cid" | "datetime" | "did" | "handle" | "nsid" | "tid" | "record-key" | "uri" | "language" | undefined; maxLength?: number | undefined; minLength?: number | undefined; maxGraphemes?: number | undefined; minGraphemes?: number | undefined; knownValues?: string[] | undefined; enum?: string[] | undefined; default?: string | undefined; const?: string | undefined; } & { type: "string"; }; }, ObjectOptions>\' is not assignable to type \'"❌ Nested objects are not supported. Use lx.ref() instead."\'.',
+	);
+});
+
+test("InferObject uses refs instead of nested objects", () => {
+	const lexicon = lx.lexicon("test.nested", {
+		user: lx.object({
+			name: lx.string({ required: true }),
+			email: lx.string({ required: true }),
+		}),
+		main: lx.object({
+			user: lx.ref("#user"),
+		}),
 	});
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
-  user?: { email: string; name: string } | undefined
-}`);
-});
-
-test("InferObject handles deeply nested objects", () => {
-	const lexicon = lx.lexicon("test.deepNested", {
-		main: lx.object({
-			data: lx.object({
-				user: lx.object({
-					profile: lx.object({
-						name: lx.string({ required: true }),
-					}),
-				}),
-			}),
-		}),
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.deepNested"
-  data?:
-    | {
-        user?:
-          | { profile?: { name: string } | undefined }
-          | undefined
-      }
+  user?:
+    | { email: string; name: string; $type: "#user" }
     | undefined
-}`);
-});
-
-test("InferObject handles required nested object", () => {
-	const lexicon = lx.lexicon("test.requiredNested", {
-		main: lx.object({
-			user: lx.object(
-				{
-					name: lx.string({ required: true }),
-					email: lx.string(),
-				},
-				{ required: true },
-			),
-		}),
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.requiredNested"
-  user: { email?: string | undefined; name: string }
-}`);
-});
-
-test("InferObject handles nullable nested object", () => {
-	const lexicon = lx.lexicon("test.nullableNested", {
-		main: lx.object({
-			meta: lx.object({ tag: lx.string() }, { nullable: true }),
-		}),
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.nullableNested"
-  meta?: { tag?: string | undefined } | null | undefined
-}`);
-});
-
-test("InferObject handles required+nullable nested object", () => {
-	const lexicon = lx.lexicon("test.requiredNullableNested", {
-		main: lx.object({
-			data: lx.object(
-				{ value: lx.string() },
-				{ required: true, nullable: true },
-			),
-		}),
-	});
-
-	attest(lexicon["~infer"]).type.toString.snap(`{
-  $type: "test.requiredNullableNested"
-  data: { value?: string | undefined } | null
 }`);
 });
 
@@ -612,21 +565,22 @@ test("InferObject handles required+nullable nested object", () => {
 // NESTED ARRAYS TESTS
 // ============================================================================
 
-test("InferArray handles arrays of objects", () => {
+test("InferArray handles arrays of objects via refs", () => {
 	const lexicon = lx.lexicon("test.arrayOfObjects", {
+		user: lx.object({
+			id: lx.string({ required: true }),
+			name: lx.string({ required: true }),
+		}),
 		main: lx.object({
-			users: lx.array(
-				lx.object({
-					id: lx.string({ required: true }),
-					name: lx.string({ required: true }),
-				}),
-			),
+			users: lx.array(lx.ref("#user")),
 		}),
 	});
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.arrayOfObjects"
-  users?: { id: string; name: string }[] | undefined
+  users?:
+    | { id: string; name: string; $type: "#user" }[]
+    | undefined
 }`);
 });
 
@@ -664,22 +618,24 @@ test("InferArray handles arrays of refs", () => {
 // COMPLEX NESTED STRUCTURES
 // ============================================================================
 
-test("InferObject handles complex nested structure", () => {
+test("InferObject handles complex structure with refs instead of nested objects", () => {
 	const lexicon = lx.lexicon("test.complex", {
+		author: lx.object({
+			did: lx.string({ required: true, format: "did" }),
+			handle: lx.string({ required: true, format: "handle" }),
+			avatar: lx.string(),
+		}),
+		metadata: lx.object({
+			views: lx.integer(),
+			likes: lx.integer(),
+			shares: lx.integer(),
+		}),
 		main: lx.object({
 			id: lx.string({ required: true }),
-			author: lx.object({
-				did: lx.string({ required: true, format: "did" }),
-				handle: lx.string({ required: true, format: "handle" }),
-				avatar: lx.string(),
-			}),
+			author: lx.ref("#author"),
 			content: lx.union(["com.example.text", "com.example.image"]),
 			tags: lx.array(lx.string(), { maxLength: 10 }),
-			metadata: lx.object({
-				views: lx.integer(),
-				likes: lx.integer(),
-				shares: lx.integer(),
-			}),
+			metadata: lx.ref("#metadata"),
 		}),
 	});
 
@@ -695,6 +651,7 @@ test("InferObject handles complex nested structure", () => {
         avatar?: string | undefined
         did: string
         handle: string
+        $type: "#author"
       }
     | undefined
   metadata?:
@@ -702,6 +659,7 @@ test("InferObject handles complex nested structure", () => {
         likes?: number | undefined
         views?: number | undefined
         shares?: number | undefined
+        $type: "#metadata"
       }
     | undefined
   id: string

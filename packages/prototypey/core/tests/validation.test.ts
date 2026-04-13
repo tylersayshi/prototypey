@@ -387,18 +387,19 @@ describe("edge cases", () => {
 		expect(result.success).toBe(false);
 	});
 
-	it("should handle deeply nested nulls", () => {
-		const nestedSchema = lx.lexicon("test.nested", {
-			main: lx.object({
-				user: lx.object({
-					name: lx.string({ required: true }),
+	it("should throw when nesting objects inline", () => {
+		expect(() =>
+			lx.lexicon("test.nested", {
+				main: lx.object({
+					// @ts-expect-error - nested objects are intentionally invalid
+					user: lx.object({
+						name: lx.string({ required: true }),
+					}),
 				}),
 			}),
-		});
-		const result = nestedSchema.validate({
-			user: null,
-		});
-		expect(result.success).toBe(false);
+		).toThrow(
+			'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+		);
 	});
 });
 
@@ -750,12 +751,13 @@ describe("deep nesting", () => {
 		expect(result.success).toBe(false);
 	});
 
-	it("should handle arrays of deeply nested objects", () => {
+	it("should handle arrays of deeply nested objects via refs", () => {
 		const arraySchema = lx.lexicon("test.array-deep", {
+			itemData: lx.object({
+				value: lx.string({ required: true }),
+			}),
 			item: lx.object({
-				data: lx.object({
-					value: lx.string({ required: true }),
-				}),
+				data: lx.ref("#itemData"),
 			}),
 			main: lx.object({
 				items: lx.array(lx.ref("#item"), { required: true }),
@@ -772,12 +774,13 @@ describe("deep nesting", () => {
 		expect(result.success).toBe(true);
 	});
 
-	it("should reject invalid item in array of nested objects", () => {
+	it("should reject invalid item in array of nested objects via refs", () => {
 		const arraySchema = lx.lexicon("test.array-deep-invalid", {
+			itemData: lx.object({
+				value: lx.string({ required: true }),
+			}),
 			item: lx.object({
-				data: lx.object({
-					value: lx.string({ required: true }),
-				}),
+				data: lx.ref("#itemData"),
 			}),
 			main: lx.object({
 				items: lx.array(lx.ref("#item"), { required: true }),

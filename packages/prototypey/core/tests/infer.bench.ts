@@ -119,28 +119,22 @@ bench("infer with app.bsky.feed.defs lexicon", () => {
 	return schema["~infer"];
 }).types([1437, "instantiations"]);
 
-bench("infer with required/nullable nested objects", () => {
+bench("infer with required/nullable refs to objects", () => {
 	const schema = lx.lexicon("test.nestedFlags", {
+		profile: lx.object({
+			name: lx.string({ required: true }),
+			bio: lx.string(),
+		}),
+		settings: lx.object({
+			theme: lx.string(),
+		}),
+		metadata: lx.object({
+			source: lx.string({ required: true }),
+		}),
 		main: lx.object({
-			profile: lx.object(
-				{
-					name: lx.string({ required: true }),
-					bio: lx.string(),
-				},
-				{ required: true },
-			),
-			settings: lx.object(
-				{
-					theme: lx.string(),
-				},
-				{ nullable: true },
-			),
-			metadata: lx.object(
-				{
-					source: lx.string({ required: true }),
-				},
-				{ required: true, nullable: true },
-			),
+			profile: lx.ref("#profile", { required: true }),
+			settings: lx.ref("#settings", { nullable: true }),
+			metadata: lx.ref("#metadata", { required: true, nullable: true }),
 		}),
 	});
 	return schema["~infer"];
