@@ -38,7 +38,7 @@
 	"dependencies": {
 		"@atproto/lexicon": "^0.6.2",
 		"sade": "^1.8.1",
-		"tinyglobby": "^0.2.15"
+		"tinyglobby": "^0.2.16"
 	},
 	"devDependencies": {
 		"@ark/attest": "^0.49.0",
