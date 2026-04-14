@@ -619,6 +619,173 @@ test("InferRecord handles record with object schema", () => {
 });
 
 // ============================================================================
+// QUERY TYPE TESTS
+// ============================================================================
+
+test("InferQuery handles query with parameters and output", () => {
+	const lexicon = lx.lexicon("app.bsky.graph.getStarterPack", {
+		main: lx.query({
+			parameters: lx.params({
+				starterPack: lx.string({ required: true, format: "at-uri" }),
+			}),
+			output: {
+				encoding: "application/json",
+				schema: lx.object({
+					starterPack: lx.ref("app.bsky.graph.defs#starterPackView", {
+						required: true,
+					}),
+				}),
+			},
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "app.bsky.graph.getStarterPack"
+  parameters: { starterPack: string }
+  output: {
+    starterPack?:
+      | {
+          [x: string]: unknown
+          $type: "app.bsky.graph.defs#starterPackView"
+        }
+      | undefined
+  }
+}`);
+});
+
+test("InferQuery handles query with only output", () => {
+	const lexicon = lx.lexicon("com.example.getStatus", {
+		main: lx.query({
+			output: {
+				encoding: "application/json",
+				schema: lx.object({
+					status: lx.string({ required: true }),
+					uptime: lx.integer(),
+				}),
+			},
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.getStatus"
+  output: { uptime?: number | undefined; status: string }
+}`);
+});
+
+test("InferQuery handles query with only parameters", () => {
+	const lexicon = lx.lexicon("com.example.ping", {
+		main: lx.query({
+			parameters: lx.params({
+				echo: lx.string(),
+			}),
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.ping"
+  parameters: { echo?: string | undefined }
+}`);
+});
+
+test("InferQuery handles query with local ref in output", () => {
+	const lexicon = lx.lexicon("com.example.getUser", {
+		profile: lx.object({
+			name: lx.string({ required: true }),
+			bio: lx.string(),
+		}),
+		main: lx.query({
+			parameters: lx.params({
+				did: lx.string({ required: true, format: "did" }),
+			}),
+			output: {
+				encoding: "application/json",
+				schema: lx.object({
+					profile: lx.ref("#profile", { required: true }),
+				}),
+			},
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.getUser"
+  parameters: { did: string }
+  output: {
+    profile?:
+      | {
+          bio?: string | undefined
+          name: string
+          $type: "#profile"
+        }
+      | undefined
+  }
+}`);
+});
+
+// ============================================================================
+// PROCEDURE TYPE TESTS
+// ============================================================================
+
+test("InferProcedure handles procedure with input and output", () => {
+	const lexicon = lx.lexicon("com.example.createPost", {
+		main: lx.procedure({
+			input: {
+				encoding: "application/json",
+				schema: lx.object({
+					text: lx.string({ required: true }),
+				}),
+			},
+			output: {
+				encoding: "application/json",
+				schema: lx.object({
+					uri: lx.string({ required: true, format: "at-uri" }),
+					cid: lx.string({ required: true }),
+				}),
+			},
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.createPost"
+  input: { text: string }
+  output: { cid: string; uri: string }
+}`);
+});
+
+// ============================================================================
+// SUBSCRIPTION TYPE TESTS
+// ============================================================================
+
+test("InferSubscription handles subscription with parameters and message", () => {
+	const lexicon = lx.lexicon("com.example.subscribe", {
+		main: lx.subscription({
+			parameters: lx.params({
+				cursor: lx.integer(),
+			}),
+			message: {
+				schema: lx.union([
+					"com.example.event#create",
+					"com.example.event#delete",
+				]),
+			},
+		}),
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.subscribe"
+  parameters: { cursor?: number | undefined }
+  message:
+    | {
+        [x: string]: unknown
+        $type: "com.example.event#create"
+      }
+    | {
+        [x: string]: unknown
+        $type: "com.example.event#delete"
+      }
+}`);
+});
+
+// ============================================================================
 // NESTED OBJECTS TESTS
 // ============================================================================
 
