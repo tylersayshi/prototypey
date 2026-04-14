@@ -48,6 +48,10 @@ export const profileNamespace = lx.lexicon("app.bsky.actor.profile", {
 		// Read the emitted JSON file
 		const outputFile = join(outDir, "app", "bsky", "actor", "profile.json");
 		const content = await readFile(outputFile, "utf-8");
+
+		// Verify the file ends with a trailing newline (POSIX-compliant)
+		expect(content.endsWith("\n")).toBe(true);
+
 		const json = JSON.parse(content);
 
 		// Verify the structure
