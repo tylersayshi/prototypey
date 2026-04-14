@@ -660,7 +660,7 @@ test("fromJSON InferObject shows error for nested objects", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
   user?:
-    | "[Nested objects are not supported in lexicon definitions. Define each object in its own lexicon def and use lx.ref() instead.]"
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
 }`);
 });
@@ -697,7 +697,7 @@ test("fromJSON InferObject shows error for deeply nested objects", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.deepNested"
   data?:
-    | "[Nested objects are not supported in lexicon definitions. Define each object in its own lexicon def and use lx.ref() instead.]"
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
 }`);
 });
@@ -859,10 +859,10 @@ test("fromJSON InferObject shows error for inline nested objects in complex stru
       }
     | undefined
   author?:
-    | "[Nested objects are not supported in lexicon definitions. Define each object in its own lexicon def and use lx.ref() instead.]"
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
   metadata?:
-    | "[Nested objects are not supported in lexicon definitions. Define each object in its own lexicon def and use lx.ref() instead.]"
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
   id: string
 }`);

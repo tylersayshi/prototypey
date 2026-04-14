@@ -398,7 +398,7 @@ describe("edge cases", () => {
 				}),
 			}),
 		).toThrow(
-			'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+			'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
 		);
 	});
 });

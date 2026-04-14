@@ -266,7 +266,7 @@ test("lx.object() throws when nesting an object inside another object", () => {
 			),
 		}),
 	).toThrow(
-		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
 	);
 });
 
@@ -277,7 +277,7 @@ test("lx.object() throws for nullable nested object", () => {
 			foo: lx.object({ bar: lx.string() }, { nullable: true }),
 		}),
 	).toThrow(
-		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
 	);
 });
 

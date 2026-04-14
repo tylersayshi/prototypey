@@ -529,7 +529,7 @@ test("InferObject throws for nested objects", () => {
 			}),
 		}),
 	).toThrow(
-		'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Define it as its own lexicon def and use lx.ref() instead.',
+		'Nested objects are not supported in lexicon definitions. Property "user" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
 	);
 });
 
@@ -538,7 +538,7 @@ test("nested object type error message", () => {
 		// @ts-expect-error - nested objects are intentionally invalid
 		lx.object({ user: lx.object({ name: lx.string() }) }),
 	).type.errors.snap(
-		'Type \'ObjectResult<{ name: LexiconItemCommonOptions & { format?: "at-identifier" | "at-uri" | "cid" | "datetime" | "did" | "handle" | "nsid" | "tid" | "record-key" | "uri" | "language" | undefined; maxLength?: number | undefined; minLength?: number | undefined; maxGraphemes?: number | undefined; minGraphemes?: number | undefined; knownValues?: string[] | undefined; enum?: string[] | undefined; default?: string | undefined; const?: string | undefined; } & { type: "string"; }; }, ObjectOptions>\' is not assignable to type \'"❌ Nested objects are not supported. Use lx.ref() instead."\'.',
+		'Type \'ObjectResult<{ name: LexiconItemCommonOptions & { format?: "at-identifier" | "at-uri" | "cid" | "datetime" | "did" | "handle" | "nsid" | "tid" | "record-key" | "uri" | "language" | undefined; maxLength?: number | undefined; minLength?: number | undefined; maxGraphemes?: number | undefined; minGraphemes?: number | undefined; knownValues?: string[] | undefined; enum?: string[] | undefined; default?: string | undefined; const?: string | undefined; } & { type: "string"; }; }, ObjectOptions>\' is not assignable to type \'"❌ Nested objects are not supported. Per the Lexicon spec, objects can be \\"nested inside other definitions by reference\\" (https://atproto.com/specs/lexicon#object). Use lx.ref() instead."\'.',
 	);
 });
 

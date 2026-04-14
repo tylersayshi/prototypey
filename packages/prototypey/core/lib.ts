@@ -213,7 +213,7 @@ type ObjectProperties = Record<
 
 /** Resolves to an error string for nested objects, or passes through unchanged. */
 type CheckNotObject<T> = T extends { type: "object" }
-	? "❌ Nested objects are not supported. Use lx.ref() instead."
+	? '❌ Nested objects are not supported. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Use lx.ref() instead.'
 	: T;
 
 /**
@@ -705,7 +705,7 @@ export const lx = {
 		for (const [key, value] of Object.entries(properties)) {
 			if ((value as { type: string }).type === "object") {
 				throw new Error(
-					`Nested objects are not supported in lexicon definitions. Property "${key}" is an inline object. Define it as its own lexicon def and use lx.ref() instead.`,
+					`Nested objects are not supported in lexicon definitions. Property "${key}" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.`,
 				);
 			}
 		}

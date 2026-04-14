@@ -8,7 +8,7 @@ import { Prettify } from "./type-utils.ts";
  * should be its own definition, referenced via lx.ref().
  */
 type NestedObjectError =
-	"[Nested objects are not supported in lexicon definitions. Define each object in its own lexicon def and use lx.ref() instead.]";
+	'[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]';
 
 /** Resolves property type, returning NestedObjectError for inline nested objects. */
 type InferPropertyType<T> = T extends { type: "object" }
