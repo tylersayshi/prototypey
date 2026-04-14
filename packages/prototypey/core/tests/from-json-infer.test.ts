@@ -637,7 +637,7 @@ test("fromJSON InferRecord handles record with object schema", () => {
 // NESTED OBJECTS TESTS
 // ============================================================================
 
-test("fromJSON InferObject handles nested objects", () => {
+test("fromJSON InferObject shows error for nested objects", () => {
 	const lexicon = fromJSON({
 		id: "test.nested",
 		defs: {
@@ -659,11 +659,13 @@ test("fromJSON InferObject handles nested objects", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.nested"
-  user?: { email: string; name: string } | undefined
+  user?:
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
+    | undefined
 }`);
 });
 
-test("fromJSON InferObject handles deeply nested objects", () => {
+test("fromJSON InferObject shows error for deeply nested objects", () => {
 	const lexicon = fromJSON({
 		id: "test.deepNested",
 		defs: {
@@ -695,11 +697,7 @@ test("fromJSON InferObject handles deeply nested objects", () => {
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.deepNested"
   data?:
-    | {
-        user?:
-          | { profile?: { name: string } | undefined }
-          | undefined
-      }
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
 }`);
 });
@@ -708,23 +706,24 @@ test("fromJSON InferObject handles deeply nested objects", () => {
 // NESTED ARRAYS TESTS
 // ============================================================================
 
-test("fromJSON InferArray handles arrays of objects", () => {
+test("fromJSON InferArray handles arrays of objects via refs", () => {
 	const lexicon = fromJSON({
 		id: "test.arrayOfObjects",
 		defs: {
+			user: {
+				type: "object",
+				properties: {
+					id: { type: "string", required: true },
+					name: { type: "string", required: true },
+				},
+				required: ["id", "name"],
+			},
 			main: {
 				type: "object",
 				properties: {
 					users: {
 						type: "array",
-						items: {
-							type: "object",
-							properties: {
-								id: { type: "string", required: true },
-								name: { type: "string", required: true },
-							},
-							required: ["id", "name"],
-						},
+						items: { type: "ref", ref: "#user" },
 					},
 				},
 			},
@@ -733,7 +732,9 @@ test("fromJSON InferArray handles arrays of objects", () => {
 
 	attest(lexicon["~infer"]).type.toString.snap(`{
   $type: "test.arrayOfObjects"
-  users?: { id: string; name: string }[] | undefined
+  users?:
+    | { id: string; name: string; $type: "#user" }[]
+    | undefined
 }`);
 });
 
@@ -795,7 +796,7 @@ test("fromJSON InferArray handles arrays of refs", () => {
 // COMPLEX NESTED STRUCTURES
 // ============================================================================
 
-test("fromJSON InferObject handles complex nested structure", () => {
+test("fromJSON InferObject shows error for inline nested objects in complex structure", () => {
 	const lexicon = fromJSON({
 		id: "test.complex",
 		defs: {
@@ -858,18 +859,10 @@ test("fromJSON InferObject handles complex nested structure", () => {
       }
     | undefined
   author?:
-    | {
-        avatar?: string | undefined
-        did: string
-        handle: string
-      }
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
   metadata?:
-    | {
-        likes?: number | undefined
-        views?: number | undefined
-        shares?: number | undefined
-      }
+    | '[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]'
     | undefined
   id: string
 }`);

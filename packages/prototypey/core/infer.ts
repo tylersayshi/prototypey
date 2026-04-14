@@ -1,6 +1,20 @@
 import { Prettify } from "./type-utils.ts";
 
 /* eslint-disable @typescript-eslint/no-empty-object-type */
+
+/**
+ * Error message displayed when an object is nested inside another object.
+ * Lexicon definitions do not support inline nested objects — each object
+ * should be its own definition, referenced via lx.ref().
+ */
+type NestedObjectError =
+	'[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]';
+
+/** Resolves property type, returning NestedObjectError for inline nested objects. */
+type InferPropertyType<T> = T extends { type: "object" }
+	? NestedObjectError
+	: InferType<T>;
+
 type InferType<T> = T extends { type: "record" }
 	? InferRecord<T>
 	: T extends { type: "object" }
@@ -64,17 +78,21 @@ type InferObject<
 > = Prettify<
 	T extends { properties: infer P }
 		? {
-				-readonly [K in Normal]?: InferType<P[K & keyof P]>;
+				-readonly [K in Normal]?: InferPropertyType<P[K & keyof P]>;
 			} & {
-				-readonly [K in Exclude<Required, NullableAndRequired>]-?: InferType<
-					P[K & keyof P]
-				>;
+				-readonly [K in Exclude<
+					Required,
+					NullableAndRequired
+				>]-?: InferPropertyType<P[K & keyof P]>;
 			} & {
-				-readonly [K in Exclude<Nullable, NullableAndRequired>]?: InferType<
+				-readonly [K in Exclude<
+					Nullable,
+					NullableAndRequired
+				>]?: InferPropertyType<P[K & keyof P]> | null;
+			} & {
+				-readonly [K in NullableAndRequired]: InferPropertyType<
 					P[K & keyof P]
 				> | null;
-			} & {
-				-readonly [K in NullableAndRequired]: InferType<P[K & keyof P]> | null;
 			}
 		: {}
 >;
