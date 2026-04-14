@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.6.0
+
+### Minor Changes
+
+- 9b28e82: this errors on nested objects for lexicon correctness. more info in #89
+
 ## 0.5.2
 
 ### Patch Changes
