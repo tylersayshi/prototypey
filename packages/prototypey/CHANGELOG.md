@@ -1,5 +1,11 @@
 # prototypey
 
+## 0.6.1
+
+### Patch Changes
+
+- 1d1eeb7: emit newline after gen emit
+
 ## 0.6.0
 
 ### Minor Changes
