@@ -256,62 +256,29 @@ test("lx.object() with nullable and description", () => {
 	});
 });
 
-test("lx.object() with required option marks object as required in parent", () => {
-	const result = lx.object({
-		foo: lx.object({ bar: lx.string({ required: true }) }, { required: true }),
-	});
-	expect(result).toEqual({
-		type: "object",
-		required: ["foo"],
-		properties: {
-			foo: {
-				type: "object",
-				required: ["bar"],
-				properties: {
-					bar: { type: "string" },
-				},
-			},
-		},
-	});
-});
-
-test("lx.object() with nullable option marks object as nullable in parent", () => {
-	const result = lx.object({
-		foo: lx.object({ bar: lx.string() }, { nullable: true }),
-	});
-	expect(result).toEqual({
-		type: "object",
-		nullable: ["foo"],
-		properties: {
-			foo: {
-				type: "object",
-				properties: {
-					bar: { type: "string" },
-				},
-			},
-		},
-	});
-});
-
-test("lx.object() nested with own required fields is not falsely required in parent", () => {
-	const result = lx.object({
-		foo: lx.object({
-			bar: lx.string({ required: true }),
+test("lx.object() throws when nesting an object inside another object", () => {
+	expect(() =>
+		lx.object({
+			// @ts-expect-error - nested objects are intentionally invalid
+			foo: lx.object(
+				{ bar: lx.string({ required: true }) },
+				{ required: true },
+			),
 		}),
-	});
-	// foo should NOT appear in parent's required array
-	expect(result).toEqual({
-		type: "object",
-		properties: {
-			foo: {
-				type: "object",
-				required: ["bar"],
-				properties: {
-					bar: { type: "string" },
-				},
-			},
-		},
-	});
+	).toThrow(
+		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
+	);
+});
+
+test("lx.object() throws for nullable nested object", () => {
+	expect(() =>
+		lx.object({
+			// @ts-expect-error - nested objects are intentionally invalid
+			foo: lx.object({ bar: lx.string() }, { nullable: true }),
+		}),
+	).toThrow(
+		'Nested objects are not supported in lexicon definitions. Property "foo" is an inline object. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define it as its own lexicon def and use lx.ref() instead.',
+	);
 });
 
 test("lx.token() with interaction event", () => {
