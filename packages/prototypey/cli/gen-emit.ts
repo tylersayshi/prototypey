@@ -93,7 +93,7 @@ async function processSourceFile(
 			// Write the JSON file
 			await writeFile(
 				outputPath,
-				JSON.stringify(lexicon.json, null, "\t"),
+				JSON.stringify(lexicon.json, null, "\t") + "\n",
 				"utf-8",
 			);
 
