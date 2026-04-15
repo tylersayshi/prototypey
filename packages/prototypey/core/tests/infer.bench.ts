@@ -348,6 +348,57 @@ bench("fromJSON infer with app.bsky.feed.defs lexicon", () => {
 	return schema["~infer"];
 }).types([587, "instantiations"]);
 
+bench("infer with query endpoint", () => {
+	const schema = lx.lexicon("app.bsky.graph.getStarterPack", {
+		main: lx.query({
+			parameters: lx.params({
+				starterPack: lx.string({ required: true, format: "at-uri" }),
+			}),
+			output: {
+				encoding: "application/json",
+				schema: lx.object({
+					starterPack: lx.ref("app.bsky.graph.defs#starterPackView", {
+						required: true,
+					}),
+				}),
+			},
+		}),
+	});
+	return schema["~infer"];
+}).types([1137, "instantiations"]);
+
+bench("fromJSON infer with query endpoint", () => {
+	const schema = fromJSON({
+		id: "app.bsky.graph.getStarterPack",
+		defs: {
+			main: {
+				type: "query",
+				parameters: {
+					type: "params",
+					required: ["starterPack"],
+					properties: {
+						starterPack: { type: "string", format: "at-uri" },
+					},
+				},
+				output: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["starterPack"],
+						properties: {
+							starterPack: {
+								type: "ref",
+								ref: "app.bsky.graph.defs#starterPackView",
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+	return schema["~infer"];
+}).types([343, "instantiations"]);
+
 bench("infer with simple permission set", () => {
 	const schema = lx.lexicon("com.example.authCore", {
 		main: lx.permissionSet({

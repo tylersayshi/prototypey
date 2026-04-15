@@ -634,6 +634,210 @@ test("fromJSON InferRecord handles record with object schema", () => {
 });
 
 // ============================================================================
+// QUERY TYPE TESTS
+// ============================================================================
+
+test("fromJSON InferQuery handles query with parameters and output", () => {
+	const lexicon = fromJSON({
+		id: "app.bsky.graph.getStarterPack",
+		defs: {
+			main: {
+				type: "query",
+				parameters: {
+					type: "params",
+					required: ["starterPack"],
+					properties: {
+						starterPack: { type: "string", format: "at-uri" },
+					},
+				},
+				output: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["starterPack"],
+						properties: {
+							starterPack: {
+								type: "ref",
+								ref: "app.bsky.graph.defs#starterPackView",
+							},
+						},
+					},
+				},
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "app.bsky.graph.getStarterPack"
+  parameters: { starterPack: string }
+  output: {
+    starterPack: {
+      [x: string]: unknown
+      $type: "app.bsky.graph.defs#starterPackView"
+    }
+  }
+}`);
+});
+
+test("fromJSON InferQuery handles query with only output", () => {
+	const lexicon = fromJSON({
+		id: "com.example.getStatus",
+		defs: {
+			main: {
+				type: "query",
+				output: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["status"],
+						properties: {
+							status: { type: "string" },
+							uptime: { type: "integer" },
+						},
+					},
+				},
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.getStatus"
+  output: { uptime?: number | undefined; status: string }
+}`);
+});
+
+test("fromJSON InferQuery handles query with local ref in output", () => {
+	const lexicon = fromJSON({
+		id: "com.example.getUser",
+		defs: {
+			profile: {
+				type: "object",
+				properties: {
+					name: { type: "string" },
+					bio: { type: "string" },
+				},
+				required: ["name"],
+			},
+			main: {
+				type: "query",
+				parameters: {
+					type: "params",
+					required: ["did"],
+					properties: {
+						did: { type: "string", format: "did" },
+					},
+				},
+				output: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["profile"],
+						properties: {
+							profile: { type: "ref", ref: "#profile" },
+						},
+					},
+				},
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.getUser"
+  parameters: { did: string }
+  output: {
+    profile: {
+      bio?: string | undefined
+      name: string
+      $type: "#profile"
+    }
+  }
+}`);
+});
+
+// ============================================================================
+// PROCEDURE TYPE TESTS
+// ============================================================================
+
+test("fromJSON InferProcedure handles procedure with input and output", () => {
+	const lexicon = fromJSON({
+		id: "com.example.createPost",
+		defs: {
+			main: {
+				type: "procedure",
+				input: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["text"],
+						properties: {
+							text: { type: "string" },
+						},
+					},
+				},
+				output: {
+					encoding: "application/json",
+					schema: {
+						type: "object",
+						required: ["uri", "cid"],
+						properties: {
+							uri: { type: "string", format: "at-uri" },
+							cid: { type: "string" },
+						},
+					},
+				},
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.createPost"
+  input: { text: string }
+  output: { cid: string; uri: string }
+}`);
+});
+
+// ============================================================================
+// SUBSCRIPTION TYPE TESTS
+// ============================================================================
+
+test("fromJSON InferSubscription handles subscription with message", () => {
+	const lexicon = fromJSON({
+		id: "com.example.subscribe",
+		defs: {
+			main: {
+				type: "subscription",
+				parameters: {
+					type: "params",
+					properties: {
+						cursor: { type: "integer" },
+					},
+				},
+				message: {
+					schema: {
+						type: "union",
+						refs: ["com.example.event#create", "com.example.event#delete"],
+					},
+				},
+			},
+		},
+	});
+
+	attest(lexicon["~infer"]).type.toString.snap(`{
+  $type: "com.example.subscribe"
+  parameters: { cursor?: number | undefined }
+  message:
+    | {
+        [x: string]: unknown
+        $type: "com.example.event#create"
+      }
+    | {
+        [x: string]: unknown
+        $type: "com.example.event#delete"
+      }
+}`);
+});
+
+// ============================================================================
 // NESTED OBJECTS TESTS
 // ============================================================================
 

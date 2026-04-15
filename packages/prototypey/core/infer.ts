@@ -17,46 +17,52 @@ type InferPropertyType<T> = T extends { type: "object" }
 
 type InferType<T> = T extends { type: "record" }
 	? InferRecord<T>
-	: T extends { type: "object" }
-		? InferObject<T>
-		: T extends { type: "array" }
-			? InferArray<T>
-			: T extends { type: "params" }
-				? InferParams<T>
-				: T extends { type: "permission-set" }
-					? InferPermissionSet<T>
-					: T extends { type: "union" }
-						? InferUnion<T>
-						: T extends { type: "token" }
-							? InferToken<T>
-							: T extends { type: "ref" }
-								? InferRef<T>
-								: T extends { type: "unknown" }
-									? unknown
-									: T extends { type: "null" }
-										? null
-										: T extends { type: "boolean" }
-											? boolean
-											: T extends { type: "integer" }
-												? number
-												: T extends { type: "string" }
-													? T extends {
-															enum: readonly (infer E extends string)[];
-														}
-														? E
-														: T extends {
-																	knownValues: readonly (infer K extends
-																		string)[];
-															  }
-															? K | (string & {})
-															: string
-													: T extends { type: "bytes" }
-														? Uint8Array
-														: T extends { type: "cid-link" }
-															? string
-															: T extends { type: "blob" }
-																? Blob
-																: never;
+	: T extends { type: "query" }
+		? InferQuery<T>
+		: T extends { type: "procedure" }
+			? InferProcedure<T>
+			: T extends { type: "subscription" }
+				? InferSubscription<T>
+				: T extends { type: "object" }
+					? InferObject<T>
+					: T extends { type: "array" }
+						? InferArray<T>
+						: T extends { type: "params" }
+							? InferParams<T>
+							: T extends { type: "permission-set" }
+								? InferPermissionSet<T>
+								: T extends { type: "union" }
+									? InferUnion<T>
+									: T extends { type: "token" }
+										? InferToken<T>
+										: T extends { type: "ref" }
+											? InferRef<T>
+											: T extends { type: "unknown" }
+												? unknown
+												: T extends { type: "null" }
+													? null
+													: T extends { type: "boolean" }
+														? boolean
+														: T extends { type: "integer" }
+															? number
+															: T extends { type: "string" }
+																? T extends {
+																		enum: readonly (infer E extends string)[];
+																	}
+																	? E
+																	: T extends {
+																				knownValues: readonly (infer K extends
+																					string)[];
+																		  }
+																		? K | (string & {})
+																		: string
+																: T extends { type: "bytes" }
+																	? Uint8Array
+																	: T extends { type: "cid-link" }
+																		? string
+																		: T extends { type: "blob" }
+																			? Blob
+																			: never;
 
 type InferToken<T> = T extends { enum: readonly (infer U)[] } ? U : string;
 
@@ -170,6 +176,32 @@ type InferRecord<T> = T extends { record: infer R }
 			? InferUnion<R>
 			: unknown
 	: unknown;
+
+type InferBody<T> = T extends { schema: infer S }
+	? S extends { type: "object" }
+		? InferObject<S>
+		: S extends { type: "union" }
+			? InferUnion<S>
+			: unknown
+	: unknown;
+
+type InferQuery<T> = Prettify<
+	(T extends { parameters: infer P } ? { parameters: InferType<P> } : {}) &
+		(T extends { output: infer O } ? { output: InferBody<O> } : {})
+>;
+
+type InferProcedure<T> = Prettify<
+	(T extends { parameters: infer P } ? { parameters: InferType<P> } : {}) &
+		(T extends { input: infer I } ? { input: InferBody<I> } : {}) &
+		(T extends { output: infer O } ? { output: InferBody<O> } : {})
+>;
+
+type InferSubscription<T> = Prettify<
+	(T extends { parameters: infer P } ? { parameters: InferType<P> } : {}) &
+		(T extends { message: { schema: infer S } }
+			? { message: InferType<S> }
+			: {})
+>;
 
 /**
  * Recursively replaces stub references in a type with their actual definitions.
