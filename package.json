@@ -19,7 +19,7 @@
 		"tsc": "pnpm -r tsc"
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.30.0",
+		"@changesets/cli": "^2.31.0",
 		"@eslint/js": "9.29.0",
 		"eslint": "9.29.0",
 		"knip": "^5.88.1",
