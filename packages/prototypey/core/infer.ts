@@ -10,6 +10,28 @@ import { Prettify } from "./type-utils.ts";
 type NestedObjectError =
 	'[Nested objects are not supported in lexicon definitions. Per the Lexicon spec, objects can be "nested inside other definitions by reference" (https://atproto.com/specs/lexicon#object). Define each object in its own lexicon def and use lx.ref() instead.]';
 
+/**
+ * Minimal structural CID, compatible with the `CID` class from
+ * [`multiformats`](https://github.com/multiformats/js-multiformats) and the `Cid` interface from
+ * [`@atproto/lex-data`](https://github.com/bluesky-social/atproto/tree/main/packages/lex-data).
+ */
+type Cid = { readonly bytes: Uint8Array };
+
+/**
+ * AT Protocol blob reference. Mirrors `BlobRef` from
+ * [`@atproto/api`](https://github.com/bluesky-social/atproto/tree/main/packages/api) /
+ * [`@atproto/lex-data`](https://github.com/bluesky-social/atproto/tree/main/packages/lex-data),
+ * but defined locally to avoid pulling in those packages as dependencies.
+ *
+ * @see https://atproto.com/specs/data-model#blob-type
+ */
+export type BlobRef = {
+	$type: "blob";
+	ref: { $link: string } | Cid;
+	mimeType: string;
+	size: number;
+};
+
 /** Resolves property type, returning NestedObjectError for inline nested objects. */
 type InferPropertyType<T> = T extends { type: "object" }
 	? NestedObjectError
@@ -61,7 +83,7 @@ type InferType<T> = T extends { type: "record" }
 																	: T extends { type: "cid-link" }
 																		? string
 																		: T extends { type: "blob" }
-																			? Blob
+																			? BlobRef
 																			: never;
 
 type InferToken<T> = T extends { enum: readonly (infer U)[] } ? U : string;
@@ -223,7 +245,7 @@ type ReplaceRefsInType<T, Defs, Visited = never> =
 			: // Reference not found in definitions
 				`[Reference not found: #${DefName}]`
 		: // Handle arrays (but not Uint8Array or other typed arrays)
-			T extends Uint8Array | Blob
+			T extends Uint8Array | BlobRef
 			? T
 			: T extends readonly (infer Item)[]
 				? ReplaceRefsInType<Item, Defs, Visited>[]

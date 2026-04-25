@@ -248,7 +248,7 @@ test("InferType handles blob primitive", () => {
 	});
 
 	attest(lexicon["~infer"]).type.toString.snap(
-		'{ $type: "test.blob"; image?: Blob | undefined }',
+		'{ $type: "test.blob"; image?: BlobRef | undefined }',
 	);
 });
 
