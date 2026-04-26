@@ -86,15 +86,16 @@ describe("Playground", () => {
 	it("starts with default code in editor", async () => {
 		renderPlayground();
 
-		// Wait for editors to be ready
 		await waitFor(() => {
-			expect(screen.getAllByTestId("monaco-editor").length).toBeGreaterThan(0);
+			const inputEditor = screen
+				.getAllByTestId("monaco-editor")
+				.find((e) =>
+					(e as HTMLTextAreaElement).value?.includes(
+						'lx.lexicon("app.bsky.actor.profile"',
+					),
+				);
+			expect(inputEditor).toBeDefined();
 		});
-
-		const editors = screen.getAllByTestId("monaco-editor");
-		const inputEditor = editors[0] as HTMLTextAreaElement;
-
-		expect(inputEditor.value).toContain('lx.lexicon("app.bsky.actor.profile"');
 	});
 
 	it("evaluates code and displays output", async () => {
