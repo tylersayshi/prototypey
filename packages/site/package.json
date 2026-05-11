@@ -16,11 +16,11 @@
 		"monaco-editor": "0.52.0",
 		"nuqs": "^2.8.9",
 		"prototypey": "workspace:*",
-		"react": "^19.2.5",
-		"react-dom": "^19.2.5"
+		"react": "^19.2.6",
+		"react-dom": "^19.2.6"
 	},
 	"devDependencies": {
-		"@tailwindcss/vite": "^4.2.4",
+		"@tailwindcss/vite": "^4.3.0",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
 		"@testing-library/user-event": "^14.6.1",
@@ -30,7 +30,7 @@
 		"babel-plugin-react-compiler": "^1.0.0",
 		"eslint-plugin-react-compiler": "19.1.0-rc.2",
 		"jsdom": "^25.0.1",
-		"tailwindcss": "^4.2.4",
+		"tailwindcss": "^4.3.0",
 		"typescript": "5.9.3",
 		"vite": "npm:rolldown-vite@7.0.6",
 		"vitest": "^3.2.4"
