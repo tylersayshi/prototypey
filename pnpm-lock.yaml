@@ -70,8 +70,8 @@ importers:
         specifier: 0.52.0
         version: 0.52.0
       nuqs:
-        specifier: ^2.9.2
-        version: 2.9.2(react@19.2.8)
+        specifier: ^2.9.4
+        version: 2.9.4(react@19.2.8)
       prototypey:
         specifier: workspace:*
         version: link:../prototypey
@@ -90,16 +90,16 @@ importers:
         version: 6.9.1
       '@testing-library/react':
         specifier: ^16.3.2
-        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
       '@types/react':
-        specifier: ^19.2.17
-        version: 19.2.17
+        specifier: ^19.2.18
+        version: 19.2.18
       '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.17)
+        specifier: ^19.2.4
+        version: 19.2.4(@types/react@19.2.18)
       '@vitejs/plugin-react':
         specifier: ^5.2.0
         version: 5.2.0(rolldown-vite@7.0.6(@types/node@24.0.4)(esbuild@0.25.10)(jiti@2.7.0)(yaml@2.8.2))
@@ -1102,13 +1102,13 @@ packages:
   '@types/node@24.0.4':
     resolution: {integrity: sha512-ulyqAkrhnuNq9pB76DRBTkcS6YsmDALy6Ua63V8OhrOBgbcYt6IOdzpw5P1+dyRIyMerzLkeYWBeOXPpA9GMAA==}
 
-  '@types/react-dom@19.2.3':
-    resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
+  '@types/react-dom@19.2.4':
+    resolution: {integrity: sha512-Bsc+QHgp+P/F02XDzNCY9jnZNCUuLki36KT7VKrTXXLdHf+vHMNZnW1rVu5DNW/rCK+fya3DATySbLM4yhtKUw==}
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react@19.2.17':
-    resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
+  '@types/react@19.2.18':
+    resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
 
   '@typescript-eslint/eslint-plugin@8.35.0':
     resolution: {integrity: sha512-ijItUYaiWuce0N1SoSMrEd0b6b6lYkYt99pqCPfybd+HKVXtEvYhICfLdwp42MhiI5mp0oq7PKEL+g1cNiz/Eg==}
@@ -2119,8 +2119,8 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
-  nuqs@2.9.2:
-    resolution: {integrity: sha512-SUrBU5PfLckv2SAquHkYs76s603vbjl2OLEc+jlL3sITwvJDbE/fg3vN7l9Rdp4WIUs6E0QD+m3DfH9QUQfLkg==}
+  nuqs@2.9.4:
+    resolution: {integrity: sha512-lsz3NyCOKmuNAyW052i9RWqcTntoYb2Qm6FxSWnkTDwOJnGS6fzpXDAp0VcwTevw3xgnWebYpDr9rm6+o4DHbw==}
     peerDependencies:
       '@remix-run/react': '>=2'
       '@tanstack/react-router': ^1
@@ -3673,15 +3673,15 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@babel/runtime': 7.28.6
       '@testing-library/dom': 10.4.1
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
     optionalDependencies:
-      '@types/react': 19.2.17
-      '@types/react-dom': 19.2.3(@types/react@19.2.17)
+      '@types/react': 19.2.18
+      '@types/react-dom': 19.2.4(@types/react@19.2.18)
 
   '@testing-library/user-event@14.6.1(@testing-library/dom@10.4.1)':
     dependencies:
@@ -3732,11 +3732,11 @@ snapshots:
     dependencies:
       undici-types: 7.8.0
 
-  '@types/react-dom@19.2.3(@types/react@19.2.17)':
+  '@types/react-dom@19.2.4(@types/react@19.2.18)':
     dependencies:
-      '@types/react': 19.2.17
+      '@types/react': 19.2.18
 
-  '@types/react@19.2.17':
+  '@types/react@19.2.18':
     dependencies:
       csstype: 3.2.3
 
@@ -4750,7 +4750,7 @@ snapshots:
 
   node-releases@2.0.27: {}
 
-  nuqs@2.9.2(react@19.2.8):
+  nuqs@2.9.4(react@19.2.8):
     dependencies:
       '@standard-schema/spec': 1.1.0
       react: 19.2.8
