@@ -10,5 +10,24 @@
 		"enabled": true,
 		"automerge": true,
 		"extends": ["schedule:weekly"]
-	}
+	},
+	"packageRules": [
+		{
+			"description": "Raising the supported Node.js range is a decision for a release, not a dependency update",
+			"matchDepTypes": ["engines"],
+			"enabled": false
+		},
+		{
+			"description": "Only touch prototypey's published ranges when an update falls outside them, so in-range updates don't trigger a release",
+			"matchFileNames": ["packages/prototypey/package.json"],
+			"matchDepTypes": ["dependencies"],
+			"rangeStrategy": "update-lockfile"
+		},
+		{
+			"description": "CI doesn't exercise the release workflow, so majors of release tooling need a manual merge",
+			"matchPackageNames": ["changesets/action", "@changesets/cli"],
+			"matchUpdateTypes": ["major"],
+			"automerge": false
+		}
+	]
 }
