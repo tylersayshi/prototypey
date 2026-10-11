@@ -1,0 +1,67 @@
+name: Renovate Changeset
+
+# When Renovate merges an update to prototypey's runtime dependencies, add a
+# patch changeset so the release workflow opens a "Version Packages" PR.
+# Dev dependency and site updates don't change what users install, so they
+# are skipped.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - packages/prototypey/package.json
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  changeset:
+    name: Add changeset
+    if: github.actor == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Write changeset for runtime dependency changes
+        id: changeset
+        env:
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+        run: |
+          pkg=packages/prototypey/package.json
+          before=$(git show "$BEFORE:$pkg" | jq '.dependencies // {}')
+          after=$(jq '.dependencies // {}' "$pkg")
+          changes=$(jq -rn --argjson a "$before" --argjson b "$after" '
+            ($a + $b) | keys[] as $k
+            | select($a[$k] != $b[$k])
+            | "- Update `\($k)` from `\($a[$k] // "none")` to `\($b[$k] // "none")`"')
+
+          if [ -z "$changes" ]; then
+            echo "No runtime dependency changes"
+            exit 0
+          fi
+
+          file=".changeset/renovate-${SHA:0:7}.md"
+          printf -- '---\n"prototypey": patch\n---\n\nUpdate runtime dependencies:\n\n%s\n' "$changes" > "$file"
+          cat "$file"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+
+      # Pushes made with GITHUB_TOKEN don't trigger other workflows, so the
+      # release workflow is started explicitly.
+      - name: Commit changeset and run release
+        if: steps.changeset.outputs.created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .changeset
+          git commit -m "add changeset for renovate dependency updates"
+          git pull --rebase
+          git push
+          gh workflow run release.yml --ref main
