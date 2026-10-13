@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: tangled-sync
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
