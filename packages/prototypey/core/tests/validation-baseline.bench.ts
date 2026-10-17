@@ -1,49 +1,35 @@
-import { bench, describe } from "vitest";
+import { describe, test } from "vitest";
 import { Lexicons } from "@atproto/lexicon";
 import { lx } from "../lib.ts";
 
 // Phase 1 Benchmarks: Baseline measurements before implementation
 
 describe("baseline: lexicon instantiation", () => {
-	bench("simple lexicon instantiation", () => {
-		lx.lexicon("test.ns.simple", {
-			main: lx.object({
-				id: lx.string({ required: true }),
-				name: lx.string({ required: true }),
-			}),
-		});
+	test("simple lexicon instantiation", async ({ bench }) => {
+		await bench("simple lexicon instantiation", () => {
+			lx.lexicon("test.ns.simple", {
+				main: lx.object({
+					id: lx.string({ required: true }),
+					name: lx.string({ required: true }),
+				}),
+			});
+		}).run();
 	});
 });
 
 describe("baseline: Lexicons class", () => {
-	bench("create empty Lexicons instance", () => {
-		new Lexicons();
+	test("create empty Lexicons instance", async ({ bench }) => {
+		await bench("create empty Lexicons instance", () => {
+			new Lexicons();
+		}).run();
 	});
 
-	bench("load 1 lexicon into Lexicons", () => {
-		const lexicons = new Lexicons();
-		lexicons.add({
-			lexicon: 1,
-			id: "test.ns.simple",
-			defs: {
-				main: {
-					type: "object",
-					properties: {
-						id: { type: "string" },
-						name: { type: "string" },
-					},
-					required: ["id", "name"],
-				},
-			},
-		});
-	});
-
-	bench("load 10 lexicons into Lexicons", () => {
-		const lexicons = new Lexicons();
-		for (let i = 0; i < 10; i++) {
+	test("load 1 lexicon into Lexicons", async ({ bench }) => {
+		await bench("load 1 lexicon into Lexicons", () => {
+			const lexicons = new Lexicons();
 			lexicons.add({
 				lexicon: 1,
-				id: `test.ns.schema${i}`,
+				id: "test.ns.simple",
 				defs: {
 					main: {
 						type: "object",
@@ -55,131 +41,161 @@ describe("baseline: Lexicons class", () => {
 					},
 				},
 			});
-		}
+		}).run();
 	});
 
-	bench("load 100 lexicons into Lexicons", () => {
-		const lexicons = new Lexicons();
-		for (let i = 0; i < 100; i++) {
-			lexicons.add({
-				lexicon: 1,
-				id: `test.ns.schema${i}`,
-				defs: {
-					main: {
-						type: "object",
-						properties: {
-							id: { type: "string" },
-							name: { type: "string" },
+	test("load 10 lexicons into Lexicons", async ({ bench }) => {
+		await bench("load 10 lexicons into Lexicons", () => {
+			const lexicons = new Lexicons();
+			for (let i = 0; i < 10; i++) {
+				lexicons.add({
+					lexicon: 1,
+					id: `test.ns.schema${i}`,
+					defs: {
+						main: {
+							type: "object",
+							properties: {
+								id: { type: "string" },
+								name: { type: "string" },
+							},
+							required: ["id", "name"],
 						},
-						required: ["id", "name"],
 					},
-				},
-			});
-		}
+				});
+			}
+		}).run();
+	});
+
+	test("load 100 lexicons into Lexicons", async ({ bench }) => {
+		await bench("load 100 lexicons into Lexicons", () => {
+			const lexicons = new Lexicons();
+			for (let i = 0; i < 100; i++) {
+				lexicons.add({
+					lexicon: 1,
+					id: `test.ns.schema${i}`,
+					defs: {
+						main: {
+							type: "object",
+							properties: {
+								id: { type: "string" },
+								name: { type: "string" },
+							},
+							required: ["id", "name"],
+						},
+					},
+				});
+			}
+		}).run();
 	});
 });
 
 describe("baseline: validation", () => {
-	bench("validate simple object", () => {
-		const lexicons = new Lexicons([
-			{
-				lexicon: 1,
-				id: "test.ns.simple",
-				defs: {
-					main: {
-						type: "object",
-						properties: {
-							id: { type: "string" },
-							name: { type: "string" },
-						},
-						required: ["id", "name"],
-					},
-				},
-			},
-		]);
-		lexicons.validate("test.ns.simple#main", {
-			id: "123",
-			name: "test",
-		});
-	});
-
-	bench("validate complex nested object", () => {
-		const lexicons = new Lexicons([
-			{
-				lexicon: 1,
-				id: "test.ns.complex",
-				defs: {
-					user: {
-						type: "object",
-						properties: {
-							handle: { type: "string" },
-							displayName: { type: "string" },
-						},
-						required: ["handle"],
-					},
-					reply: {
-						type: "object",
-						properties: {
-							text: { type: "string" },
-							author: { type: "ref", ref: "#user" },
-						},
-						required: ["text", "author"],
-					},
-					main: {
-						type: "record",
-						key: "tid",
-						record: {
+	test("validate simple object", async ({ bench }) => {
+		await bench("validate simple object", () => {
+			const lexicons = new Lexicons([
+				{
+					lexicon: 1,
+					id: "test.ns.simple",
+					defs: {
+						main: {
 							type: "object",
 							properties: {
-								author: { type: "ref", ref: "#user" },
-								replies: {
-									type: "array",
-									items: { type: "ref", ref: "#reply" },
-								},
-								content: { type: "string" },
-								createdAt: { type: "string", format: "datetime" },
+								id: { type: "string" },
+								name: { type: "string" },
 							},
-							required: ["author", "content", "createdAt"],
+							required: ["id", "name"],
 						},
 					},
 				},
-			},
-		]);
-		lexicons.validate("test.ns.complex#main", {
-			author: { handle: "alice.bsky.social", displayName: "Alice" },
-			replies: [
-				{
-					text: "Great post!",
-					author: { handle: "bob.bsky.social", displayName: "Bob" },
-				},
-			],
-			content: "Hello world",
-			createdAt: "2025-01-01T00:00:00Z",
-		});
+			]);
+			lexicons.validate("test.ns.simple#main", {
+				id: "123",
+				name: "test",
+			});
+		}).run();
 	});
 
-	bench("validate 1000 simple objects", () => {
-		const lexicons = new Lexicons([
-			{
-				lexicon: 1,
-				id: "test.ns.simple",
-				defs: {
-					main: {
-						type: "object",
-						properties: {
-							id: { type: "string" },
-							name: { type: "string" },
+	test("validate complex nested object", async ({ bench }) => {
+		await bench("validate complex nested object", () => {
+			const lexicons = new Lexicons([
+				{
+					lexicon: 1,
+					id: "test.ns.complex",
+					defs: {
+						user: {
+							type: "object",
+							properties: {
+								handle: { type: "string" },
+								displayName: { type: "string" },
+							},
+							required: ["handle"],
 						},
-						required: ["id", "name"],
+						reply: {
+							type: "object",
+							properties: {
+								text: { type: "string" },
+								author: { type: "ref", ref: "#user" },
+							},
+							required: ["text", "author"],
+						},
+						main: {
+							type: "record",
+							key: "tid",
+							record: {
+								type: "object",
+								properties: {
+									author: { type: "ref", ref: "#user" },
+									replies: {
+										type: "array",
+										items: { type: "ref", ref: "#reply" },
+									},
+									content: { type: "string" },
+									createdAt: { type: "string", format: "datetime" },
+								},
+								required: ["author", "content", "createdAt"],
+							},
+						},
 					},
 				},
-			},
-		]);
-		for (let i = 0; i < 1000; i++) {
-			lexicons.validate("test.ns.simple#main", {
-				id: `${i}`,
-				name: `test${i}`,
+			]);
+			lexicons.validate("test.ns.complex#main", {
+				author: { handle: "alice.bsky.social", displayName: "Alice" },
+				replies: [
+					{
+						text: "Great post!",
+						author: { handle: "bob.bsky.social", displayName: "Bob" },
+					},
+				],
+				content: "Hello world",
+				createdAt: "2025-01-01T00:00:00Z",
 			});
-		}
+		}).run();
+	});
+
+	test("validate 1000 simple objects", async ({ bench }) => {
+		await bench("validate 1000 simple objects", () => {
+			const lexicons = new Lexicons([
+				{
+					lexicon: 1,
+					id: "test.ns.simple",
+					defs: {
+						main: {
+							type: "object",
+							properties: {
+								id: { type: "string" },
+								name: { type: "string" },
+							},
+							required: ["id", "name"],
+						},
+					},
+				},
+			]);
+			for (let i = 0; i < 1000; i++) {
+				lexicons.validate("test.ns.simple#main", {
+					id: `${i}`,
+					name: `test${i}`,
+				});
+			}
+		}).run();
 	});
 });

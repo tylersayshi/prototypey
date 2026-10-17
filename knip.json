@@ -1,5 +1,5 @@
 {
-	"$schema": "https://unpkg.com/knip@5/schema.json",
+	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"workspaces": {
 		".": {
 			"entry": [],
@@ -10,11 +10,9 @@
 			"project": ["**/*.ts"]
 		},
 		"packages/site": {
-			"entry": ["src/main.tsx!", "tests/**/*.test.{ts,tsx}"],
-			"project": ["src/**/*.{ts,tsx}"]
+			"entry": ["tests/**/*.test.{ts,tsx}"],
+			"project": ["src/**/*.{ts,tsx,css}"]
 		}
 	},
-	"ignore": ["**/*.d.ts", "**/dist/**", "**/lib/**", "**/node_modules/**"],
-	"ignoreDependencies": ["tailwindcss"],
 	"ignoreExportsUsedInFile": true
 }

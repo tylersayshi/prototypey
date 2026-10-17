@@ -666,7 +666,7 @@ export const lx = {
 			type: "ref",
 			ref,
 			...options,
-		} as LexiconItemCommonOptions & { type: "ref"; ref: Ref };
+		};
 	},
 	/**
 	 * Creates a union type for multiple possible type variants.
@@ -947,8 +947,6 @@ function stripPropertyFlags(
 
 /** helper to pull lexicon from json directly */
 export function fromJSON<const Lex extends LexiconNamespace>(json: Lex) {
-	const defs = stripPropertyFlags(
-		structuredClone(json.defs) as Record<string, unknown>,
-	) as Lex["defs"];
+	const defs = stripPropertyFlags(structuredClone(json.defs)) as Lex["defs"];
 	return lx.lexicon<Lex["id"], Lex["defs"]>(json.id, defs);
 }
