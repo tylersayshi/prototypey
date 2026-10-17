@@ -19,14 +19,7 @@ function mockMonacoWorkers() {
 }
 
 export default defineConfig({
-	plugins: [
-		react({
-			babel: {
-				plugins: [],
-			},
-		}),
-		mockMonacoWorkers(),
-	],
+	plugins: [react(), mockMonacoWorkers()],
 	test: {
 		environment: "jsdom",
 		globals: true,

@@ -28,6 +28,19 @@
 			"matchPackageNames": ["changesets/action", "@changesets/cli"],
 			"matchUpdateTypes": ["major"],
 			"automerge": false
+		},
+		{
+			"description": "Majors of vite and its plugins depend on each other, so land them together",
+			"matchPackageNames": ["vite", "@vitejs/**", "@rolldown/**"],
+			"matchUpdateTypes": ["major"],
+			"groupName": "vite"
+		},
+		{
+			"description": "typescript-eslint has to support a TypeScript major before we can take it, so hold majors for approval on the Dependency Dashboard instead of opening a PR that can't pass CI",
+			"matchPackageNames": ["typescript"],
+			"matchUpdateTypes": ["major"],
+			"dependencyDashboardApproval": true
 		}
-	]
+	],
+	"minimumReleaseAge": "3 days"
 }

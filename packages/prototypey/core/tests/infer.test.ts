@@ -1059,8 +1059,7 @@ test("Local ref resolution: nested refs", () => {
   author?:
     | {
         profile?:
-          | { bio: string; $type: "#profile" }
-          | undefined
+          { bio: string; $type: "#profile" } | undefined
         name: string
         $type: "#user"
       }
@@ -1085,8 +1084,7 @@ test("Edge case: circular reference detection", () => {
   parent?:
     | {
         parent?:
-          | "[Circular reference detected: #main]"
-          | undefined
+          "[Circular reference detected: #main]" | undefined
         value: string
         $type: "#main"
       }
