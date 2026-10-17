@@ -20,19 +20,19 @@
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.31.1",
-		"@eslint/js": "9.29.0",
-		"eslint": "9.29.0",
+		"@eslint/js": "9.39.5",
+		"eslint": "9.39.5",
 		"knip": "^6.41.0",
-		"prettier": "3.6.1",
-		"typescript-eslint": "8.35.0"
+		"prettier": "3.9.10",
+		"typescript-eslint": "8.71.2"
 	},
-	"packageManager": "pnpm@10.34.5",
+	"packageManager": "pnpm@10.34.7",
 	"engines": {
 		"node": ">=20.19.0"
 	},
 	"pnpm": {
 		"overrides": {
-			"vite": "npm:rolldown-vite@7.0.6"
+			"vite": "npm:rolldown-vite@7.3.1"
 		}
 	}
 }
