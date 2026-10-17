@@ -10,8 +10,7 @@ import { useQueryState } from "nuqs";
 import MonacoEditor from "@monaco-editor/react";
 import { parseAsCompressed } from "../utils/parsers";
 
-let tsWorkerInstance: Monaco.languages.typescript.TypeScriptWorker | null =
-	null;
+let tsWorkerInstance: Monaco.typescript.TypeScriptWorker | null = null;
 
 export function Playground() {
 	const [code, setCode] = useQueryState(
@@ -26,8 +25,7 @@ export function Playground() {
 			: "vs-light",
 	);
 	const monaco = useMonaco();
-	const tsWorkerRef =
-		useRef<Monaco.languages.typescript.TypeScriptWorker | null>(null);
+	const tsWorkerRef = useRef<Monaco.typescript.TypeScriptWorker | null>(null);
 
 	const handleCodeChange = (newCode: string) => {
 		void setCode(newCode);
@@ -53,8 +51,7 @@ export function Playground() {
 			const initWorker = async () => {
 				try {
 					await new Promise((resolve) => setTimeout(resolve, 200));
-					const worker =
-						await monaco.languages.typescript.getTypeScriptWorker();
+					const worker = await monaco.typescript.getTypeScriptWorker();
 					const uri = monaco.Uri.parse("file:///main.ts");
 					const client = await worker(uri);
 					tsWorkerRef.current = client;

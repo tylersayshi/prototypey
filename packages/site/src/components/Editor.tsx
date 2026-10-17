@@ -30,18 +30,18 @@ export function Editor({ value, onChange, onReady }: EditorProps) {
 	useEffect(() => {
 		if (!monaco) return;
 
-		monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-			target: monaco.languages.typescript.ScriptTarget.ES2020,
+		monaco.typescript.typescriptDefaults.setCompilerOptions({
+			target: monaco.typescript.ScriptTarget.ES2020,
 			allowNonTsExtensions: true,
-			moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-			module: monaco.languages.typescript.ModuleKind.ESNext,
+			moduleResolution: monaco.typescript.ModuleResolutionKind.NodeJs,
+			module: monaco.typescript.ModuleKind.ESNext,
 			noEmit: true,
 			esModuleInterop: true,
 			allowSyntheticDefaultImports: true,
 			strict: false,
 		});
 
-		monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+		monaco.typescript.typescriptDefaults.setDiagnosticsOptions({
 			noSemanticValidation: false,
 			noSyntaxValidation: false,
 		});
@@ -71,7 +71,7 @@ ${stripImportsExports(libModule.default)}
 ${combinedTypes}
 }`;
 
-			monaco.languages.typescript.typescriptDefaults.addExtraLib(
+			monaco.typescript.typescriptDefaults.addExtraLib(
 				moduleDeclaration,
 				"prototypey.d.ts",
 			);
