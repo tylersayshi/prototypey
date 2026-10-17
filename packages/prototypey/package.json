@@ -36,14 +36,14 @@
 		"tsc": "tsc"
 	},
 	"dependencies": {
-		"@atproto/lexicon": "^0.6.2",
+		"@atproto/lexicon": "^0.7.0",
 		"sade": "^1.8.1",
 		"tinyglobby": "^0.2.17"
 	},
 	"devDependencies": {
-		"@ark/attest": "^0.49.0",
-		"@types/node": "24.0.4",
-		"tsdown": "^0.15.12",
+		"@ark/attest": "^0.57.0",
+		"@types/node": "24.19.2",
+		"tsdown": "^0.23.1",
 		"typescript": "5.9.3",
 		"vitest": "^3.2.7"
 	},
