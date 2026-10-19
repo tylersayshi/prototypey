@@ -1,5 +1,13 @@
 # prototypey
 
+## 0.8.1
+
+### Patch Changes
+
+- c204c31: Update runtime dependencies:
+
+  - Update `@atproto/lexicon` from `^0.6.2` to `^0.7.0`
+
 ## 0.8.0
 
 ### Minor Changes
