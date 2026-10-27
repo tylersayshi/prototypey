@@ -1,0 +1,35 @@
+# Tell Coolify to deploy prototypey.org on every push to main.
+#
+# Coolify does everything else itself — it clones main, builds the Dockerfile,
+# and only swaps the container if that succeeds — so this pipeline is just the
+# trigger. GitHub is the source of truth; sync-tangled.yml mirrors main here.
+#
+# Coolify sits behind Cloudflare Access; only the /api/v1/deploy path admits
+# the service token (policy "allow tangled api", action Service Auth).
+#
+# Repo secrets (Settings -> Secrets):
+#   COOLIFY_DEPLOY_URL      — https://coolify.tyler.fun/api/v1/deploy?uuid=<app-uuid>
+#   COOLIFY_TOKEN           — Coolify API token with deploy permission
+#   CF_ACCESS_CLIENT_ID     — Cloudflare Access service token client id
+#   CF_ACCESS_CLIENT_SECRET — its client secret
+
+when:
+  - event: ["push", "manual"]
+    branch: ["main"]
+
+engine: "nixery"
+
+clone:
+  skip: true
+
+dependencies:
+  nixpkgs:
+    - curl
+
+steps:
+  - name: "deploy"
+    command: |
+      curl --fail-with-body -sS -X POST "$COOLIFY_DEPLOY_URL" \
+        -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+        -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+        -H "Authorization: Bearer $COOLIFY_TOKEN"
