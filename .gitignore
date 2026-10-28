@@ -2,3 +2,6 @@ lib/
 node_modules/
 .attest/
 generated/
+
+# wrangler
+.wrangler
