@@ -8,7 +8,11 @@
 		     string (OAuth callbacks put codes there). count.js counts the first
 		     load; the pushState wrapper counts client-side navigations. -->
 		<script>
-			window.goatcounter = { path: function () { return location.pathname; } };
+			window.goatcounter = {
+				path: function () {
+					return location.pathname;
+				},
+			};
 			(function () {
 				var last = location.pathname;
 				function hit() {
@@ -17,11 +21,18 @@
 					if (window.goatcounter.count) window.goatcounter.count();
 				}
 				var push = history.pushState;
-				history.pushState = function () { push.apply(this, arguments); hit(); };
+				history.pushState = function () {
+					push.apply(this, arguments);
+					hit();
+				};
 				addEventListener("popstate", hit);
 			})();
 		</script>
-		<script async data-goatcounter="https://count-prototypey.tyler.fun/count" src="https://count-prototypey.tyler.fun/count.js"></script>
+		<script
+			async
+			data-goatcounter="https://count-prototypey.tyler.fun/count"
+			src="https://count-prototypey.tyler.fun/count.js"
+		></script>
 	</head>
 	<body>
 		<div id="root"></div>
