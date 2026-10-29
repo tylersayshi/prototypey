@@ -4,6 +4,24 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>prototypey</title>
+		<!-- GoatCounter (~/lab/mini/goatcounter). Paths only, never the query
+		     string (OAuth callbacks put codes there). count.js counts the first
+		     load; the pushState wrapper counts client-side navigations. -->
+		<script>
+			window.goatcounter = { path: function () { return location.pathname; } };
+			(function () {
+				var last = location.pathname;
+				function hit() {
+					if (location.pathname === last) return;
+					last = location.pathname;
+					if (window.goatcounter.count) window.goatcounter.count();
+				}
+				var push = history.pushState;
+				history.pushState = function () { push.apply(this, arguments); hit(); };
+				addEventListener("popstate", hit);
+			})();
+		</script>
+		<script async data-goatcounter="https://count-prototypey.tyler.fun/count" src="https://count-prototypey.tyler.fun/count.js"></script>
 	</head>
 	<body>
 		<div id="root"></div>
