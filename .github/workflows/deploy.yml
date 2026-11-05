@@ -5,7 +5,7 @@ jobs:
     name: Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/prepare
       - run: pnpm build
       - run: npx -y wrangler@4 pages deploy packages/site/dist --project-name prototypey --branch main
