@@ -25,16 +25,16 @@
 		"@tailwindcss/vite": "^4.3.5",
 		"@testing-library/jest-dom": "^7.0.1",
 		"@testing-library/react": "^16.3.3",
-		"@testing-library/user-event": "^14.6.10",
+		"@testing-library/user-event": "^14.6.13",
 		"@types/react": "^19.3.0",
 		"@types/react-dom": "^19.3.0",
 		"@vitejs/plugin-react": "^6.3.0",
 		"babel-plugin-react-compiler": "^1.0.0",
 		"eslint-plugin-react-compiler": "19.1.0-rc.2",
-		"jsdom": "^31.0.0",
+		"jsdom": "^31.0.1",
 		"tailwindcss": "^4.3.5",
 		"typescript": "6.0.3",
 		"vite": "^8.3.8",
-		"vitest": "^5.1.0"
+		"vitest": "^5.1.1"
 	}
 }
